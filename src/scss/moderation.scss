@@ -1,0 +1,164 @@
+#main .moderation {
+	color: $fascistteam;
+	position: relative;
+	width: 98%;
+	.player-input {
+		display: flex;
+		justify-content: center;
+		color: black;
+	}
+	textarea {
+		color: black;
+	}
+	h2 {
+		text-align: center;
+	}
+	.ib {
+		display: inline-block;
+		width: 150px;
+	}
+	.player-list-toggle {
+		position: absolute;
+		color: lightblue;
+		text-decoration: underline;
+		right: 80px;
+		top: 10px;
+		cursor: pointer;
+	}
+	ul {
+		list-style-type: none;
+		li label {
+			cursor: pointer;
+		}
+	}
+	button {
+		color: black;
+		padding: 10px;
+	}
+	> div {
+		display: flex;
+		.modlog {
+			max-width: 60%;
+			width: 100%;
+			> div {
+				overflow-y: scroll;
+			}
+		}
+		.modplayerlist {
+			ul {
+				padding: 0 0 0 10px;
+				overflow-y: scroll;
+			}
+		}
+		> div {
+			padding: 0 5px;
+		}
+		h3 {
+			text-align: center;
+		}
+	}
+	.istor { // IP is part of the TOR network.
+		color: maroon;
+		font-weight: bold;
+	}
+	.isbannedbefore { // Another user with the same IP is in the ban list.
+		color: red;
+		font-weight: bold;
+	}
+	.istimedbefore { // This user has been timed out.
+		color: darkorange;
+		font-weight: bold;
+	}
+	.multi { // IP fully matches another user.
+		color: blue;
+		font-weight: bold;
+	}
+	.multi2 { // First three blocks of IP fully matches another user.
+		color: purple;
+		font-weight: bold;
+	}
+	table {
+		font-size: 12px;
+
+		td {
+			padding: 2px;
+		}
+
+		tr {
+			background: lightyellow;
+		}
+
+		thead tr th {
+			cursor: pointer;
+		}
+
+		+ button {
+			color: #fff;
+		}
+	}
+	textarea {
+		width: 100%;
+	}
+	.ip {
+		// color: turquoise;
+	}
+	.broadcast {
+		cursor: pointer;
+		position: absolute;
+		left: 5%;
+		top: 10px;
+		text-decoration: underline;
+	}
+	.ipban-button {
+		width: 100%;
+		background: darkred;
+		color: white;
+		margin: 2px 0;
+	}
+	.cardback-button {
+		width: 100%;
+		background: lightblue;
+		margin: 2px 0;
+	}
+	.timeout-button {
+		width: 100%;
+		background: lightgreen !important;
+		margin: 2px 0;
+	}
+	.tier3 {
+		background: orange;
+		margin: 2px 3px 2px 0;
+		padding: 2px;
+		width: 74px;
+		height: 40px;
+		vertical-align: text-bottom;
+	}
+}
+
+.broadcastmodal {
+	display: none !important;
+	input {
+		width: 600px;
+	}
+
+	label {
+		color: #fff;
+		margin: 5px;
+		cursor: pointer;
+	}
+
+	.stickycheck {
+		margin-top: 5px !important;
+		display: inline-block;
+		width: inherit;
+		cursor: pointer;
+	}
+}
+
+.horizontal.divider {
+	color: white;
+}
+
+.toggle-containers {
+	text-align: center;
+}

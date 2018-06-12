@@ -1,0 +1,184 @@
+.creategame {
+	.timed-slider-value {
+		background: #eee;
+		display: block;
+		padding: 5px;
+		color: #888;
+		width: max-content;
+		margin: -10px auto 5px;
+	}
+
+	.ui.header > div {
+		font-size: 30px;
+	}
+	padding: 2%;
+	margin-right: 10px;
+
+	.rc-slider-handle {
+		margin-left: -9px;
+		margin-top: -7px;
+		width: 18px;
+		height: 18px;
+	}
+
+	.contains-bad-word {
+		color: red;
+	}
+
+	> .header {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	.grid h4 {
+		margin-bottom: 5px;
+		margin-top: 10px;
+	}
+
+	.grid > div {
+		text-align: center;
+	}
+
+	.sliderrow {
+		.ui.header {
+			min-height: 80px;
+		}
+	}
+
+	.gamename {
+		h4 small {
+			margin-left: 8px;
+		}
+
+		input {
+			width: 80%;
+		}
+	}
+
+	#main .row .thumbs.up.icon,
+	#main .row .thumbs.up.icon + h4 {
+		color: tan !important;
+	}
+
+	.ui.search.dropdown > .text {
+		color: black;
+	}
+
+	.lock.icon {
+		margin-top: -15px;
+	}
+	.private {
+		padding-top: 10px;
+	}
+	.password-input {
+		margin-top: 20px !important;
+	}
+	.row.slider {
+		margin: 10px 0 10px 0;
+	}
+
+	.row.tourny-row {
+		padding: 0;
+	}
+	.footer {
+		margin: 20px 0 10px 0;
+		.button {
+			margin-left: 15px;
+			width: 400px;
+		}
+	}
+
+	.tourny-container h4 {
+		color: $tourny;
+	}
+
+	.tourny-slider {
+		background: $tourny;
+	}
+
+	.checkbox-container {
+		width: 104%;
+		margin-left: -6px;
+		position: relative;
+		top: 30px;
+		display: flex;
+		justify-content: space-between;
+
+		input {
+			cursor: pointer;
+			width: 25px;
+			height: 25px;
+		}
+	}
+
+	.rebalance {
+		> div {
+			padding-left: 100px;
+		}
+		span {
+			color: $hitlerteam;
+			i {
+				cursor: pointer;
+				color: $hitlerteam !important;
+			}
+		}
+
+		label {
+			position: absolute;
+			top: 10px;
+			height: 28px;
+			border: 2px solid $hitlerteam;
+		}
+
+		.rebalance-0 {
+			left: 298px;
+		}
+		.rebalance-1 {
+			left: 376px;
+		}
+		.rebalance-2 {
+			left: 531px;
+		}
+
+		.rebalance-container.isTourny {
+			.rebalance-0 {
+				display: none;
+			}
+
+			.rebalance-1 {
+				left: 214px;
+			}
+
+			.rebalance-2 {
+				left: 612px;
+			}
+		}
+		input {
+			cursor: pointer;
+			width: 25px;
+			height: 25px;
+		}
+	}
+}
+
+#main .scrollbar-container-main .ui.grid .timedmode-slider {
+	width: 70% !important;
+	margin: 0 auto 10px;
+	.rc-slider {
+		background: lightcoral;
+	}
+}
+
+#main .scrollbar-container-main .ui.grid .timedmode-check {
+	width: 44% !important;
+	margin: 0 auto;
+}
+
+#main .verified-row {
+	width: 44% !important;
+
+	.thumbs.up.icon,
+	.thumbs.up.icon + h4 {
+		color: tan !important;
+	}
+}
