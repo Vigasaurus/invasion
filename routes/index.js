@@ -98,7 +98,7 @@ module.exports = () => {
 					verified: req.user.verified,
 					username,
 					gameSettings: account.gameSettings,
-					blacklist
+					blacklist,
 				});
 			});
 		}
@@ -135,7 +135,13 @@ module.exports = () => {
 						_profile.bio = account.bio;
 					}
 
-					if (!(MODERATORS.includes(requestingUser) || ADMINS.includes(requestingUser) || EDITORS.includes(requestingUser))) {
+					if (
+						!(
+							MODERATORS.includes(requestingUser) ||
+							ADMINS.includes(requestingUser) ||
+							EDITORS.includes(requestingUser)
+						)
+					) {
 						_profile.lastConnectedIP = 'no looking';
 					} else {
 						try {
@@ -184,7 +190,7 @@ module.exports = () => {
 		const { userList } = require('./socket/models');
 
 		res.json({
-			count: userList.length
+			count: userList.length,
 		});
 	});
 
@@ -206,13 +212,15 @@ module.exports = () => {
 			const username = req.session.passport.user;
 			const now = new Date();
 			const socketId = Object.keys(io.sockets.sockets).find(
-				socketId => io.sockets.sockets[socketId].handshake.session.passport && io.sockets.sockets[socketId].handshake.session.passport.user === username
+				socketId =>
+					io.sockets.sockets[socketId].handshake.session.passport &&
+					io.sockets.sockets[socketId].handshake.session.passport.user === username
 			);
 
 			Account.findOne({ username }, (err, account) => {
 				if (account.wins + account.losses < 50) {
 					res.json({
-						message: 'You need to have played 50 games to upload a cardback.'
+						message: 'You need to have played 50 games to upload a cardback.',
 					});
 					// } else if (account.gameSettings.customCardbackSaveTime && (now.getTime() - new Date(account.gameSettings.customCardbackSaveTime).getTime() < 64800000)) {
 				} else if (
@@ -220,22 +228,27 @@ module.exports = () => {
 					now.getTime() - new Date(account.gameSettings.customCardbackSaveTime).getTime() < 30000
 				) {
 					res.json({
-						message: 'You can only change your cardback once every 30 seconds.'
+						message: 'You can only change your cardback once every 30 seconds.',
 					});
 				} else {
-					fs.writeFile(`public/images/custom-cardbacks/${req.session.passport.user}.${extension}`, raw, 'base64', () => {
-						account.gameSettings.customCardback = extension;
-						account.gameSettings.customCardbackSaveTime = now.toString();
-						account.gameSettings.customCardbackUid = Math.random()
-							.toString(36)
-							.substring(2);
-						account.save(() => {
-							res.json({ message: 'Cardback successfully uploaded.' });
-							if (socketId && io.sockets.sockets[socketId]) {
-								io.sockets.sockets[socketId].emit('gameSettings', account.gameSettings);
-							}
-						});
-					});
+					fs.writeFile(
+						`public/images/custom-cardbacks/${req.session.passport.user}.${extension}`,
+						raw,
+						'base64',
+						() => {
+							account.gameSettings.customCardback = extension;
+							account.gameSettings.customCardbackSaveTime = now.toString();
+							account.gameSettings.customCardbackUid = Math.random()
+								.toString(36)
+								.substring(2);
+							account.save(() => {
+								res.json({ message: 'Cardback successfully uploaded.' });
+								if (socketId && io.sockets.sockets[socketId]) {
+									io.sockets.sockets[socketId].emit('gameSettings', account.gameSettings);
+								}
+							});
+						}
+					);
 				}
 			}).catch(err => {
 				console.log(err, 'account err in cardbacks');

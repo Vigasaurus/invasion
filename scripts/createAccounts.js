@@ -8,8 +8,8 @@ const options = {
 	port: '8080',
 	path: '/account/signup',
 	headers: {
-		'content-type': 'application/json; charset=UTF-8'
-	}
+		'content-type': 'application/json; charset=UTF-8',
+	},
 };
 
 const createUser = function(username) {

@@ -5,7 +5,7 @@ const rateEloGame = (size, libElo, fasElo, libWin) => {
 		7: -17.282,
 		8: 45.418,
 		9: -70.679,
-		10: -31.539
+		10: -31.539,
 	};
 
 	const fasSize = () => {

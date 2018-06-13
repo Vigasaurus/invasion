@@ -54,7 +54,7 @@ mongoose.connect(`mongodb://localhost:${process.env.MONGOPORT}/secret-hitler-app
 // Dump summaries for the day
 const summaries = [];
 GameSummary.find({
-	date: { $gte: new Date(dumpDateFrom), $lt: new Date(dumpDateTo) }
+	date: { $gte: new Date(dumpDateFrom), $lt: new Date(dumpDateTo) },
 })
 	.lean()
 	.cursor()

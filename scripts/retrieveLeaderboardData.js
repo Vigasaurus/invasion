@@ -3,7 +3,7 @@ const Account = require('../models/account');
 const fs = require('fs');
 const data = {
 	seasonalLeaderboard: [],
-	dailyLeaderboard: []
+	dailyLeaderboard: [],
 };
 
 mongoose.Promise = global.Promise;
@@ -15,7 +15,7 @@ Account.find({ 'games.1': { $exists: true } })
 		if (account.account.previousDayElo > 1620) {
 			data.seasonalLeaderboard.push({
 				userName: account.username,
-				elo: account.eloSeason
+				elo: account.eloSeason,
 			});
 		}
 		account.previousDayElo = account.eloSeason;
@@ -27,11 +27,13 @@ Account.find({ 'games.1': { $exists: true } })
 			.eachAsync(account => {
 				data.dailyLeaderboard.push({
 					userName: account.username,
-					dailyEloDifference: account.eloSeason - account.previousDayElo
+					dailyEloDifference: account.eloSeason - account.previousDayElo,
 				});
 			})
 			.then(() => {
-				data.dailyLeaderboard = data.dailyLeaderboard.sort((a, b) => b.dailyEloDifference - a.dailyEloDifference).slice(0, 20);
+				data.dailyLeaderboard = data.dailyLeaderboard
+					.sort((a, b) => b.dailyEloDifference - a.dailyEloDifference)
+					.slice(0, 20);
 				data.seasonalLeaderboard = data.seasonalLeaderboard.sort((a, b) => b.elo - a.elo).slice(0, 20);
 				fs.writeFile('/var/www/secret-hitler/public/leaderboardData.json', JSON.stringify(data), () => {
 					mongoose.connection.close();

@@ -3894,5 +3894,5 @@ module.exports = [
 	'its0k.com',
 	'myself.com',
 	'pdold.com',
-	'xvx.us'
+	'xvx.us',
 ];

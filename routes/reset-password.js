@@ -6,7 +6,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const template = _.template(
 	fs.readFileSync('./routes/reset-password-email.template', {
-		encoding: 'UTF-8'
+		encoding: 'UTF-8',
 	})
 );
 
@@ -22,7 +22,7 @@ module.exports = {
 			tokens = accounts.map(account => ({
 				username: account.username,
 				token: account.verification.verificationToken,
-				expires: account.verification.verificationTokenExpiration
+				expires: account.verification.verificationTokenExpiration,
 			}));
 		});
 
@@ -66,8 +66,8 @@ module.exports = {
 					mg({
 						auth: {
 							api_key: process.env.MGKEY,
-							domain: 'todo'
-						}
+							domain: 'todo',
+						},
 					})
 				);
 
@@ -77,7 +77,7 @@ module.exports = {
 				tokens.push({
 					username,
 					token,
-					expires: tomorrow
+					expires: tomorrow,
 				});
 
 				nmMailgun.sendMail(
@@ -87,7 +87,7 @@ module.exports = {
 						to: 'shiotestemail@mailinator.com',
 						subject: 'Secret Hitler - reset your password',
 						'h:Reply-To': 'chris.v.ozols@gmail.com',
-						html: template({ username, token })
+						html: template({ username, token }),
 					},
 					err => {
 						if (err) {
@@ -103,5 +103,5 @@ module.exports = {
 				res.status(401).send();
 			}
 		});
-	}
+	},
 };

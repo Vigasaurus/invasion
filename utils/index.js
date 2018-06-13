@@ -44,7 +44,7 @@ exports.mapOpt2 = f => {
 exports.handDiff = (handX, handY) => {
 	return {
 		reds: handX.reds - handY.reds,
-		blues: handX.blues - handY.blues
+		blues: handX.blues - handY.blues,
 	};
 };
 

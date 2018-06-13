@@ -17,7 +17,7 @@ const Game = new Schema({
 	isTournyFirstRound: Boolean,
 	isTournySecondRound: Boolean,
 	casualGame: Boolean,
-	chats: Array
+	chats: Array,
 });
 
 module.exports = mongoose.model('Game', Game);

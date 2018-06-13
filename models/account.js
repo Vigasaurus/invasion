@@ -5,7 +5,7 @@ const Account = new Schema({
 	username: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
 	},
 	password: String,
 	gameSettings: {
@@ -39,16 +39,16 @@ const Account = new Schema({
 			top: Number,
 			left: Number,
 			width: Number,
-			height: Number
+			height: Number,
 		},
-		playerNotes: Array
+		playerNotes: Array,
 	},
 	verification: {
 		email: String,
 		verificationToken: String,
 		verificationTokenExpiration: Date,
 		passwordResetToken: String,
-		passwordResetTokenExpiration: Date
+		passwordResetTokenExpiration: Date,
 	},
 	signupIP: String,
 	lastConnectedIP: String,
@@ -81,7 +81,7 @@ const Account = new Schema({
 	isFixed: Boolean,
 	eloSeason: Number,
 	eloOverall: Number,
-	hashUid: String
+	hashUid: String,
 });
 
 Account.plugin(passportLocalMongoose);

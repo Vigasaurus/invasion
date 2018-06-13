@@ -6,7 +6,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const template = _.template(
 	fs.readFileSync('./routes/account-verification-email.template', {
-		encoding: 'UTF-8'
+		encoding: 'UTF-8',
 	})
 );
 
@@ -29,7 +29,7 @@ module.exports = {
 			tokens = accounts.map(account => ({
 				username: account.username,
 				token: account.verification.verificationToken,
-				expires: account.verification.verificationTokenExpiration
+				expires: account.verification.verificationTokenExpiration,
 			}));
 		});
 
@@ -70,8 +70,8 @@ module.exports = {
 				mg({
 					auth: {
 						api_key: process.env.MGKEY,
-						domain: process.env.MGDOMAIN
-					}
+						domain: process.env.MGDOMAIN,
+					},
 				})
 			);
 
@@ -82,7 +82,7 @@ module.exports = {
 			tokens.push({
 				username,
 				token,
-				expires: tomorrow
+				expires: tomorrow,
 			});
 
 			nmMailgun.sendMail({
@@ -90,7 +90,7 @@ module.exports = {
 				html: template({ username, token }),
 				to: email,
 				subject: 'Secret Hitler IO - verify your account',
-				'h:Reply-To': 'chris.v.ozols@gmail.com'
+				'h:Reply-To': 'chris.v.ozols@gmail.com',
 			});
 
 			account.save(() => {
@@ -99,5 +99,5 @@ module.exports = {
 				}
 			});
 		});
-	}
+	},
 };

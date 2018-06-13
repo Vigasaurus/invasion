@@ -1131,5 +1131,5 @@ module.exports = [
 	'zealous',
 	'zesty',
 	'zippy',
-	'zonked'
+	'zonked',
 ];

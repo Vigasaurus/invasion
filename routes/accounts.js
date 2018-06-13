@@ -31,7 +31,7 @@ module.exports = () => {
 		res.render('page-account', {
 			username: req.user.username,
 			verified: req.user.verified,
-			email: req.user.verification.email
+			email: req.user.verification.email,
 		});
 	});
 
@@ -88,7 +88,11 @@ module.exports = () => {
 	app.post('/account/signup', (req, res, next) => {
 		const { username, password, password2, email, isPrivate } = req.body;
 		const signupIP =
-			req.headers['x-real-ip'] || req.headers['X-Real-IP'] || req.headers['X-Forwarded-For'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+			req.headers['x-real-ip'] ||
+			req.headers['X-Real-IP'] ||
+			req.headers['X-Forwarded-For'] ||
+			req.headers['x-forwarded-for'] ||
+			req.connection.remoteAddress;
 		const save = {
 			username,
 			gameSettings: {
@@ -97,21 +101,21 @@ module.exports = () => {
 				disableRightSidebarInGame: false,
 				enableDarkTheme: false,
 				soundStatus: 'Pack2',
-				isPrivate
+				isPrivate,
 			},
 			verification: {
 				email: email || '',
 				verificationToken: '',
 				verificationTokenExpiration: null,
 				passwordResetToken: '',
-				passwordResetTokenExpiration: null
+				passwordResetTokenExpiration: null,
 			},
 			verified: false,
 			games: [],
 			wins: 0,
 			losses: 0,
 			created: new Date(),
-			signupIP
+			signupIP,
 		};
 
 		if (!/^[a-z0-9]+$/i.test(username)) {
@@ -128,11 +132,12 @@ module.exports = () => {
 			res.status(401).json({ message: 'Sorry, your passwords did not match.' });
 		} else if (/88$/i.test(username)) {
 			res.status(401).json({
-				message: 'Sorry, usernames that end with 88 are not allowed.'
+				message: 'Sorry, usernames that end with 88 are not allowed.',
 			});
 		} else if (accountCreationDisabled.status) {
 			res.status(403).json({
-				message: 'Sorry, creating new accounts is temporarily disabled.  If you need an account created, please contact our moderators on discord.'
+				message:
+					'Sorry, creating new accounts is temporarily disabled.  If you need an account created, please contact our moderators on discord.',
 			});
 		} else {
 			let doesContainBadWord = false;
@@ -145,14 +150,14 @@ module.exports = () => {
 
 			if (email && email.split('@')[1] && bannedEmails.includes(email.split('@')[1])) {
 				res.status(401).json({
-					message: 'Only non-disposible email providers are allowed to create verified accounts.'
+					message: 'Only non-disposible email providers are allowed to create verified accounts.',
 				});
 				return;
 			}
 
 			if (email && !emailRegex.test(email)) {
 				res.status(401).json({
-					message: `That doesn't look like a valid email address.`
+					message: `That doesn't look like a valid email address.`,
 				});
 
 				return;
@@ -160,7 +165,7 @@ module.exports = () => {
 
 			if (doesContainBadWord) {
 				res.status(401).json({
-					message: 'Sorry, your username contains a naughty word or part of a naughty word.'
+					message: 'Sorry, your username contains a naughty word or part of a naughty word.',
 				});
 			} else {
 				Account.findOne({ username: username.toLowerCase() }, (err, account) => {
@@ -182,7 +187,10 @@ module.exports = () => {
 
 							if (ip) {
 								date = new Date().getTime();
-								unbannedTime = ip.type === 'small' || ip.type === 'new' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
+								unbannedTime =
+									ip.type === 'small' || ip.type === 'new'
+										? ip.bannedDate.getTime() + 64800000
+										: ip.bannedDate.getTime() + 604800000;
 							}
 
 							if (ip && unbannedTime > date && !ipbansNotEnforced.status && process.env.NODE_ENV === 'production') {
@@ -190,7 +198,7 @@ module.exports = () => {
 									message:
 										ip.type === 'small'
 											? 'You can no longer access this service.  If you believe this is in error, contact the moderators.'
-											: 'You can only make accounts once per day.  If you need an exception to this rule, contact the moderators.'
+											: 'You can only make accounts once per day.  If you need an exception to this rule, contact the moderators.',
 								});
 							} else {
 								Account.register(new Account(save), password, err => {
@@ -205,7 +213,7 @@ module.exports = () => {
 										const newPlayerBan = new BannedIP({
 											bannedDate: new Date(),
 											type: 'new',
-											ip: signupIP
+											ip: signupIP,
 										});
 
 										newPlayerBan.save(() => {
@@ -232,7 +240,7 @@ module.exports = () => {
 						req.headers['X-Forwarded-For'] ||
 						req.headers['x-forwarded-for'] ||
 						req.connection.remoteAddress,
-					type: 'small' || 'big'
+					type: 'small' || 'big',
 				},
 				(err, ips) => {
 					let date;
@@ -252,12 +260,13 @@ module.exports = () => {
 
 					if (ip) {
 						date = new Date().getTime();
-						unbannedTime = ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
+						unbannedTime =
+							ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
 					}
 
 					if (ip && unbannedTime > date) {
 						res.status(403).json({
-							message: 'You can not access this service.  If you believe this is in error, contact the moderators.'
+							message: 'You can not access this service.  If you believe this is in error, contact the moderators.',
 							// TODO: include the reason moderators provided for the IP ban, if it exists
 						});
 					} else {
@@ -269,11 +278,11 @@ module.exports = () => {
 		passport.authenticate('local'),
 		(req, res) => {
 			Account.findOne({
-				username: req.user.username
+				username: req.user.username,
 			}).then(player => {
 				if (player.isBanned) {
 					res.status(403).json({
-						message: 'You can not access this service.  If you believe this is in error, contact the moderators.'
+						message: 'You can not access this service.  If you believe this is in error, contact the moderators.',
 						// TODO: include the reason moderators provided for the account ban, if it exists
 					});
 					return;
@@ -321,14 +330,14 @@ module.exports = () => {
 
 		if (email && email.split('@')[1] && bannedEmails.includes(email.split('@')[1])) {
 			res.status(401).json({
-				message: 'Only non-disposible email providers are allowed to create verified accounts.'
+				message: 'Only non-disposible email providers are allowed to create verified accounts.',
 			});
 			return;
 		}
 
 		if (email && !emailRegex.test(email)) {
 			res.status(401).json({
-				message: `That doesn't look like a valid email address.`
+				message: `That doesn't look like a valid email address.`,
 			});
 			return;
 		}
@@ -342,14 +351,14 @@ module.exports = () => {
 
 		if (email && email.split('@')[1] && bannedEmails.includes(email.split('@')[1])) {
 			res.status(401).json({
-				message: 'Only non-disposible email providers are allowed to create verified accounts.'
+				message: 'Only non-disposible email providers are allowed to create verified accounts.',
 			});
 			return;
 		}
 
 		if (email && !emailRegex.test(email)) {
 			res.status(401).json({
-				message: `That doesn't look like a valid email address.`
+				message: `That doesn't look like a valid email address.`,
 			});
 			return;
 		}
