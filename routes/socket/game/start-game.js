@@ -2,7 +2,6 @@ const { sendInProgressGameUpdate } = require('../util.js');
 const _ = require('lodash');
 const { startElection } = require('./election.js');
 const { shufflePolicies } = require('./common.js');
-const GameSummaryBuilder = require('../../../models/game-summary/GameSummaryBuilder');
 const Account = require('../../../models/account.js');
 
 /**
@@ -20,15 +19,15 @@ const beginGame = game => {
 		{
 			cardName: 'hitler',
 			icon: 0,
-			team: 'fascist'
-		}
+			team: 'fascist',
+		},
 	]
 		.concat(
 			_.shuffle(
 				_.range(0, 6).map(el => ({
 					cardName: 'liberal',
 					icon: el,
-					team: 'liberal'
+					team: 'liberal',
 				}))
 			).slice(0, libCount)
 		)
@@ -37,7 +36,7 @@ const beginGame = game => {
 				_.range(0, 3).map(el => ({
 					cardName: 'fascist',
 					icon: el,
-					team: 'fascist'
+					team: 'fascist',
 				}))
 			).slice(0, fasCount)
 		);
@@ -68,20 +67,20 @@ const beginGame = game => {
 				gameChat: true,
 				chat: [
 					{
-						text: 'The game begins and you receive the '
+						text: 'The game begins and you receive the ',
 					},
 					{
 						text: player.role.cardName === 'hitler' ? 'hitler' : player.role.cardName,
-						type: player.role.cardName
+						type: player.role.cardName,
 					},
 					{
-						text: ' role and take seat '
+						text: ' role and take seat ',
 					},
 					{
 						text: `#${i + 1}.`,
-						type: 'player'
-					}
-				]
+						type: 'player',
+					},
+				],
 			});
 		} else {
 			player.gameChats.push({
@@ -89,9 +88,9 @@ const beginGame = game => {
 				timestamp: new Date(),
 				chat: [
 					{
-						text: 'The game begins.'
-					}
-				]
+						text: 'The game begins.',
+					},
+				],
 			});
 		}
 	});
@@ -103,30 +102,38 @@ const beginGame = game => {
 	const libElo = { overall: 1600, season: 1600 };
 	const fasElo = { overall: 1600, season: 1600 };
 	Account.find({
-		username: { $in: game.private.seatedPlayers.map(player => player.userName) }
+		username: { $in: game.private.seatedPlayers.map(player => player.userName) },
 	}).then(accounts => {
 		libElo.overall =
 			lib.reduce(
 				(prev, curr) =>
-					(accounts.find(account => account.username === curr).eloOverall ? accounts.find(account => account.username === curr).eloOverall : 1600) + prev,
+					(accounts.find(account => account.username === curr).eloOverall
+						? accounts.find(account => account.username === curr).eloOverall
+						: 1600) + prev,
 				0
 			) / lib.length;
 		libElo.season =
 			lib.reduce(
 				(prev, curr) =>
-					(accounts.find(account => account.username === curr).eloSeason ? accounts.find(account => account.username === curr).eloSeason : 1600) + prev,
+					(accounts.find(account => account.username === curr).eloSeason
+						? accounts.find(account => account.username === curr).eloSeason
+						: 1600) + prev,
 				0
 			) / lib.length;
 		fasElo.overall =
 			fas.reduce(
 				(prev, curr) =>
-					(accounts.find(account => account.username === curr).eloOverall ? accounts.find(account => account.username === curr).eloOverall : 1600) + prev,
+					(accounts.find(account => account.username === curr).eloOverall
+						? accounts.find(account => account.username === curr).eloOverall
+						: 1600) + prev,
 				0
 			) / fas.length;
 		fasElo.season =
 			fas.reduce(
 				(prev, curr) =>
-					(accounts.find(account => account.username === curr).eloSeason ? accounts.find(account => account.username === curr).eloSeason : 1600) + prev,
+					(accounts.find(account => account.username === curr).eloSeason
+						? accounts.find(account => account.username === curr).eloSeason
+						: 1600) + prev,
 				0
 			) / fas.length;
 	});
@@ -139,12 +146,12 @@ const beginGame = game => {
 			rebalance7p: game.general.rebalance7p && game.private.seatedPlayers.length === 7,
 			rebalance9p: false,
 			rerebalance9p: game.general.rerebalance9p && game.private.seatedPlayers.length === 9,
-			casualGame: Boolean(game.general.casualGame)
+			casualGame: Boolean(game.general.casualGame),
 		},
 		game.private.seatedPlayers.map(p => ({
 			username: p.userName,
 			role: p.role.cardName,
-			icon: p.role.icon
+			icon: p.role.icon,
 		})),
 		libElo,
 		fasElo
@@ -156,10 +163,10 @@ const beginGame = game => {
 			timestamp: new Date(),
 			chat: [
 				{
-					text: 'The game begins.'
-				}
-			]
-		}
+					text: 'The game begins.',
+				},
+			],
+		},
 	];
 
 	sendInProgressGameUpdate(game);
@@ -174,7 +181,9 @@ const beginGame = game => {
 				player.playersState[i].nameStatus = 'fascist';
 
 				if (playerCount > 6 && playerCount < 9) {
-					const otherFascist = seatedPlayers.find(play => play.role.cardName === 'fascist' && play.userName !== player.userName);
+					const otherFascist = seatedPlayers.find(
+						play => play.role.cardName === 'fascist' && play.userName !== player.userName
+					);
 					const otherFascistIndex = seatedPlayers.indexOf(otherFascist);
 
 					if (!game.general.disableGamechat) {
@@ -183,29 +192,33 @@ const beginGame = game => {
 							gameChat: true,
 							chat: [
 								{
-									text: 'You see that the other '
+									text: 'You see that the other ',
 								},
 								{
 									text: 'fascist',
-									type: 'fascist'
+									type: 'fascist',
 								},
 								{
-									text: ' in this game is '
+									text: ' in this game is ',
 								},
 								{
-									text: game.general.blindMode ? `{${otherFascistIndex + 1}}` : `${otherFascist.userName} {${otherFascistIndex + 1}}`,
-									type: 'player'
+									text: game.general.blindMode
+										? `{${otherFascistIndex + 1}}`
+										: `${otherFascist.userName} {${otherFascistIndex + 1}}`,
+									type: 'player',
 								},
 								{
-									text: '.'
-								}
-							]
+									text: '.',
+								},
+							],
 						});
 					}
 					player.playersState[otherFascistIndex].nameStatus = 'fascist';
 					player.playersState[otherFascistIndex].notificationStatus = 'fascist';
 				} else if (playerCount > 8) {
-					const otherFascists = seatedPlayers.filter(play => play.role.cardName === 'fascist' && play.userName !== player.userName);
+					const otherFascists = seatedPlayers.filter(
+						play => play.role.cardName === 'fascist' && play.userName !== player.userName
+					);
 
 					if (!game.general.disableGamechat) {
 						player.gameChats.push({
@@ -213,34 +226,34 @@ const beginGame = game => {
 							gameChat: true,
 							chat: [
 								{
-									text: 'You see that the other '
+									text: 'You see that the other ',
 								},
 								{
 									text: 'fascists',
-									type: 'fascist'
+									type: 'fascist',
 								},
 								{
-									text: ' in this game are '
+									text: ' in this game are ',
 								},
 								{
 									text: game.general.blindMode
 										? `{${seatedPlayers.indexOf(otherFascists[0]) + 1}}`
 										: `${otherFascists[0].userName} {${seatedPlayers.indexOf(otherFascists[0]) + 1}}`,
-									type: 'player'
+									type: 'player',
 								},
 								{
-									text: ' and '
+									text: ' and ',
 								},
 								{
 									text: game.general.blindMode
 										? `{${seatedPlayers.indexOf(otherFascists[1]) + 1}}`
 										: `${otherFascists[1].userName} {${seatedPlayers.indexOf(otherFascists[1]) + 1}}`,
-									type: 'player'
+									type: 'player',
 								},
 								{
-									text: '.'
-								}
-							]
+									text: '.',
+								},
+							],
 						});
 					}
 					otherFascists.forEach(fascistPlayer => {
@@ -257,22 +270,22 @@ const beginGame = game => {
 					gameChat: true,
 					chat: [
 						{
-							text: 'You see that '
+							text: 'You see that ',
 						},
 						{
 							text: 'hitler',
-							type: 'hitler'
+							type: 'hitler',
 						},
 						{
-							text: ' in this game is '
+							text: ' in this game is ',
 						},
 						{
 							text: game.general.blindMode
 								? `{${seatedPlayers.indexOf(hitlerPlayer) + 1}}`
 								: `${hitlerPlayer.userName} {${seatedPlayers.indexOf(hitlerPlayer) + 1}}`,
-							type: 'player'
-						}
-					]
+							type: 'player',
+						},
+					],
 				};
 
 				if (!game.general.disableGamechat) {
@@ -281,7 +294,7 @@ const beginGame = game => {
 							{ text: '. They also see that you are a ' },
 							{
 								text: 'fascist',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{ text: '.' }
 						);
@@ -290,7 +303,7 @@ const beginGame = game => {
 							{ text: '. They do not know you are a ' },
 							{
 								text: 'fascist',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{ text: '.' }
 						);
@@ -312,25 +325,25 @@ const beginGame = game => {
 							gameChat: true,
 							chat: [
 								{
-									text: 'You see that the other '
+									text: 'You see that the other ',
 								},
 								{
 									text: 'fascist',
-									type: 'fascist'
+									type: 'fascist',
 								},
 								{
-									text: ' in this game is '
+									text: ' in this game is ',
 								},
 								{
 									text: game.general.blindMode
 										? `{${seatedPlayers.indexOf(otherFascist) + 1}}`
 										: `${otherFascist.userName} {${seatedPlayers.indexOf(otherFascist) + 1}}`,
-									type: 'player'
+									type: 'player',
 								},
 								{
-									text: '.  They know who you are.'
-								}
-							]
+									text: '.  They know who you are.',
+								},
+							],
 						});
 					}
 					player.playersState[seatedPlayers.indexOf(otherFascist)].nameStatus = 'fascist';

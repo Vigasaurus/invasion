@@ -7,7 +7,7 @@ Considering contributing to this project? Please read our brief guidelines found
 
 Front end: React, Redux, Sass, Ant Design, SocketIO.
 
-Back end: Node v10+, Express, Pug, Passport, Mongodb with Mongoose, SocketIO.
+Back end: Node v8, Express, Pug, Passport, Mongodb with Mongoose, SocketIO.
 
 ## Installation
 

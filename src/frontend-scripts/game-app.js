@@ -7,7 +7,7 @@ import { render } from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
-import AppComponent from './components/App.jsx';
+import AppComponent from './components/App2.jsx';
 import account from './account';
 import shapp from './reducers/sh-app';
 import polyfills from '../../iso/polyfills.js';

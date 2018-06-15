@@ -1,14 +1,9 @@
 const passport = require('passport'); // eslint-disable-line no-unused-vars
 const Account = require('../models/account'); // eslint-disable-line no-unused-vars
-const { getProfile } = require('../models/profile/utils');
-const GameSummary = require('../models/game-summary');
 const socketRoutes = require('./socket/routes');
-const _ = require('lodash');
 const accounts = require('./accounts');
 const version = require('../version');
-const { MODERATORS, TRIALMODS, ADMINS, EDITORS } = require('../src/frontend-scripts/constants');
 const fs = require('fs');
-const { obfIP } = require('./socket/ip-obf');
 
 /**
  * @param {object} req - express request object.
@@ -74,10 +69,6 @@ module.exports = () => {
 		renderPage(req, res, 'page-polls', 'polls');
 	});
 
-	app.get('/player-profiles', (req, res) => {
-		renderPage(req, res, 'page-player-profiles', 'playerProfiles');
-	});
-
 	app.get('/game', ensureAuthenticated, (req, res) => {
 		res.redirect('/game/');
 	});
@@ -114,76 +105,6 @@ module.exports = () => {
 			req.logout();
 		}
 		res.render('game', { game: true });
-	});
-
-	app.get('/profile', (req, res) => {
-		const username = req.query.username;
-		const requestingUser = req.query.requestingUser;
-
-		getProfile(username).then(profile => {
-			if (!profile) {
-				res.status(404).send('Profile not found');
-			} else {
-				Account.findOne({ username }, (err, account) => {
-					const _profile = _.cloneDeep(profile);
-
-					if (err) {
-						return new Error(err);
-					}
-					if (account) {
-						_profile.customCardback = account.gameSettings.customCardback;
-						_profile.bio = account.bio;
-					}
-
-					if (
-						!(
-							MODERATORS.includes(requestingUser) ||
-							ADMINS.includes(requestingUser) ||
-							EDITORS.includes(requestingUser)
-						)
-					) {
-						_profile.lastConnectedIP = 'no looking';
-					} else {
-						try {
-							_profile.lastConnectedIP = '-' + obfIP(_profile.lastConnectedIP);
-						} catch (e) {
-							_profile.lastConnectedIP = 'something went wrong';
-							console.log(e);
-						}
-					}
-
-					if (TRIALMODS.includes(requestingUser)) {
-						try {
-							const tmIP = [];
-
-							tmIP[0] = tmIP[1] = tmIP[2] = 'xxx';
-							tmIP[3] = _profile.lastConnectedIP.split('.')[3];
-
-							_profile.lastConnectedIP = tmIP.join('.');
-						} catch (e) {
-							_profile.lastConnectedIP = 'something went wrong';
-						}
-					}
-					res.json(_profile);
-				});
-			}
-		});
-	});
-
-	app.get('/gameSummary', (req, res) => {
-		const id = req.query.id;
-
-		GameSummary.findById(id)
-			.lean()
-			.exec()
-			.then(gs => {
-				if (!gs) {
-					res.status(404).send('Game summary not found');
-				} else {
-					res.json(gs);
-				}
-			})
-			.catch(err => debug(err));
 	});
 
 	app.get('/online-playercount', (req, res) => {

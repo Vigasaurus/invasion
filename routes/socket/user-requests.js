@@ -13,12 +13,10 @@ const {
 	gameCreationDisabled,
 	currentSeasonNumber,
 	userListEmitter,
-	formattedUserList
+	formattedUserList,
 } = require('./models');
-const { getProfile } = require('../../models/profile/utils');
 const { sendInProgressGameUpdate } = require('./util');
 const version = require('../../version');
-const { obfIP } = require('./ip-obf');
 //	const https = require('https');
 //	const options = {
 //	hostname: 'check.torproject.org',
@@ -65,7 +63,7 @@ const sendUserList = (module.exports.sendUserList = socket => {
 	// eslint-disable-line one-var
 	if (socket) {
 		socket.emit('userList', {
-			list: formattedUserList()
+			list: formattedUserList(),
 		});
 	} else {
 		userListEmitter.send = true;
@@ -97,7 +95,7 @@ module.exports.sendModInfo = (socket, count) => {
 						userName: user.username,
 						isTor: torIps && torIps.includes(user.lastConnectedIP || user.signupIP),
 						ip: user.lastConnectedIP || user.signupIP,
-						email: user.verified ? maskEmail(user.verification.email) : ''
+						email: user.verified ? maskEmail(user.verification.email) : '',
 					}));
 					list.forEach(user => {
 						if (user.ip && user.ip != '') {
@@ -128,7 +126,7 @@ module.exports.sendModInfo = (socket, count) => {
 						accountCreationDisabled,
 						ipbansNotEnforced,
 						gameCreationDisabled,
-						userList: list
+						userList: list,
 					});
 				})
 				.catch(err => {
@@ -172,14 +170,15 @@ module.exports.sendUserGameSettings = socket => {
 					eloSeason: account.eloSeason,
 					status: {
 						type: 'none',
-						gameId: null
-					}
+						gameId: null,
+					},
 				};
 
 				userListInfo[`winsSeason${currentSeasonNumber}`] = account[`winsSeason${currentSeasonNumber}`];
 				userListInfo[`lossesSeason${currentSeasonNumber}`] = account[`lossesSeason${currentSeasonNumber}`];
 				userListInfo[`rainbowWinsSeason${currentSeasonNumber}`] = account[`rainbowWinsSeason${currentSeasonNumber}`];
-				userListInfo[`rainbowLossesSeason${currentSeasonNumber}`] = account[`rainbowLossesSeason${currentSeasonNumber}`];
+				userListInfo[`rainbowLossesSeason${currentSeasonNumber}`] =
+					account[`rainbowLossesSeason${currentSeasonNumber}`];
 				userList.push(userListInfo);
 				sendUserList();
 			}
@@ -188,44 +187,12 @@ module.exports.sendUserGameSettings = socket => {
 
 			socket.emit('version', {
 				current: version,
-				lastSeen: account.lastVersionSeen || 'none'
+				lastSeen: account.lastVersionSeen || 'none',
 			});
 		})
 		.catch(err => {
 			console.log(err);
 		});
-};
-
-/**
- * @param {object} socket - user socket reference.
- * @param {object} data - data about the request
- */
-module.exports.sendPlayerNotes = (socket, data) => {
-	PlayerNote.find({ userName: data.userName, notedUser: { $in: data.seatedPlayers } })
-		.then(notes => {
-			if (notes) {
-				socket.emit('notesUpdate', notes);
-			}
-		})
-		.catch(err => {
-			console.log(err, 'err in getting playernotes');
-		});
-};
-
-/**
- * @param {object} socket - user socket reference.
- * @param {string} uid - uid of game.
- */
-module.exports.sendReplayGameChats = (socket, uid) => {
-	Game.findOne({ uid }).then((game, err) => {
-		if (err) {
-			console.log(err, 'game err retrieving for replay');
-		}
-
-		if (game) {
-			socket.emit('replayGameChats', game.chats);
-		}
-	});
 };
 
 /**
@@ -238,7 +205,11 @@ module.exports.sendGameList = socket => {
 		userNames: game.publicPlayersState.map(val => val.userName),
 		customCardback: game.publicPlayersState.map(val => val.customCardback),
 		customCardbackUid: game.publicPlayersState.map(val => val.customCardbackUid),
-		gameStatus: game.gameState.isCompleted ? game.gameState.isCompleted : game.gameState.isTracksFlipped ? 'isStarted' : 'notStarted',
+		gameStatus: game.gameState.isCompleted
+			? game.gameState.isCompleted
+			: game.gameState.isTracksFlipped
+				? 'isStarted'
+				: 'notStarted',
 		seatedCount: game.publicPlayersState.length,
 		gameCreatorName: game.general.gameCreatorName,
 		minPlayersCount: game.general.minPlayersCount,
@@ -252,7 +223,7 @@ module.exports.sendGameList = socket => {
 			if (game.general.isTourny) {
 				if (game.general.tournyInfo.queuedPlayers && game.general.tournyInfo.queuedPlayers.length) {
 					return {
-						queuedPlayers: game.general.tournyInfo.queuedPlayers.length
+						queuedPlayers: game.general.tournyInfo.queuedPlayers.length,
 					};
 				}
 			}
@@ -271,7 +242,7 @@ module.exports.sendGameList = socket => {
 		privateOnly: game.general.privateOnly,
 		private: game.general.private,
 		uid: game.general.uid,
-		rainbowgame: game.general.rainbowgame
+		rainbowgame: game.general.rainbowgame,
 	}));
 
 	if (socket) {
@@ -311,7 +282,7 @@ const updateUserStatus = (module.exports.updateUserStatus = (passport, game, ove
 	if (user) {
 		user.status = {
 			type: override ? override : game ? (game.general.rainbowgame ? 'rainbow' : 'playing') : 'none',
-			gameId: game ? game.general.uid : false
+			gameId: game ? game.general.uid : false,
 		};
 		sendUserList();
 	}

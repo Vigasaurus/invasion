@@ -1,6 +1,5 @@
 const passport = require('passport');
 const Account = require('../models/account');
-const Profile = require('../models/profile/index');
 const BannedIP = require('../models/bannedIP');
 const { ipbansNotEnforced, accountCreationDisabled } = require('./socket/models');
 const verifyAccount = require('./verify-account');

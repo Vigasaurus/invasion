@@ -1,14 +1,28 @@
 let generalChatCount = 0;
 
-const { games, userList, generalChats, accountCreationDisabled, ipbansNotEnforced, gameCreationDisabled, currentSeasonNumber } = require('./models');
-const { sendGameList, sendGeneralChats, sendUserList, updateUserStatus, sendGameInfo, sendUserReports, sendPlayerNotes } = require('./user-requests');
+const {
+	games,
+	userList,
+	generalChats,
+	accountCreationDisabled,
+	ipbansNotEnforced,
+	gameCreationDisabled,
+	currentSeasonNumber,
+} = require('./models');
+const {
+	sendGameList,
+	sendGeneralChats,
+	sendUserList,
+	updateUserStatus,
+	sendGameInfo,
+	sendUserReports,
+	sendPlayerNotes,
+} = require('./user-requests');
 const Account = require('../../models/account');
 const Generalchats = require('../../models/generalchats');
 const ModAction = require('../../models/modAction');
 const PlayerReport = require('../../models/playerReport');
 const BannedIP = require('../../models/bannedIP');
-const Profile = require('../../models/profile/index');
-const PlayerNote = require('../../models/playerNote');
 const startGame = require('./game/start-game.js');
 const { secureGame } = require('./util.js');
 // const crypto = require('crypto');
@@ -74,11 +88,13 @@ const startCountdown = game => {
 				const BPlayerNames = BPlayers.map(player => player.userName);
 				const ASocketIds = Object.keys(io.sockets.sockets).filter(
 					socketId =>
-						io.sockets.sockets[socketId].handshake.session.passport && APlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
+						io.sockets.sockets[socketId].handshake.session.passport &&
+						APlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
 				);
 				const BSocketIds = Object.keys(io.sockets.sockets).filter(
 					socketId =>
-						io.sockets.sockets[socketId].handshake.session.passport && BPlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
+						io.sockets.sockets[socketId].handshake.session.passport &&
+						BPlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
 				);
 
 				gameA.general.uid = `${game.general.uid}TableA`;
@@ -122,11 +138,17 @@ const startCountdown = game => {
 
 					gameA.general.replacementNames = _.shuffle(animals)
 						.slice(0, gameA.publicPlayersState.length)
-						.map((animal, index) => `${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`);
+						.map(
+							(animal, index) =>
+								`${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`
+						);
 
 					gameB.general.replacementNames = _.shuffle(animals)
 						.slice(0, gameB.publicPlayersState.length)
-						.map((animal, index) => `${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`);
+						.map(
+							(animal, index) =>
+								`${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`
+						);
 				}
 
 				startGame(gameA);
@@ -138,7 +160,10 @@ const startCountdown = game => {
 
 					game.general.replacementNames = _.shuffle(animals)
 						.slice(0, game.publicPlayersState.length)
-						.map((animal, index) => `${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`);
+						.map(
+							(animal, index) =>
+								`${_shuffledAdjectives[index].charAt(0).toUpperCase()}${_shuffledAdjectives[index].slice(1)} ${animal}`
+						);
 				}
 
 				startGame(game);
@@ -167,7 +192,8 @@ const checkStartConditions = game => {
 
 	if (
 		game.gameState.isStarted &&
-		(game.publicPlayersState.length < game.general.minPlayersCount || game.general.excludedPlayerCount.includes(game.publicPlayersState.length))
+		(game.publicPlayersState.length < game.general.minPlayersCount ||
+			game.general.excludedPlayerCount.includes(game.publicPlayersState.length))
 	) {
 		game.gameState.cancellStart = true;
 		game.general.status = displayWaitingForPlayers(game);
@@ -203,12 +229,12 @@ const playerLeavePretourny = (game, playerName) => {
 		chat: [
 			{
 				text: playerName,
-				type: 'player'
+				type: 'player',
 			},
 			{
-				text: ` (${queuedPlayers.length}/${game.general.maxPlayersCount}) has left the tournament queue.`
-			}
-		]
+				text: ` (${queuedPlayers.length}/${game.general.maxPlayersCount}) has left the tournament queue.`,
+			},
+		],
 	});
 	game.general.status = displayWaitingForPlayers(game);
 	sendInProgressGameUpdate(game);
@@ -223,7 +249,9 @@ const handleSocketDisconnect = socket => {
 	let listUpdate = false;
 	if (passport && Object.keys(passport).length) {
 		const userIndex = userList.findIndex(user => user.userName === passport.user);
-		const gamesPlayerSeatedIn = games.filter(game => game.publicPlayersState.find(player => player.userName === passport.user && !player.leftGame));
+		const gamesPlayerSeatedIn = games.filter(game =>
+			game.publicPlayersState.find(player => player.userName === passport.user && !player.leftGame)
+		);
 
 		if (userIndex !== -1) {
 			userList.splice(userIndex, 1);
@@ -237,7 +265,9 @@ const handleSocketDisconnect = socket => {
 
 				if (
 					(!gameState.isStarted && publicPlayersState.length === 1) ||
-					(gameState.isCompleted && game.publicPlayersState.filter(player => !player.connected || player.leftGame).length === game.general.playerCount - 1)
+					(gameState.isCompleted &&
+						game.publicPlayersState.filter(player => !player.connected || player.leftGame).length ===
+							game.general.playerCount - 1)
 				) {
 					games.splice(games.indexOf(game), 1);
 				} else if (!gameState.isTracksFlipped && playerIndex > -1) {
@@ -248,7 +278,9 @@ const handleSocketDisconnect = socket => {
 					publicPlayersState[playerIndex].connected = false;
 					publicPlayersState[playerIndex].leftGame = true;
 					sendInProgressGameUpdate(game);
-					if (game.publicPlayersState.filter(publicPlayer => publicPlayer.leftGame).length === game.general.playerCount) {
+					if (
+						game.publicPlayersState.filter(publicPlayer => publicPlayer.leftGame).length === game.general.playerCount
+					) {
 						games.splice(games.indexOf(game), 1);
 					}
 				}
@@ -272,7 +304,7 @@ const handleSocketDisconnect = socket => {
 };
 
 const crashReport = JSON.stringify({
-	content: `${process.env.DISCORDADMINPING} the site just crashed or reset.`
+	content: `${process.env.DISCORDADMINPING} the site just crashed or reset.`,
 });
 
 const crashOptions = {
@@ -281,8 +313,8 @@ const crashOptions = {
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/json',
-		'Content-Length': Buffer.byteLength(crashReport)
-	}
+		'Content-Length': Buffer.byteLength(crashReport),
+	},
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -334,13 +366,14 @@ const handleUserLeaveGame = (socket, game, data, passport) => {
 				gameChat: true,
 				chat: [
 					{
-						text: 'A player'
-					}
-				]
+						text: 'A player',
+					},
+				],
 			};
 			chat.chat.push({
-				text: ` has left and rescinded their vote to ${game.general.isTourny ? 'cancel this tournament.' : 'remake this game.'} (${remakePlayerCount -
-					1}/${minimumRemakeVoteCount})`
+				text: ` has left and rescinded their vote to ${
+					game.general.isTourny ? 'cancel this tournament.' : 'remake this game.'
+				} (${remakePlayerCount - 1}/${minimumRemakeVoteCount})`,
 			});
 			game.chats.push(chat);
 			game.publicPlayersState[playerIndex].isRemakeVoting = false;
@@ -406,7 +439,7 @@ module.exports.handleUpdatedPlayerNote = (socket, data) => {
 			const playerNote = new PlayerNote({
 				userName: data.userName,
 				notedUser: data.notedUser,
-				note: data.note
+				note: data.note,
 			});
 
 			playerNote.save(() => {
@@ -436,7 +469,8 @@ const updateSeatedUser = (socket, passport, data) => {
 		const isRainbowSafe = !game.general.rainbowgame || (game.general.rainbowgame && account.wins + account.losses > 49);
 		const isPrivateSafe =
 			!game.general.private ||
-			(game.general.private && (data.password === game.private.privatePassword || game.general.whitelistedPlayers.includes(passport.user)));
+			(game.general.private &&
+				(data.password === game.private.privatePassword || game.general.whitelistedPlayers.includes(passport.user)));
 		const isBlacklistSafe = !game.general.gameCreatorBlacklist.includes(passport.user);
 		if (isNotMaxedOut && isNotInGame && isRainbowSafe && isPrivateSafe && isBlacklistSafe) {
 			const { publicPlayersState } = game;
@@ -453,8 +487,8 @@ const updateSeatedUser = (socket, passport, data) => {
 					cardDisplayed: false,
 					isFlipped: false,
 					cardFront: 'secretrole',
-					cardBack: {}
-				}
+					cardBack: {},
+				},
 			};
 
 			if (game.general.isTourny) {
@@ -471,12 +505,14 @@ const updateSeatedUser = (socket, passport, data) => {
 					chat: [
 						{
 							text: `${passport.user}`,
-							type: 'player'
+							type: 'player',
 						},
 						{
-							text: ` (${game.general.tournyInfo.queuedPlayers.length}/${game.general.maxPlayersCount}) has entered the tournament queue.`
-						}
-					]
+							text: ` (${game.general.tournyInfo.queuedPlayers.length}/${
+								game.general.maxPlayersCount
+							}) has entered the tournament queue.`,
+						},
+					],
 				});
 			} else {
 				publicPlayersState.push(player);
@@ -548,7 +584,7 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 			previousElectedGovernment: [],
 			undrawnPolicyCount: 17,
 			discardedPolicyCount: 0,
-			presidentIndex: -1
+			presidentIndex: -1,
 		},
 		chats: [],
 		general: {
@@ -571,15 +607,17 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 			disableGamechat: data.disablegamechat,
 			rainbowgame: user.wins + user.losses > 49 ? data.rainbowgame : false,
 			blindMode: data.blindMode,
-			timedMode: typeof data.timedMode === 'number' && data.timedMode >= 2 && data.timedMode <= 6000 ? data.timedMode : false,
-			casualGame: typeof data.timedMode === 'number' && data.timedMode < 30 && !data.casualGame ? true : data.casualGame,
+			timedMode:
+				typeof data.timedMode === 'number' && data.timedMode >= 2 && data.timedMode <= 6000 ? data.timedMode : false,
+			casualGame:
+				typeof data.timedMode === 'number' && data.timedMode < 30 && !data.casualGame ? true : data.casualGame,
 			rebalance6p: data.rebalance6p,
 			rebalance7p: data.rebalance7p,
 			rebalance9p2f: data.rebalance9p2f,
 			private: user.isPrivate ? (data.privatePassword ? data.privatePassword : 'private') : data.privatePassword,
 			privateOnly: user.isPrivate,
 			electionCount: 0,
-			isRemade: false
+			isRemade: false,
 		},
 		publicPlayersState: [],
 		playersState: [],
@@ -588,8 +626,8 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 			liberalPolicyCount: 0,
 			fascistPolicyCount: 0,
 			electionTrackerCount: 0,
-			enactedPolicies: []
-		}
+			enactedPolicies: [],
+		},
 	};
 
 	if (data.isTourny) {
@@ -606,10 +644,10 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 						cardDisplayed: false,
 						isFlipped: false,
 						cardFront: 'secretrole',
-						cardBack: {}
-					}
-				}
-			]
+						cardBack: {},
+					},
+				},
+			],
 		};
 	} else {
 		newGame.publicPlayersState = [
@@ -625,16 +663,17 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 					cardDisplayed: false,
 					isFlipped: false,
 					cardFront: 'secretrole',
-					cardBack: {}
-				}
-			}
+					cardBack: {},
+				},
+			},
 		];
 	}
 
 	if (data.isTourny) {
 		const { minPlayersCount } = newGame.general;
 
-		newGame.general.minPlayersCount = newGame.general.maxPlayersCount = minPlayersCount === 1 ? 14 : minPlayersCount === 2 ? 16 : 18;
+		newGame.general.minPlayersCount = newGame.general.maxPlayersCount =
+			minPlayersCount === 1 ? 14 : minPlayersCount === 2 ? 16 : 18;
 		newGame.general.status = `Waiting for ${newGame.general.minPlayersCount - 1} more players..`;
 		newGame.chats.push({
 			timestamp: new Date(),
@@ -642,12 +681,14 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 			chat: [
 				{
 					text: `${user.userName}`,
-					type: 'player'
+					type: 'player',
 				},
 				{
-					text: ` (${data.general.tournyInfo.queuedPlayers.length}/${data.general.maxPlayersCount}) has entered the tournament queue.`
-				}
-			]
+					text: ` (${data.general.tournyInfo.queuedPlayers.length}/${
+						data.general.maxPlayersCount
+					}) has entered the tournament queue.`,
+				},
+			],
 		});
 	}
 
@@ -657,7 +698,7 @@ module.exports.handleAddNewGame = (socket, passport, data) => {
 		newGame.private = {
 			reports: {},
 			unSeatedGameChats: [],
-			lock: {}
+			lock: {},
 		};
 
 		if (newGame.general.private) {
@@ -696,32 +737,34 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 			case 'wasPresident':
 				text = [
 					{
-						text: 'President '
+						text: 'President ',
 					},
 					{
-						text: blindMode ? `${replacementNames[playerIndex]} {${playerIndex + 1}} ` : `${passport.user} {${playerIndex + 1}} `,
-						type: 'player'
-					}
+						text: blindMode
+							? `${replacementNames[playerIndex]} {${playerIndex + 1}} `
+							: `${passport.user} {${playerIndex + 1}} `,
+						type: 'player',
+					},
 				];
 				switch (data.claimState) {
 					case 'threefascist':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								presidentClaim: { reds: 3, blues: 0 }
+								presidentClaim: { reds: 3, blues: 0 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'RRR',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -729,25 +772,25 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'twofascistoneliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								presidentClaim: { reds: 2, blues: 1 }
+								presidentClaim: { reds: 2, blues: 1 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'RR',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
 								text: 'B',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -755,25 +798,25 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'twoliberalonefascist':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								presidentClaim: { reds: 1, blues: 2 }
+								presidentClaim: { reds: 1, blues: 2 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'R',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
 								text: 'BB',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -781,21 +824,21 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'threeliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								presidentClaim: { reds: 0, blues: 3 }
+								presidentClaim: { reds: 0, blues: 3 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'BBB',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -805,32 +848,34 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 			case 'wasChancellor':
 				text = [
 					{
-						text: 'Chancellor '
+						text: 'Chancellor ',
 					},
 					{
-						text: blindMode ? `${replacementNames[playerIndex]} {${playerIndex + 1}} ` : `${passport.user} {${playerIndex + 1}} `,
-						type: 'player'
-					}
+						text: blindMode
+							? `${replacementNames[playerIndex]} {${playerIndex + 1}} `
+							: `${passport.user} {${playerIndex + 1}} `,
+						type: 'player',
+					},
 				];
 				switch (data.claimState) {
 					case 'twofascist':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								chancellorClaim: { reds: 2, blues: 0 }
+								chancellorClaim: { reds: 2, blues: 0 },
 							},
 							{ chancellorId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'RR',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -838,25 +883,25 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'onefascistoneliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								chancellorClaim: { reds: 1, blues: 1 }
+								chancellorClaim: { reds: 1, blues: 1 },
 							},
 							{ chancellorId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'R',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
 								text: 'B',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -864,21 +909,21 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'twoliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								chancellorClaim: { reds: 0, blues: 2 }
+								chancellorClaim: { reds: 0, blues: 2 },
 							},
 							{ chancellorId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims '
+								text: 'claims ',
 							},
 							{
 								text: 'BB',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -887,32 +932,34 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 			case 'didPolicyPeek':
 				text = [
 					{
-						text: 'President '
+						text: 'President ',
 					},
 					{
-						text: blindMode ? `${replacementNames[playerIndex]} {${playerIndex + 1}} ` : `${passport.user} {${playerIndex + 1}} `,
-						type: 'player'
-					}
+						text: blindMode
+							? `${replacementNames[playerIndex]} {${playerIndex + 1}} `
+							: `${passport.user} {${playerIndex + 1}} `,
+						type: 'player',
+					},
 				];
 				switch (data.claimState) {
 					case 'threefascist':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								policyPeekClaim: { reds: 3, blues: 0 }
+								policyPeekClaim: { reds: 3, blues: 0 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims to have peeked at '
+								text: 'claims to have peeked at ',
 							},
 							{
 								text: 'RRR',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -920,25 +967,25 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'twofascistoneliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								policyPeekClaim: { reds: 2, blues: 1 }
+								policyPeekClaim: { reds: 2, blues: 1 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims to have peeked at '
+								text: 'claims to have peeked at ',
 							},
 							{
 								text: 'RR',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
 								text: 'B',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -946,25 +993,25 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'twoliberalonefascist':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								policyPeekClaim: { reds: 1, blues: 2 }
+								policyPeekClaim: { reds: 1, blues: 2 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims to have peeked at '
+								text: 'claims to have peeked at ',
 							},
 							{
 								text: 'R',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
 								text: 'BB',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -972,21 +1019,21 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 					case 'threeliberal':
 						game.private.summary = game.private.summary.updateLog(
 							{
-								policyPeekClaim: { reds: 0, blues: 3 }
+								policyPeekClaim: { reds: 0, blues: 3 },
 							},
 							{ presidentId: playerIndex }
 						);
 
 						text.push(
 							{
-								text: 'claims to have peeked at '
+								text: 'claims to have peeked at ',
 							},
 							{
 								text: 'BBB',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: '.'
+								text: '.',
 							}
 						);
 
@@ -995,20 +1042,22 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 			case 'didInvestigateLoyalty':
 				text = [
 					{
-						text: 'President '
+						text: 'President ',
 					},
 					{
-						text: blindMode ? `${replacementNames[playerIndex]} {${playerIndex + 1}} ` : `${passport.user} {${playerIndex + 1}} `,
-						type: 'player'
+						text: blindMode
+							? `${replacementNames[playerIndex]} {${playerIndex + 1}} `
+							: `${passport.user} {${playerIndex + 1}} `,
+						type: 'player',
 					},
 					{
-						text: 'claims to see a party membership of the '
-					}
+						text: 'claims to see a party membership of the ',
+					},
 				];
 
 				game.private.summary = game.private.summary.updateLog(
 					{
-						investigationClaim: data.claimState
+						investigationClaim: data.claimState,
 					},
 					{ presidentId: playerIndex }
 				);
@@ -1017,10 +1066,10 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 						text.push(
 							{
 								text: 'fascist ',
-								type: 'fascist'
+								type: 'fascist',
 							},
 							{
-								text: 'team.'
+								text: 'team.',
 							}
 						);
 
@@ -1029,10 +1078,10 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 						text.push(
 							{
 								text: 'liberal ',
-								type: 'liberal'
+								type: 'liberal',
 							},
 							{
-								text: 'team.'
+								text: 'team.',
 							}
 						);
 
@@ -1057,7 +1106,7 @@ module.exports.handleAddNewClaim = (passport, game, data) => {
 			uid: game.general.uid,
 			userName: passport.user,
 			claim: data.claim,
-			claimState: data.claimState
+			claimState: data.claimState,
 		};
 
 		game.chats.push(claimChat);
@@ -1104,16 +1153,17 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 		gameChat: true,
 		chat: [
 			{
-				text: 'A player'
-			}
-		]
+				text: 'A player',
+			},
+		],
 	};
 	const makeNewGame = () => {
 		const newGame = _.cloneDeep(game);
 		const remakePlayerNames = publicPlayersState.filter(player => player.isRemaking).map(player => player.userName);
 		const remakePlayerSocketIDs = Object.keys(io.sockets.sockets).filter(
 			socketId =>
-				io.sockets.sockets[socketId].handshake.session.passport && remakePlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
+				io.sockets.sockets[socketId].handshake.session.passport &&
+				remakePlayerNames.includes(io.sockets.sockets[socketId].handshake.session.passport.user)
 		);
 
 		sendInProgressGameUpdate(game);
@@ -1122,7 +1172,7 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 			previousElectedGovernment: [],
 			undrawnPolicyCount: 17,
 			discardedPolicyCount: 0,
-			presidentIndex: -1
+			presidentIndex: -1,
 		};
 
 		newGame.chats = [];
@@ -1142,8 +1192,8 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 				cardDisplayed: false,
 				isFlipped: false,
 				cardFront: 'secretrole',
-				cardBack: {}
-			}
+				cardBack: {},
+			},
 		}));
 		newGame.playersState = [];
 		newGame.cardFlingerState = [];
@@ -1151,13 +1201,13 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 			liberalPolicyCount: 0,
 			fascistPolicyCount: 0,
 			electionTrackerCount: 0,
-			enactedPolicies: []
+			enactedPolicies: [],
 		};
 		newGame.private = {
 			reports: {},
 			unSeatedGameChats: [],
 			lock: {},
-			privatePassword: game.private.privatePassword
+			privatePassword: game.private.privatePassword,
 		};
 
 		game.publicPlayersState.forEach((player, i) => {
@@ -1221,9 +1271,9 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 				chat: [
 					{
 						text: 'Due to the other tournament table voting for cancellation, this tournament has been cancelled.',
-						type: 'hitler'
-					}
-				]
+						type: 'hitler',
+					},
+				],
 			});
 			secondTable.general.status = 'Tournament has been cancelled.';
 			sendInProgressGameUpdate(secondTable);
@@ -1240,7 +1290,9 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 		const remakePlayerCount = publicPlayersState.filter(player => player.isRemakeVoting).length;
 
 		chat.chat.push({
-			text: ` has voted to ${remakeText} this ${game.general.isTourny ? 'tournament.' : 'game.'} (${remakePlayerCount}/${minimumRemakeVoteCount})`
+			text: ` has voted to ${remakeText} this ${
+				game.general.isTourny ? 'tournament.' : 'game.'
+			} (${remakePlayerCount}/${minimumRemakeVoteCount})`,
 		});
 		player.isRemaking = true;
 
@@ -1250,9 +1302,9 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 
 			game.private.remakeTimer = setInterval(() => {
 				if (game.general.remakeCount !== 0) {
-					game.general.status = `Game is ${game.general.isTourny ? 'cancelled ' : 'remade'} in ${game.general.remakeCount} ${
-						game.general.remakeCount === 1 ? 'second' : 'seconds'
-					}.`;
+					game.general.status = `Game is ${game.general.isTourny ? 'cancelled ' : 'remade'} in ${
+						game.general.remakeCount
+					} ${game.general.remakeCount === 1 ? 'second' : 'seconds'}.`;
 					game.general.remakeCount--;
 				} else {
 					clearInterval(game.private.remakeTimer);
@@ -1278,7 +1330,7 @@ module.exports.handleUpdatedRemakeGame = (passport, game, data) => {
 		chat.chat.push({
 			text: ` has rescinded their vote to ${
 				game.general.isTourny ? 'cancel this tournament.' : 'remake this game.'
-			} (${remakePlayerCount}/${minimumRemakeVoteCount})`
+			} (${remakePlayerCount}/${minimumRemakeVoteCount})`,
 		});
 	}
 	game.chats.push(chat);
@@ -1347,7 +1399,8 @@ module.exports.handleAddNewGameChat = (socket, passport, data) => {
 			const affectedSocketId = Object.keys(io.sockets.sockets).find(
 				socketId =>
 					io.sockets.sockets[socketId].handshake.session.passport &&
-					io.sockets.sockets[socketId].handshake.session.passport.user === game.publicPlayersState[affectedPlayerNumber].userName
+					io.sockets.sockets[socketId].handshake.session.passport.user ===
+						game.publicPlayersState[affectedPlayerNumber].userName
 			);
 
 			player.pingTime = new Date().getTime();
@@ -1356,7 +1409,9 @@ module.exports.handleAddNewGameChat = (socket, passport, data) => {
 			}
 			io.sockets.sockets[affectedSocketId].emit(
 				'pingPlayer',
-				game.general.blindMode ? 'Secret Hitler IO: A player has pinged you.' : `Secret Hitler IO: Player ${data.userName} just pinged you.`
+				game.general.blindMode
+					? 'Secret Hitler IO: A player has pinged you.'
+					: `Secret Hitler IO: Player ${data.userName} just pinged you.`
 			);
 
 			game.chats.push({
@@ -1367,24 +1422,28 @@ module.exports.handleAddNewGameChat = (socket, passport, data) => {
 					{
 						text: game.general.blindMode
 							? `A player has pinged player number ${affectedPlayerNumber + 1}.`
-							: `${passport.user} has pinged ${publicPlayersState[affectedPlayerNumber].userName} (${affectedPlayerNumber + 1}).`
-					}
+							: `${passport.user} has pinged ${
+									publicPlayersState[affectedPlayerNumber].userName
+							  } (${affectedPlayerNumber + 1}).`,
+					},
 				],
 				previousSeasonAward: user.previousSeasonAward,
 				uid: data.uid,
-				inProgress: game.gameState.isStarted
+				inProgress: game.gameState.isStarted,
 			});
 			sendInProgressGameUpdate(game);
 		} catch (e) {
 			console.log(e, 'caught exception in ping chat');
 		}
 	} else if (!pinged) {
-		const lastMessage = game.chats.filter(chat => !chat.gameChat && typeof chat.message === 'string' && chat.userName === user.userName).reduce(
-			(acc, cur) => {
-				return acc.timestamp > cur.timestamp ? acc : cur;
-			},
-			{ timestamp: new Date(0) }
-		);
+		const lastMessage = game.chats
+			.filter(chat => !chat.gameChat && typeof chat.message === 'string' && chat.userName === user.userName)
+			.reduce(
+				(acc, cur) => {
+					return acc.timestamp > cur.timestamp ? acc : cur;
+				},
+				{ timestamp: new Date(0) }
+			);
 
 		if (lastMessage.chat) {
 			let leniancy; // How much time (in seconds) must pass before allowing the message.
@@ -1414,7 +1473,8 @@ module.exports.handleAddNewGameChat = (socket, passport, data) => {
 module.exports.handleUpdateWhitelist = (passport, game, data) => {
 	const isPrivateSafe =
 		!game.general.private ||
-		(game.general.private && (data.password === game.private.privatePassword || game.general.whitelistedPlayers.includes(passport.user)));
+		(game.general.private &&
+			(data.password === game.private.privatePassword || game.general.whitelistedPlayers.includes(passport.user)));
 
 	// Only update the whitelist if whitelistsed, has password, or is the creator
 	if (isPrivateSafe || game.general.gameCreatorName === passport.user) {
@@ -1465,7 +1525,7 @@ module.exports.handleNewGeneralChat = (socket, passport, data) => {
 		const newChat = {
 			time: curTime,
 			chat: data.chat,
-			userName: passport.user
+			userName: passport.user,
 		};
 
 		generalChats.list.push(newChat);
@@ -1498,7 +1558,8 @@ module.exports.handleUpdatedGameSettings = (socket, passport, data) => {
 
 			if (
 				((data.isPrivate && !currentPrivate) || (!data.isPrivate && currentPrivate)) &&
-				(!account.gameSettings.privateToggleTime || account.gameSettings.privateToggleTime < new Date().getTime() - 64800000)
+				(!account.gameSettings.privateToggleTime ||
+					account.gameSettings.privateToggleTime < new Date().getTime() - 64800000)
 			) {
 				account.gameSettings.privateToggleTime = new Date().getTime();
 				account.save(() => {
@@ -1549,7 +1610,10 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 		}
 	}
 
-	if ((!data.ip || data.ip === '') && (data.action === 'timeOut' || data.action === 'ipban' || data.action === 'getIP')) {
+	if (
+		(!data.ip || data.ip === '') &&
+		(data.action === 'timeOut' || data.action === 'ipban' || data.action === 'getIP')
+	) {
 		// Failed to get a relevant IP, abort the action since it needs one.
 		socket.emit('sendAlert', 'That action requires a valid IP.');
 		return;
@@ -1557,7 +1621,9 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 
 	const isSuperMod = EDITORS.includes(passport.user) || ADMINS.includes(passport.user);
 	const affectedSocketId = Object.keys(io.sockets.sockets).find(
-		socketId => io.sockets.sockets[socketId].handshake.session.passport && io.sockets.sockets[socketId].handshake.session.passport.user === data.userName
+		socketId =>
+			io.sockets.sockets[socketId].handshake.session.passport &&
+			io.sockets.sockets[socketId].handshake.session.passport.user === data.userName
 	);
 
 	if (MODERATORS.includes(passport.user) || ADMINS.includes(passport.user) || EDITORS.includes(passport.user)) {
@@ -1579,7 +1645,7 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 				userActedOn: data.userName,
 				modNotes: data.comment,
 				ip: data.ip,
-				actionTaken: typeof data.action === 'string' ? data.action : data.action.type
+				actionTaken: typeof data.action === 'string' ? data.action : data.action.type,
 			});
 			/**
 			 * @param {string} username - name of user.
@@ -1600,7 +1666,10 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 			 * @param {string} username - name of user.
 			 */
 			const banAccount = username => {
-				if (!ADMINS.includes(username) && (!MODERATORS.includes(username) || !EDITORS.includes(username) || isSuperMod)) {
+				if (
+					!ADMINS.includes(username) &&
+					(!MODERATORS.includes(username) || !EDITORS.includes(username) || isSuperMod)
+				) {
 					Account.findOne({ username })
 						.then(account => {
 							if (account) {
@@ -1660,7 +1729,7 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 					break;
 				case 'broadcast':
 					const discordBroadcastBody = JSON.stringify({
-						content: `Text: ${data.comment}\nMod: ${passport.user}`
+						content: `Text: ${data.comment}\nMod: ${passport.user}`,
 					});
 					const discordBroadcastOptions = {
 						hostname: 'discordapp.com',
@@ -1668,8 +1737,8 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
-							'Content-Length': Buffer.byteLength(discordBroadcastBody)
-						}
+							'Content-Length': Buffer.byteLength(discordBroadcastBody),
+						},
 					};
 					const broadcastReq = https.request(discordBroadcastOptions);
 
@@ -1679,14 +1748,14 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 							userName: `[BROADCAST] ${data.modName}`,
 							chat: data.comment,
 							isBroadcast: true,
-							timestamp: new Date()
+							timestamp: new Date(),
 						});
 					});
 					generalChats.list.push({
 						userName: `[BROADCAST] ${data.modName}`,
 						time: new Date(),
 						chat: data.comment,
-						isBroadcast: true
+						isBroadcast: true,
 					});
 
 					if (data.isSticky) {
@@ -1699,7 +1768,7 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 					const ipban = new BannedIP({
 						bannedDate: new Date(),
 						type: 'small',
-						ip: data.ip
+						ip: data.ip,
 					});
 
 					ipban.save(() => {
@@ -1715,7 +1784,7 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 					const timeout = new BannedIP({
 						bannedDate: new Date(),
 						type: 'small',
-						ip: data.ip
+						ip: data.ip,
 					});
 					timeout.save(() => {
 						Account.find({ lastConnectedIP: data.ip }, function(err, user) {
@@ -1802,7 +1871,7 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 					const ipbanl = new BannedIP({
 						bannedDate: new Date(),
 						type: 'big',
-						ip: data.ip
+						ip: data.ip,
 					});
 
 					if (isSuperMod) {
@@ -1903,8 +1972,10 @@ module.exports.handleModerationAction = (socket, passport, data, skipCheck) => {
 											account[`${setType}Season${currentSeasonNumber}`] = isPlusOrMinus
 												? account[`${setType}Season${currentSeasonNumber}`]
 													? number.charAt(0) === '+'
-														? account[`${setType}Season${currentSeasonNumber}`] + parseInt(number.substr(1, number.length))
-														: account[`${setType}Season${currentSeasonNumber}`] - parseInt(number.substr(1, number.length))
+														? account[`${setType}Season${currentSeasonNumber}`] +
+														  parseInt(number.substr(1, number.length))
+														: account[`${setType}Season${currentSeasonNumber}`] -
+														  parseInt(number.substr(1, number.length))
 													: parseInt(number.substr(1, number.length))
 												: parseInt(number);
 										}
@@ -1942,12 +2013,12 @@ module.exports.handlePlayerReport = (passport, data) => {
 		reason: data.reason,
 		gameType: data.gameType,
 		comment: data.comment,
-		isActive: true
+		isActive: true,
 	});
 	const body = JSON.stringify({
-		content: `Game UID: https://secrethitler.io/game/#/table/${data.uid}\nReported player: ${data.reportedPlayer}\nReason: ${data.reason}\nComment: ${
-			data.comment
-		}`
+		content: `Game UID: https://secrethitler.io/game/#/table/${data.uid}\nReported player: ${
+			data.reportedPlayer
+		}\nReason: ${data.reason}\nComment: ${data.comment}`,
 	});
 
 	const options = {
@@ -1956,8 +2027,8 @@ module.exports.handlePlayerReport = (passport, data) => {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Content-Length': Buffer.byteLength(body)
-		}
+			'Content-Length': Buffer.byteLength(body),
+		},
 	};
 
 	const game = games.find(el => el.general.uid === data.uid);
@@ -1984,7 +2055,8 @@ module.exports.handlePlayerReport = (passport, data) => {
 			accounts.forEach(account => {
 				const onlineSocketId = Object.keys(io.sockets.sockets).find(
 					socketId =>
-						io.sockets.sockets[socketId].handshake.session.passport && io.sockets.sockets[socketId].handshake.session.passport.user === account.username
+						io.sockets.sockets[socketId].handshake.session.passport &&
+						io.sockets.sockets[socketId].handshake.session.passport.user === account.username
 				);
 
 				account.gameSettings.newReport = true;
@@ -2004,7 +2076,9 @@ module.exports.handlePlayerReportDismiss = () => {
 	Account.find({ username: mods }).then(accounts => {
 		accounts.forEach(account => {
 			const onlineSocketId = Object.keys(io.sockets.sockets).find(
-				socketId => io.sockets.sockets[socketId].handshake.session.passport && io.sockets.sockets[socketId].handshake.session.passport.user === account.username
+				socketId =>
+					io.sockets.sockets[socketId].handshake.session.passport &&
+					io.sockets.sockets[socketId].handshake.session.passport.user === account.username
 			);
 
 			account.gameSettings.newReport = false;
@@ -2026,7 +2100,9 @@ module.exports.checkUserStatus = socket => {
 	if (passport && Object.keys(passport).length) {
 		const { user } = passport;
 		const { sockets } = io.sockets;
-		const game = games.find(game => game.publicPlayersState.find(player => player.userName === user && !player.leftGame));
+		const game = games.find(game =>
+			game.publicPlayersState.find(player => player.userName === user && !player.leftGame)
+		);
 		const oldSocketID = Object.keys(sockets).find(
 			socketID =>
 				sockets[socketID].handshake.session.passport &&
@@ -2063,7 +2139,7 @@ module.exports.checkUserStatus = socket => {
 					BannedIP.find(
 						{
 							ip: account.lastConnectedIP,
-							type: 'small' || 'big'
+							type: 'small' || 'big',
 						},
 						(err, ips) => {
 							let date;
@@ -2072,7 +2148,8 @@ module.exports.checkUserStatus = socket => {
 
 							if (ip) {
 								date = new Date().getTime();
-								unbannedTime = ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
+								unbannedTime =
+									ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
 							}
 
 							if (ip && unbannedTime > date) logOutUser(user);
