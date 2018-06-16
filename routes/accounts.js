@@ -2,8 +2,8 @@ const passport = require('passport');
 const Account = require('../models/account');
 const BannedIP = require('../models/bannedIP');
 const { ipbansNotEnforced, accountCreationDisabled } = require('./socket/models');
-const verifyAccount = require('./verify-account');
-const resetPassword = require('./reset-password');
+// const verifyAccount = require('./verify-account');
+// const resetPassword = require('./reset-password');
 const blacklistedWords = require('../iso/blacklistwords');
 const bannedEmails = require('../utils/disposibleEmails');
 const { expandAndSimplify } = require('./socket/ip-obf');
@@ -23,8 +23,8 @@ const ensureAuthenticated = (req, res, next) => {
 const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
 module.exports = () => {
-	verifyAccount.setRoutes();
-	resetPassword.setRoutes();
+	// verifyAccount.setRoutes();
+	// resetPassword.setRoutes();
 
 	app.get('/account', ensureAuthenticated, (req, res) => {
 		res.render('page-account', {

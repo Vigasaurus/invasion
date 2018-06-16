@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
+import { Layout } from 'antd';
 import io from 'socket.io-client';
 
 const socket = io({ reconnect: false });
@@ -9,6 +10,19 @@ const socket = io({ reconnect: false });
 const select = state => state;
 
 export class Main extends React.Component {
+	constructor() {
+		super();
+
+		this.state = {
+			collapsed: false,
+		};
+
+		this.handleSidebarVisibilityUpdate = this.handleSidebarVisibilityUpdate.bind(this);
+	}
+	// state = {
+	//   collapsed: false,
+	// }
+
 	componentDidMount() {
 		const { dispatch } = this.props;
 		const { classList } = document.getElementById('game-container');
@@ -76,12 +90,33 @@ export class Main extends React.Component {
 	// 	});
 	// }
 
+	handleSidebarVisibilityUpdate(collapsed) {
+		this.setState({
+			collapsed,
+		});
+	}
+
 	render() {
+		const { Header, Content, Footer, Sider } = Layout;
+
 		return (
-			<section className="app-container" style={{}}>
-				hello world
-				{/* <DevHelpers /> */}
-			</section>
+			<Layout style={{ minHeight: '100vh' }} className="app-container">
+				<Sider
+					collapsible
+					collapsed={this.state.collapsed}
+					onCollapse={this.handleSidebarVisibilityUpdate}
+					collapsedWidth={18}
+					width={340}
+				>
+					<div className="logo" />
+					sidebar here
+				</Sider>
+				<Layout>
+					<Header style={{ background: '#fff', padding: 0 }}>header here</Header>
+					<Content style={{ margin: '0 16px' }}>content here</Content>
+					<Footer style={{ textAlign: 'center' }}>footer here</Footer>
+				</Layout>
+			</Layout>
 		);
 	}
 }
