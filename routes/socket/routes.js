@@ -16,7 +16,7 @@ const {
 	handlePlayerReportDismiss,
 	handleUpdatedBio,
 	handleUpdatedRemakeGame,
-	handleUpdatedPlayerNote
+	handleUpdatedPlayerNote,
 } = require('./user-events');
 const {
 	sendPlayerNotes,
@@ -28,20 +28,33 @@ const {
 	sendGeneralChats,
 	sendUserList,
 	sendReplayGameChats,
-	updateUserStatus
+	updateUserStatus,
 } = require('./user-requests');
-const { selectVoting, selectPresidentPolicy, selectChancellorPolicy, selectChancellorVoteOnVeto, selectPresidentVoteOnVeto } = require('./game/election');
+const {
+	selectVoting,
+	selectPresidentPolicy,
+	selectChancellorPolicy,
+	selectChancellorVoteOnVeto,
+	selectPresidentVoteOnVeto,
+} = require('./game/election');
 const { selectChancellor } = require('./game/election-util');
-const { selectSpecialElection, selectPartyMembershipInvestigate, selectPolicies, selectPlayerToExecute } = require('./game/policy-powers');
+const {
+	selectSpecialElection,
+	selectPartyMembershipInvestigate,
+	selectPolicies,
+	selectPlayerToExecute,
+} = require('./game/policy-powers');
 const { games } = require('./models');
-const { MODERATORS, ADMINS, EDITORS } = require('../../src/frontend-scripts/constants');
 const gamesGarbageCollector = () => {
 	const currentTime = new Date().getTime();
 	const toRemoveIndexes = games
 		.filter(
 			game =>
 				(game.general.timeStarted && game.general.timeStarted + 4200000 < currentTime) ||
-				(game.general.timeCreated && game.general.timeCreated + 600000 < currentTime && game.general.private && game.publicPlayersState.length < 5)
+				(game.general.timeCreated &&
+					game.general.timeCreated + 600000 < currentTime &&
+					game.general.private &&
+					game.publicPlayersState.length < 5)
 		)
 		.map(game => games.indexOf(game))
 		.reverse();
@@ -97,7 +110,9 @@ module.exports = () => {
 
 		const { passport } = socket.handshake.session;
 		const authenticated = ensureAuthenticated(socket);
-		const isAEM = authenticated && (MODERATORS.includes(passport.user) || ADMINS.includes(passport.user) || EDITORS.includes(passport.user));
+		const isAEM =
+			authenticated &&
+			(MODERATORS.includes(passport.user) || ADMINS.includes(passport.user) || EDITORS.includes(passport.user));
 
 		// Instantly sends the userlist as soon as the websocket is created.
 		// For some reason, sending the userlist before this happens actually doesn't work on the client. The event gets in, but is not used.

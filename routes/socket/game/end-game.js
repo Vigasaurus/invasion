@@ -7,7 +7,6 @@ const debug = require('debug')('game:summary');
 const animals = require('../../../utils/animals');
 const adjectives = require('../../../utils/adjectives');
 const _ = require('lodash');
-const { makeReport } = require('../report.js');
 
 /**
  * @param {object} game - game to act on.

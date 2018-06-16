@@ -1,28 +1,24 @@
-const fs = require('fs'),
-	express = require('express'),
-	logger = require('morgan'),
-	cookieParser = require('cookie-parser'),
-	bodyParser = require('body-parser'),
-	favicon = require('serve-favicon'),
-	socketSession = require('express-socket.io-session'),
-	passport = require('passport'),
-	mongoose = require('mongoose'),
-	compression = require('compression'),
-	Strategy = require('passport-local').Strategy,
-	Account = require('./models/account'),
-	routesIndex = require('./routes/index'),
-	session = require('express-session')({
-		secret: process.env.SECRETSESSIONKEY,
-		resave: false,
-		saveUninitialized: false,
-	}),
-	logFile = fs.createWriteStream('./logs/express.log', { flags: 'a' });
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const favicon = require('serve-favicon');
+const socketSession = require('express-socket.io-session');
+const passport = require('passport');
+const mongoose = require('mongoose');
+const compression = require('compression');
+const Strategy = require('passport-local').Strategy;
+const Account = require('./models/account');
+const routesIndex = require('./routes/index');
+const session = require('express-session')({
+	secret: process.env.SECRETSESSIONKEY,
+	resave: false,
+	saveUninitialized: false,
+});
 
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'pug');
 app.locals.pretty = true;
 app.use(compression());
-app.use(logger('combined', { stream: logFile }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(favicon(`${__dirname}/public/favicon.ico`));

@@ -7,7 +7,11 @@ const { sendInProgressGameUpdate } = require('../util');
  * @param {object} data - from socket emit.
  */
 module.exports.selectChancellor = (socket, passport, game, data) => {
-	if ((game.general.isTourny && game.general.tournyInfo.isCancelled) || data.chancellorIndex >= game.general.playerCount || data.chancellorIndex < 0) {
+	if (
+		(game.general.isTourny && game.general.tournyInfo.isCancelled) ||
+		data.chancellorIndex >= game.general.playerCount ||
+		data.chancellorIndex < 0
+	) {
 		return;
 	}
 
@@ -37,12 +41,16 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 		game.gameState.timedModeEnabled = game.private.timerId = null;
 	}
 
-	if (!game.private.lock.selectChancellor && !Number.isInteger(game.gameState.pendingChancellorIndex) && game.gameState.phase !== 'voting') {
+	if (
+		!game.private.lock.selectChancellor &&
+		!Number.isInteger(game.gameState.pendingChancellorIndex) &&
+		game.gameState.phase !== 'voting'
+	) {
 		game.private.lock.selectChancellor = true;
 		game.publicPlayersState[presidentIndex].isLoader = false;
 
 		game.private.summary = game.private.summary.updateLog({
-			chancellorId: chancellorIndex
+			chancellorId: chancellorIndex,
 		});
 
 		presidentPlayer.playersState.forEach(player => {
@@ -59,7 +67,7 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 				cardDisplayed: true,
 				isFlipped: false,
 				cardFront: 'ballot',
-				cardBack: {}
+				cardBack: {},
 			};
 		});
 
@@ -72,23 +80,27 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 					timestamp: new Date(),
 					chat: [
 						{
-							text: 'You must vote for the election of president '
+							text: 'You must vote for the election of president ',
 						},
 						{
-							text: game.general.blindMode ? `{${presidentIndex + 1}}` : `${presidentPlayer.userName} {${presidentIndex + 1}}`,
-							type: 'player'
+							text: game.general.blindMode
+								? `{${presidentIndex + 1}}`
+								: `${presidentPlayer.userName} {${presidentIndex + 1}}`,
+							type: 'player',
 						},
 						{
-							text: ' and chancellor '
+							text: ' and chancellor ',
 						},
 						{
-							text: game.general.blindMode ? `{${chancellorIndex + 1}}` : `${chancellorPlayer.userName} {${chancellorIndex + 1}}`,
-							type: 'player'
+							text: game.general.blindMode
+								? `{${chancellorIndex + 1}}`
+								: `${chancellorPlayer.userName} {${chancellorIndex + 1}}`,
+							type: 'player',
 						},
 						{
-							text: '.'
-						}
-					]
+							text: '.',
+						},
+					],
 				});
 			}
 
@@ -100,8 +112,8 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 					cardStatus: {
 						isFlipped: false,
 						cardFront: 'ballot',
-						cardBack: 'ja'
-					}
+						cardBack: 'ja',
+					},
 				},
 				{
 					position: 'middle-right',
@@ -110,9 +122,9 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 					cardStatus: {
 						isFlipped: false,
 						cardFront: 'ballot',
-						cardBack: 'nein'
-					}
-				}
+						cardBack: 'nein',
+					},
+				},
 			];
 		});
 
@@ -126,9 +138,10 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 			seatedPlayers.forEach(player => {
 				if (player.cardFlingerState && player.cardFlingerState.length) {
 					player.cardFlingerState[0].cardStatus.isFlipped = player.cardFlingerState[1].cardStatus.isFlipped = true;
-					player.cardFlingerState[0].notificationStatus = player.cardFlingerState[1].notificationStatus = 'notification';
+					player.cardFlingerState[0].notificationStatus = player.cardFlingerState[1].notificationStatus =
+						'notification';
 					player.voteStatus = {
-						hasVoted: false
+						hasVoted: false,
 					};
 				}
 			});
@@ -162,9 +175,9 @@ module.exports.selectChancellor = (socket, passport, game, data) => {
 									timestamp: new Date(),
 									chat: [
 										{
-											text: 'Not enough players are present, votes will not be auto-picked.'
-										}
-									]
+											text: 'Not enough players are present, votes will not be auto-picked.',
+										},
+									],
 								});
 							});
 							sendInProgressGameUpdate(game);

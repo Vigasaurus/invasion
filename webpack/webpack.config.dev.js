@@ -4,7 +4,7 @@ const path = require('path');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-	entry: './src/frontend-scripts/game-app.js',
+	entry: './src/app.js',
 	plugins: [
 		// new Reload(),
 		// new CleanWebpackPlugin(['../public/scripts']),
@@ -43,27 +43,7 @@ module.exports = {
 				exclude: /node_modules/,
 			},
 			{
-				test: /\.less$/,
-				use: [
-					{
-						loader: 'style-loader',
-					},
-					{
-						loader: 'css-loader',
-						options: {
-							sourceMap: true,
-						},
-					},
-					{
-						loader: 'less-loader',
-						options: {
-							sourceMap: true,
-						},
-					},
-				],
-			},
-			{
-				test: /\.scss$/,
+				test: /\.(scss|css)$/,
 				use: [
 					{
 						loader: 'style-loader',

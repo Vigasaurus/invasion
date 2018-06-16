@@ -33,8 +33,6 @@ const animals = require('../../utils/animals');
 const adjectives = require('../../utils/adjectives');
 const version = require('../../version');
 const { generateCombination } = require('gfycat-style-urls');
-const { MODERATORS, ADMINS, EDITORS } = require('../../src/frontend-scripts/constants');
-const { obfIP, expandAndSimplify } = require('./ip-obf');
 
 /**
  * @param {object} game - game to act on.

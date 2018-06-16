@@ -1,5 +1,3 @@
-import antd
-gut src/frontend-scripts, get to hello world with antd at /observe
 build basic lobby layout using antd Layout.  top bar, collapsible sidebar, main
 build dnd sidebar - be able to dnd and snap between userList and generalChat
 build top nav with sign in sign up modals - update Account model

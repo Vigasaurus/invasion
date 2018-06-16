@@ -1,15 +1,12 @@
-const { CURRENTSEASONNUMBER } = require('../../src/frontend-scripts/constants');
-
 module.exports.games = [];
 module.exports.userList = [];
 module.exports.generalChats = {
 	sticky: '',
-	list: []
+	list: [],
 };
 module.exports.accountCreationDisabled = { status: false };
 module.exports.ipbansNotEnforced = { status: false };
 module.exports.gameCreationDisabled = { status: false };
-module.exports.currentSeasonNumber = CURRENTSEASONNUMBER;
 
 // set of profiles, no duplicate usernames
 /**
@@ -58,7 +55,7 @@ module.exports.formattedUserList = () => {
 		rainbowWinsSeason2: user.rainbowWinsSeason2,
 		rainbowLossesSeason2: user.rainbowLossesSeason2,
 		previousSeasonAward: user.previousSeasonAward,
-		timeLastGameCreated: user.timeLastGameCreated
+		timeLastGameCreated: user.timeLastGameCreated,
 		// oldData: user
 	}));
 };
@@ -75,10 +72,10 @@ const userListEmitter = {
 		else {
 			userListEmitter.send = false;
 			io.sockets.emit('userList', {
-				list: module.exports.formattedUserList()
+				list: module.exports.formattedUserList(),
 			});
 		}
-	}, 100)
+	}, 100),
 };
 
 module.exports.userListEmitter = userListEmitter;

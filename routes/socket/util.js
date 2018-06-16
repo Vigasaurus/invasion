@@ -36,7 +36,9 @@ module.exports.sendInProgressGameUpdate = game => {
 	let observerSockets;
 
 	if (io.sockets.adapter.rooms[game.general.uid]) {
-		roomSockets = Object.keys(io.sockets.adapter.rooms[game.general.uid].sockets).map(sockedId => io.sockets.connected[sockedId]);
+		roomSockets = Object.keys(io.sockets.adapter.rooms[game.general.uid].sockets).map(
+			sockedId => io.sockets.connected[sockedId]
+		);
 
 		playerSockets = roomSockets.filter(
 			socket =>
@@ -47,7 +49,9 @@ module.exports.sendInProgressGameUpdate = game => {
 		);
 
 		observerSockets = roomSockets.filter(
-			socket => (socket && !socket.handshake.session.passport) || (socket && !seatedPlayerNames.includes(socket.handshake.session.passport.user))
+			socket =>
+				(socket && !socket.handshake.session.passport) ||
+				(socket && !seatedPlayerNames.includes(socket.handshake.session.passport.user))
 		);
 	}
 
@@ -94,12 +98,14 @@ module.exports.rateEloGame = (game, accounts, winningPlayerNames) => {
 		7: -17.282,
 		8: 45.418,
 		9: -70.679,
-		10: -31.539
+		10: -31.539,
 	};
 	const rk = 12;
 	const nk = 3;
 	// Players
-	const losingPlayerNames = game.private.seatedPlayers.filter(player => !winningPlayerNames.includes(player.userName)).map(player => player.userName);
+	const losingPlayerNames = game.private.seatedPlayers
+		.filter(player => !winningPlayerNames.includes(player.userName))
+		.map(player => player.userName);
 	// Accounts
 	const winningAccounts = accounts.filter(account => winningPlayerNames.includes(account.username));
 	const loosingAccounts = accounts.filter(account => losingPlayerNames.includes(account.username));

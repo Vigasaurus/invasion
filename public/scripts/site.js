@@ -8,8 +8,8 @@ $(document).ready(function() {
 			statusCode: {
 				200: function(d) {
 					$('.chrome.icon').after('<span>' + d.count + ' </span>');
-				}
-			}
+				},
+			},
 		});
 	}
 
@@ -46,7 +46,7 @@ $(document).ready(function() {
 			method: 'POST',
 			contentType: 'application/json; charset=UTF-8',
 			data: JSON.stringify({
-				email: email
+				email: email,
 			}),
 			statusCode: {
 				200: function() {
@@ -57,7 +57,9 @@ $(document).ready(function() {
 				},
 				401: function(xhr) {
 					var message =
-						typeof xhr.responseJSON !== 'undefined' ? xhr.responseJSON.message : 'Only non-disposible email addresses can be added for verification purposes.';
+						typeof xhr.responseJSON !== 'undefined'
+							? xhr.responseJSON.message
+							: 'Only non-disposible email addresses can be added for verification purposes.';
 
 					submitErr(message);
 				},
@@ -65,8 +67,8 @@ $(document).ready(function() {
 					var message = typeof xhr.responseJSON !== 'undefined' ? xhr.responseJSON.message : '';
 
 					submitErr(message);
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -95,7 +97,7 @@ $(document).ready(function() {
 				password: password,
 				password2: password2,
 				email: email,
-				isPrivate: isPrivate
+				isPrivate: isPrivate,
 			}),
 			statusCode: {
 				200: function() {
@@ -120,8 +122,8 @@ $(document).ready(function() {
 					var message = typeof xhr.responseJSON !== 'undefined' ? xhr.responseJSON.message : '';
 
 					submitErr(message);
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -189,8 +191,8 @@ $(document).ready(function() {
 				},
 				401: function() {
 					submitErr('Sorry, that was not the correct password for that username.');
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -239,8 +241,8 @@ $(document).ready(function() {
 				},
 				401: function() {
 					submitErr("Sorry, we don't have an account associated with that verified email address.");
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -278,8 +280,8 @@ $(document).ready(function() {
 				},
 				401: function() {
 					submitErr("Sorry, we don't have an account associated with that verified email address.");
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -291,7 +293,7 @@ $(document).ready(function() {
 			method: 'POST',
 			success: function() {
 				window.location.reload();
-			}
+			},
 		});
 	});
 
@@ -320,8 +322,8 @@ $(document).ready(function() {
 					$('section.requestemail-modal')
 						.modal('setting', 'transition', 'horizontal flip')
 						.modal('show');
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -335,7 +337,7 @@ $(document).ready(function() {
 			$successMessage = $errMessage.next(),
 			data = JSON.stringify({
 				newPassword: newPassword,
-				newPasswordConfirm: newPasswordConfirm
+				newPasswordConfirm: newPasswordConfirm,
 			});
 
 		$loader.addClass('active');
@@ -359,8 +361,8 @@ $(document).ready(function() {
 					if (!$successMessage.hasClass('hidden')) {
 						$successMessage.addClass('hidden');
 					}
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -371,7 +373,7 @@ $(document).ready(function() {
 			$loader = $(this).next(),
 			$errMessage = $loader.next(),
 			data = JSON.stringify({
-				email: newEmail
+				email: newEmail,
 			}),
 			submitErr = function(message) {
 				$loader.removeClass('active');
@@ -390,8 +392,8 @@ $(document).ready(function() {
 				},
 				401: function(xhr) {
 					submitErr(xhr.responseJSON.message);
-				}
-			}
+				},
+			},
 		});
 	});
 
@@ -434,8 +436,8 @@ $(document).ready(function() {
 					if (!$successMessage.hasClass('hidden')) {
 						$successMessage.addClass('hidden');
 					}
-				}
-			}
+				},
+			},
 		});
 	});
 });

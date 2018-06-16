@@ -34,8 +34,8 @@ const shufflePolicies = (module.exports.shufflePolicies = (game, is6pRebalanceSt
 			{
 				cardBack: 'fascist',
 				isFlipped: true,
-				position: 'fascist1'
-			}
+				position: 'fascist1',
+			},
 		];
 	}
 
@@ -128,9 +128,9 @@ module.exports.startElection = (game, specialElectionPresidentIndex) => {
 			timestamp: new Date(),
 			chat: [
 				{
-					text: 'You are president and must select a chancellor.'
-				}
-			]
+					text: 'You are president and must select a chancellor.',
+				},
+			],
 		});
 	}
 
@@ -139,7 +139,10 @@ module.exports.startElection = (game, specialElectionPresidentIndex) => {
 			(player, index) =>
 				seatedPlayers[index] &&
 				!seatedPlayers[index].isDead &&
-				(index !== presidentIndex && (game.general.livingPlayerCount > 5 ? !previousElectedGovernment.includes(index) : previousElectedGovernment[1] !== index))
+				(index !== presidentIndex &&
+					(game.general.livingPlayerCount > 5
+						? !previousElectedGovernment.includes(index)
+						: previousElectedGovernment[1] !== index))
 		)
 		.forEach(player => {
 			player.notificationStatus = 'notification';
@@ -170,14 +173,19 @@ module.exports.startElection = (game, specialElectionPresidentIndex) => {
 			? [
 					pendingPresidentPlayer.userName,
 					seatedPlayers
-						.filter((player, index) => !player.isDead && index !== presidentIndex && !previousElectedGovernment.includes(index))
-						.map(el => seatedPlayers.indexOf(el))
+						.filter(
+							(player, index) =>
+								!player.isDead && index !== presidentIndex && !previousElectedGovernment.includes(index)
+						)
+						.map(el => seatedPlayers.indexOf(el)),
 			  ]
 			: [
 					pendingPresidentPlayer.userName,
 					seatedPlayers
-						.filter((player, index) => !player.isDead && index !== presidentIndex && previousElectedGovernment[1] !== index)
-						.map(el => seatedPlayers.indexOf(el))
+						.filter(
+							(player, index) => !player.isDead && index !== presidentIndex && previousElectedGovernment[1] !== index
+						)
+						.map(el => seatedPlayers.indexOf(el)),
 			  ];
 	/* eslint-enable */
 	sendInProgressGameUpdate(game);
