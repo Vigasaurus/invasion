@@ -1,3 +1,9 @@
-build basic lobby layout using antd Layout.  top bar, collapsible sidebar, main
-build dnd sidebar - be able to dnd and snap between userList and generalChat
-build top nav with sign in sign up modals - update Account model
+build dnd sidebar - be able to dnd and snap to right.  custom image (none) for drag preview.  react-cookie implementation: read and set sidebar width on mount of app/dnd of sidebar
+
+build header - title, signin & signup with models, logout.  be able to log in and out.
+
+build settings icon on header that pops out sidebar account settings component with route and checks if logged in.  build a basic setting that saves to server on toggle.
+
+build gameslist mid component - create game button (auth)
+
+build creategame component with route
