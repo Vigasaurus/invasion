@@ -1,24 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
 import { Layout } from 'antd';
 import io from 'socket.io-client';
+
+import Sidebar from './Sidebar';
+import Mid from './Mid';
+import DraggableSidebarBorder from './DraggableSidebarBorder';
 
 const socket = io({ reconnect: false });
 
 const select = state => state;
 
 export class Main extends React.Component {
-	constructor() {
-		super();
-
-		this.state = {
-			collapsed: false,
-		};
-
-		this.handleSidebarVisibilityUpdate = this.handleSidebarVisibilityUpdate.bind(this);
-	}
 	// state = {
 	//   collapsed: false,
 	// }
@@ -90,31 +87,19 @@ export class Main extends React.Component {
 	// 	});
 	// }
 
-	handleSidebarVisibilityUpdate(collapsed) {
-		this.setState({
-			collapsed,
-		});
-	}
-
 	render() {
-		const { Header, Content, Footer, Sider } = Layout;
+		const { Header, Content } = Layout;
 
 		return (
 			<Layout style={{ minHeight: '100vh' }} className="app-container">
-				<Sider
-					collapsible
-					collapsed={this.state.collapsed}
-					onCollapse={this.handleSidebarVisibilityUpdate}
-					collapsedWidth={18}
-					width={340}
-				>
-					<div className="logo" />
-					sidebar here
-				</Sider>
 				<Layout>
 					<Header style={{ background: '#fff', padding: 0 }}>header here</Header>
-					<Content style={{ margin: '0 16px' }}>content here</Content>
-					<Footer style={{ textAlign: 'center' }}>footer here</Footer>
+					<Content style={{ display: 'flex' }}>
+						<Sidebar />
+						<DraggableSidebarBorder color="blue" />
+						<Mid />
+					</Content>
+					{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}
 				</Layout>
 			</Layout>
 		);
@@ -123,4 +108,4 @@ export class Main extends React.Component {
 
 Main.propTypes = {};
 
-export default connect(select)(Main);
+export default DragDropContext(HTML5Backend)(connect(select)(Main));
