@@ -5,30 +5,23 @@ import { DropTarget } from 'react-dnd';
 const collect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget() });
 const spec = {
 	hover(props, monitor, component) {
-		component.setState({
-			width: monitor.getSourceClientOffset().x,
-		});
+		props.updateSidebarWidth(window.innerWidth - monitor.getClientOffset().x);
 	},
 };
 
 export class Sidebar extends React.Component {
-	constructor() {
-		super();
-
-		this.state = {
-			width: 400,
-		};
-	}
-
 	render() {
-		const { connectDropTarget } = this.props;
+		const { connectDropTarget, sidebarWidth } = this.props;
 
 		return connectDropTarget(
-			<section style={{ background: '#222', width: `${this.state.width}px`, color: 'white' }}>sidebar</section>
+			<section style={{ background: '#222', width: `${sidebarWidth}px`, color: 'white' }}>sidebar</section>
 		);
 	}
 }
 
-Sidebar.propTypes = {};
+Sidebar.propTypes = {
+	sidebarWidth: PropTypes.number,
+	updateSidebarWidth: PropTypes.func,
+};
 
 export default DropTarget('sidebar', spec, collect)(Sidebar);

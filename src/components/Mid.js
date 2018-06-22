@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { DropTarget } from 'react-dnd';
+
+const collect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget() });
+const spec = {
+	hover(props, monitor, component) {
+		props.updateSidebarWidth(window.innerWidth - monitor.getClientOffset().x);
+	},
+};
 
 export class Mid extends React.Component {
 	render() {
-		return <section style={{ background: '#444', flexGrow: '1' }}>mid</section>;
+		const { connectDropTarget } = this.props;
+
+		return connectDropTarget(<section style={{ background: '#444', flexGrow: '1' }}>mid</section>);
 	}
 }
 
-Mid.propTypes = {};
+Mid.propTypes = {
+	updateSidebarWidth: PropTypes.func,
+};
 
-export default Mid;
+export default DropTarget('sidebar', spec, collect)(Mid);

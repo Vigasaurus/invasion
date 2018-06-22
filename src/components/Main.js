@@ -16,9 +16,15 @@ const socket = io({ reconnect: false });
 const select = state => state;
 
 export class Main extends React.Component {
-	// state = {
-	//   collapsed: false,
-	// }
+	constructor() {
+		super();
+
+		this.state = {
+			sidebarWidth: 400,
+		};
+
+		this.updateSidebarWidth = this.updateSidebarWidth.bind(this);
+	}
 
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -86,6 +92,9 @@ export class Main extends React.Component {
 	// 		uid: manualLeaveGame || gameInfo.general.uid,
 	// 	});
 	// }
+	updateSidebarWidth(sidebarWidth) {
+		this.setState({ sidebarWidth });
+	}
 
 	render() {
 		const { Header, Content } = Layout;
@@ -94,10 +103,10 @@ export class Main extends React.Component {
 			<Layout style={{ minHeight: '100vh' }} className="app-container">
 				<Layout>
 					<Header style={{ background: '#fff', padding: 0 }}>header here</Header>
-					<Content style={{ display: 'flex' }}>
-						<Sidebar />
-						<DraggableSidebarBorder color="blue" />
-						<Mid />
+					<Content style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+						<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={this.state.sidebarWidth} />
+						<DraggableSidebarBorder />
+						<Mid updateSidebarWidth={this.updateSidebarWidth} />
 					</Content>
 					{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}
 				</Layout>
