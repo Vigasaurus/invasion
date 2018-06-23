@@ -1,0 +1,26 @@
+.sidebar-container {
+	background: #1e1e1e;
+	color: #fff;
+
+	.expand-collapse-sidebar {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+
+		> i {
+			font-size: 50px;
+			color: #bbb;
+		}
+	}
+}
+
+.sidebar-border {
+	background: $cobalt;
+	width: 8px;
+	cursor: col-resize;
+
+	&.dragging {
+		background: $darkliberalteam;
+	}
+}

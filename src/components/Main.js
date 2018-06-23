@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withCookies, Cookies } from 'react-cookie';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
+import '../scss/app.scss';
 import { Layout } from 'antd';
 import io from 'socket.io-client';
 
@@ -16,11 +18,12 @@ const socket = io({ reconnect: false });
 const select = state => state;
 
 export class Main extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
-			sidebarWidth: 400,
+			sidebarWidth: parseInt(props.cookies.get('sidebarWidth'), 10) || 400,
+			sidebarIsCollapsed: false,
 		};
 
 		this.updateSidebarWidth = this.updateSidebarWidth.bind(this);
@@ -93,7 +96,9 @@ export class Main extends React.Component {
 	// 	});
 	// }
 	updateSidebarWidth(sidebarWidth) {
-		this.setState({ sidebarWidth });
+		this.setState({ sidebarWidth }, () => {
+			this.props.cookies.set('sidebarWidth', sidebarWidth, { path: '/' });
+		});
 	}
 
 	render() {
@@ -102,7 +107,7 @@ export class Main extends React.Component {
 		return (
 			<Layout style={{ minHeight: '100vh' }} className="app-container">
 				<Layout>
-					<Header style={{ background: '#fff', padding: 0 }}>header here</Header>
+					<Header style={{ background: '#fff', padding: 0 }}>header</Header>
 					<Content style={{ display: 'flex', flexDirection: 'row-reverse' }}>
 						<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={this.state.sidebarWidth} />
 						<DraggableSidebarBorder />
@@ -117,4 +122,4 @@ export class Main extends React.Component {
 
 Main.propTypes = {};
 
-export default DragDropContext(HTML5Backend)(connect(select)(Main));
+export default DragDropContext(HTML5Backend)(withCookies(connect(select)(Main)));

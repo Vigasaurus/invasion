@@ -38,8 +38,9 @@
 		"prop-types": "15.6.1",
 		"pug": "2.0.3",
 		"react": "16.4.0",
-		"react-dnd": "^5.0.0",
-		"react-dnd-html5-backend": "^5.0.1",
+		"react-cookie": "2.2.0",
+		"react-dnd": "5.0.0",
+		"react-dnd-html5-backend": "5.0.1",
 		"react-dom": "16.4.0",
 		"react-redux": "5.0.7",
 		"redux": "4.0.0",
@@ -96,7 +97,6 @@
 	"scripts": {
 		"format": "prettier --write **/*.js",
 		"dev": "npm-run-all --parallel db inspect start",
-		"dev-docker": "npm-run-all --parallel db-docker server start",
 		"create-accounts": "node scripts/createAccounts.js",
 		"test": "jest",
 		"test:watch": "jest --watch",
@@ -107,8 +107,7 @@
 		"inspect": "nodemon --inspect=9137 bin/dev",
 		"server": "nodemon bin/dev",
 		"start": "webpack --watch --config webpack/webpack.config.dev --mode development",
-		"precommit": "yarn format && git add -A",
-		"prepush": "yarn lint",
+		"precommit": "git add -A",
 		"lint": "esw src/ scripts/ routes/ webpack/ models/ iso/"
 	},
 	"jest": {
