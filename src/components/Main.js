@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withCookies, Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
 import '../scss/app.scss';
 import { Layout } from 'antd';
@@ -22,8 +22,10 @@ export class Main extends React.Component {
 		super(props);
 
 		this.state = {
-			sidebarWidth: parseInt(props.cookies.get('sidebarWidth'), 10) || 400,
-			sidebarIsCollapsed: false,
+			sidebarWidth: Number.isInteger(parseInt(props.cookies.get('sidebarWidth'), 10))
+				? parseInt(props.cookies.get('sidebarWidth'), 10)
+				: 400,
+			sidebarIsCollapsed: Boolean(props.allCookies.sidebarWidth && props.allCookies.sidebarWidth === '0'),
 		};
 
 		this.updateSidebarWidth = this.updateSidebarWidth.bind(this);
@@ -110,7 +112,10 @@ export class Main extends React.Component {
 					<Header style={{ background: '#fff', padding: 0 }}>header</Header>
 					<Content style={{ display: 'flex', flexDirection: 'row-reverse' }}>
 						<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={this.state.sidebarWidth} />
-						<DraggableSidebarBorder />
+						<DraggableSidebarBorder
+							isCollapsed={this.state.sidebarIsCollapsed}
+							updateSidebarWidth={this.updateSidebarWidth}
+						/>
 						<Mid updateSidebarWidth={this.updateSidebarWidth} />
 					</Content>
 					{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}

@@ -20,7 +20,23 @@
 	width: 8px;
 	cursor: col-resize;
 
+	&:hover {
+		opacity: 0.8;
+	}
+
 	&.dragging {
 		background: $darkliberalteam;
+	}
+
+	&.collapsed {
+		width: 12px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		> i {
+			font-size: 8px;
+			color: #bbb;
+		}
 	}
 }

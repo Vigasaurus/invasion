@@ -8,13 +8,16 @@ const spec = {
 	hover(props, monitor, component) {
 		const newWidth = window.innerWidth - monitor.getClientOffset().x;
 
-		if (newWidth <= 100 && !component.state.isCollapsed && !component.state.isExpanding) {
+		if (newWidth <= 100) {
 			if (!component.state.isCollapsing) {
 				component.setState({
 					isCollapsing: true,
 				});
 			}
 		} else {
+			if (newWidth > 100 && component.state.isCollapsing) {
+				component.setState({ isCollapsing: false });
+			}
 			props.updateSidebarWidth(window.innerWidth - monitor.getClientOffset().x);
 		}
 	},
@@ -22,29 +25,35 @@ const spec = {
 		const newWidth = window.innerWidth - monitor.getClientOffset().x;
 
 		if (newWidth <= 100 && !component.state.isCollapsed) {
-			props.updateSidebarWidth(0);
+			component.setState(
+				{
+					isCollapsed: true,
+				},
+				() => {
+					props.updateSidebarWidth(0);
+				}
+			);
 		}
 	},
 };
 
 export class Sidebar extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
-			isCollapsed: false,
+			isCollapsed: Boolean(props.sidebarWidth === 0),
 			isCollapsing: false,
-			isExpanding: false,
 		};
 	}
 
 	renderContent() {
-		const { isCollapsed, isCollapsing, isExpanding } = this.state;
+		const { isCollapsing } = this.state;
 
-		if (isCollapsing || isExpanding) {
+		if (isCollapsing) {
 			return (
 				<div className="expand-collapse-sidebar">
-					<Icon type={isExpanding ? 'verticle-right' : 'verticle-left'} />
+					<Icon type="verticle-left" />
 				</div>
 			);
 		}
