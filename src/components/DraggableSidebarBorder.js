@@ -16,7 +16,7 @@ const collect = (connect, monitor) => ({
 	connectDragPreview: connect.dragPreview(),
 });
 
-export class DraggableSidebarBorder extends React.Component {
+export class DraggableSidebarBorder extends React.PureComponent {
 	constructor() {
 		super();
 

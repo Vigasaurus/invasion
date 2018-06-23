@@ -13,7 +13,7 @@ export class Mid extends React.Component {
 	render() {
 		const { connectDropTarget } = this.props;
 
-		return connectDropTarget(<section style={{ background: '#444', flexGrow: '1', color: 'white' }}>mid</section>);
+		return connectDropTarget(<section className="mid-container">mid</section>);
 	}
 }
 

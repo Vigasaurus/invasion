@@ -15,14 +15,16 @@ const spec = {
 				});
 			}
 		} else {
-			if (newWidth > 100 && component.state.isCollapsing) {
-				component.setState({ isCollapsing: false });
-			}
+			// if (newWidth > 100 && component.state.isCollapsing) {
+			// 	component.setState({ isCollapsing: false });
+			// }
 			props.updateSidebarWidth((window.innerWidth - monitor.getClientOffset().x).toString());
 		}
 	},
 	drop(props, monitor, component) {
 		const newWidth = window.innerWidth - monitor.getClientOffset().x;
+
+		props.cookies.set('sidebarWidth', newWidth, { path: '/' });
 
 		if (newWidth <= 100 && !component.state.isCollapsed) {
 			component.setState(
@@ -37,7 +39,7 @@ const spec = {
 	},
 };
 
-export class Sidebar extends React.Component {
+export class Sidebar extends React.PureComponent {
 	constructor(props) {
 		super(props);
 
@@ -73,6 +75,7 @@ export class Sidebar extends React.Component {
 Sidebar.propTypes = {
 	sidebarWidth: PropTypes.string,
 	updateSidebarWidth: PropTypes.func,
+	cookies: PropTypes.object,
 };
 
 export default DropTarget('sidebar', spec, collect)(Sidebar);
