@@ -21,11 +21,12 @@ export class Main extends React.Component {
 	constructor(props) {
 		super(props);
 
+		const { sidebarWidth } = props.allCookies;
+
+		console.log(props);
 		this.state = {
-			sidebarWidth: Number.isInteger(parseInt(props.cookies.get('sidebarWidth'), 10))
-				? parseInt(props.cookies.get('sidebarWidth'), 10)
-				: 400,
-			sidebarIsCollapsed: Boolean(props.allCookies.sidebarWidth && props.allCookies.sidebarWidth === '0'),
+			sidebarWidth: sidebarWidth || '400',
+			sidebarIsCollapsed: sidebarWidth === '0',
 		};
 
 		this.updateSidebarWidth = this.updateSidebarWidth.bind(this);
@@ -105,21 +106,17 @@ export class Main extends React.Component {
 
 	render() {
 		const { Header, Content } = Layout;
+		const { sidebarIsCollapsed, sidebarWidth } = this.state;
 
 		return (
-			<Layout style={{ minHeight: '100vh' }} className="app-container">
-				<Layout>
-					<Header style={{ background: '#fff', padding: 0 }}>header</Header>
-					<Content style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-						<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={this.state.sidebarWidth} />
-						<DraggableSidebarBorder
-							isCollapsed={this.state.sidebarIsCollapsed}
-							updateSidebarWidth={this.updateSidebarWidth}
-						/>
-						<Mid updateSidebarWidth={this.updateSidebarWidth} />
-					</Content>
-					{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}
-				</Layout>
+			<Layout className="app-container">
+				<Header className="app-header">header</Header>
+				<Content>
+					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
+					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />
+					<Mid updateSidebarWidth={this.updateSidebarWidth} />
+				</Content>
+				{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}
 			</Layout>
 		);
 	}

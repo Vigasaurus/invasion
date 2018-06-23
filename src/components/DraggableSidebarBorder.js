@@ -30,7 +30,7 @@ export class DraggableSidebarBorder extends React.Component {
 	handleDoubleClick() {
 		const { updateSidebarWidth, isCollapsed } = this.props;
 
-		updateSidebarWidth(isCollapsed ? 400 : 0);
+		updateSidebarWidth(isCollapsed ? '400' : '0');
 	}
 
 	render() {

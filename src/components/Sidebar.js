@@ -18,7 +18,7 @@ const spec = {
 			if (newWidth > 100 && component.state.isCollapsing) {
 				component.setState({ isCollapsing: false });
 			}
-			props.updateSidebarWidth(window.innerWidth - monitor.getClientOffset().x);
+			props.updateSidebarWidth((window.innerWidth - monitor.getClientOffset().x).toString());
 		}
 	},
 	drop(props, monitor, component) {
@@ -30,7 +30,7 @@ const spec = {
 					isCollapsed: true,
 				},
 				() => {
-					props.updateSidebarWidth(0);
+					props.updateSidebarWidth('0');
 				}
 			);
 		}
@@ -71,7 +71,7 @@ export class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-	sidebarWidth: PropTypes.number,
+	sidebarWidth: PropTypes.string,
 	updateSidebarWidth: PropTypes.func,
 };
 

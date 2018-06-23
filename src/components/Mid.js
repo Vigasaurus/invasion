@@ -5,7 +5,7 @@ import { DropTarget } from 'react-dnd';
 const collect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget() });
 const spec = {
 	hover(props, monitor, component) {
-		props.updateSidebarWidth(window.innerWidth - monitor.getClientOffset().x);
+		props.updateSidebarWidth((window.innerWidth - monitor.getClientOffset().x).toString());
 	},
 };
 
