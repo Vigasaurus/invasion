@@ -12,6 +12,7 @@ import io from 'socket.io-client';
 import Sidebar from './Sidebar';
 import Mid from './Mid';
 import DraggableSidebarBorder from './DraggableSidebarBorder';
+import AppHeader from './Header';
 
 const socket = io({ reconnect: false });
 
@@ -102,13 +103,13 @@ export class Main extends React.Component {
 	}
 
 	render() {
-		const { Header, Content } = Layout;
+		const { Content } = Layout;
 		const { cookies } = this.props;
 		const { sidebarIsCollapsed, sidebarWidth } = this.state;
 
 		return (
 			<Layout className="app-container">
-				<Header className="app-header">header</Header>
+				<AppHeader />
 				<Content>
 					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} cookies={cookies} />
 					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />

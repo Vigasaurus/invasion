@@ -20,7 +20,6 @@ const dropCollect = (connect, monitor) => ({ connectDropTarget: connect.dropTarg
 const spec = {
 	hover(props, monitor, component) {
 		const newWidth = window.innerWidth - monitor.getClientOffset().x;
-		console.log(newWidth);
 
 		if (newWidth <= 100) {
 			if (!component.state.isCollapsing) {

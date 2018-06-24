@@ -1,7 +1,6 @@
 .sidebar-container {
 	background: #1e1e1e;
 	color: #fff;
-	// margin-left: -5px;
 
 	.expand-collapse-sidebar {
 		display: flex;
@@ -18,11 +17,10 @@
 
 .sidebar-border {
 	background: $cobalt;
-	width: 30px;
+	width: 5px;
 	cursor: col-resize;
 	position: relative;
 	z-index: 1;
-	// right: 5px;
 
 	&:hover {
 		opacity: 0.8;
