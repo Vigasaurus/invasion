@@ -19,18 +19,10 @@ const socket = io({ reconnect: false });
 const select = state => state;
 
 export class Main extends React.Component {
-	constructor(props) {
-		super(props);
-
-		const { sidebarWidth } = props.allCookies;
-
-		this.state = {
-			sidebarWidth: sidebarWidth || '400',
-			sidebarIsCollapsed: sidebarWidth === '0',
-		};
-
-		this.updateSidebarWidth = this.updateSidebarWidth.bind(this);
-	}
+	state = {
+		sidebarWidth: this.props.allCookies.sidebarWidth || '400',
+		sidebarIsCollapsed: this.props.allCookies.sidebarWidth === '0',
+	};
 
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -98,9 +90,9 @@ export class Main extends React.Component {
 	// 		uid: manualLeaveGame || gameInfo.general.uid,
 	// 	});
 	// }
-	updateSidebarWidth(sidebarWidth) {
+	updateSidebarWidth = sidebarWidth => {
 		this.setState({ sidebarWidth });
-	}
+	};
 
 	render() {
 		const { Content } = Layout;

@@ -53,21 +53,15 @@ const spec = {
 };
 
 export class DraggableSidebarBorder extends React.PureComponent {
-	constructor() {
-		super();
-
-		this.handleDoubleClick = this.handleDoubleClick.bind(this);
-	}
-
 	componentDidMount() {
 		this.props.connectDragPreview(getEmptyImage());
 	}
 
-	handleDoubleClick() {
+	handleDoubleClick = () => {
 		const { updateSidebarWidth, isCollapsed } = this.props;
 
 		updateSidebarWidth(isCollapsed ? '400' : '0');
-	}
+	};
 
 	render() {
 		const { isDragging, isCollapsed, connectDragSource, connectDropTarget } = this.props;

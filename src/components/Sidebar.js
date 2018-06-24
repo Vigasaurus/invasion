@@ -39,15 +39,11 @@ const spec = {
 	},
 };
 
-export class Sidebar extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			isCollapsed: Boolean(props.sidebarWidth === 0),
-			isCollapsing: false,
-		};
-	}
+export class Sidebar extends React.Component {
+	state = {
+		isCollapsed: Boolean(this.props.sidebarWidth === 0),
+		isCollapsing: false,
+	};
 
 	renderContent() {
 		const { isCollapsing } = this.state;

@@ -2,21 +2,15 @@ import React from 'react';
 import { Modal, Layout, Button } from 'antd';
 
 export class Header extends React.Component {
-	constructor() {
-		super();
+	state = {
+		signupModalVisible: false,
+	};
 
-		this.state = {
-			signupModalVisible: false,
-		};
-
-		this.handleSignupClick = this.handleSignupClick.bind(this);
-	}
-
-	handleSignupClick() {
+	handleSignupClick = () => {
 		this.setState({
 			signupModalVisible: true,
 		});
-	}
+	};
 
 	render() {
 		const { Header } = Layout;

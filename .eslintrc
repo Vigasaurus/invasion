@@ -1,4 +1,5 @@
 {
+	"parser": "babel-eslint",
 	"extends": ["google"],
 	"rules": {
 		"linebreak-style": "off",
@@ -27,7 +28,8 @@
 		"react/jsx-uses-vars": "error",
 		"react/jsx-indent-props": "off",
 		"object-curly-spacing": "off",
-		"array-bracket-spacing": "off"
+		"array-bracket-spacing": "off",
+		"no-invalid-this": 0
 	},
 	"globals": {
 		"io": true,
