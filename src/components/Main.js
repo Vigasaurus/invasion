@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withCookies, cookie } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 // import PropTypes from 'prop-types';
@@ -91,19 +91,18 @@ export class Main extends React.Component {
 	// 	});
 	// }
 	updateSidebarWidth = sidebarWidth => {
-		this.setState({ sidebarWidth });
+		this.setState({ sidebarWidth, sidebarIsCollapsed: sidebarWidth === '0' });
 	};
 
 	render() {
 		const { Content } = Layout;
-		const { cookies } = this.props;
 		const { sidebarIsCollapsed, sidebarWidth } = this.state;
 
 		return (
 			<Layout className="app-container">
 				<AppHeader />
 				<Content>
-					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} cookies={cookies} />
+					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
 					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />
 					<Mid updateSidebarWidth={this.updateSidebarWidth} />
 				</Content>

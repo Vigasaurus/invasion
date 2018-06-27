@@ -17,6 +17,7 @@
 
 .sidebar-border {
 	background: $cobalt;
+	background: linear-gradient(to bottom, $cobalt 0%, #7db9e8 100%);
 	width: 5px;
 	cursor: col-resize;
 	position: relative;

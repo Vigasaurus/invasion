@@ -1,4 +1,12 @@
 .app-header {
-	background: #bbb;
+	background: #333;
 	padding: 0;
+
+	.header-border {
+		height: 5px;
+		background: $cobalt;
+		background: linear-gradient(to right, $cobalt 0%, #7db9e8 100%);
+		position: relative;
+		top: -5px;
+	}
 }

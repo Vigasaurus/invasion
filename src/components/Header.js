@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Layout, Button } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Modal, Layout } from 'antd';
 
 export class Header extends React.Component {
 	state = {
@@ -12,8 +12,14 @@ export class Header extends React.Component {
 		});
 	};
 
+	handleFormSubmit = e => {
+		e.preventDefault();
+		console.log('submit');
+	};
+
 	render() {
 		const { Header } = Layout;
+		const FormItem = Form.Item;
 
 		return (
 			<Header className="app-header">
@@ -25,17 +31,19 @@ export class Header extends React.Component {
 				</Button.Group>
 				<Modal
 					title="Sign up"
+					footer={null}
 					visible={this.state.signupModalVisible}
-					onOk={() => {
-						console.log('ok');
-					}}
 					onCancel={() => {
 						this.setState({ signupModalVisible: false });
-						console.log('cancel');
 					}}
 				>
-					<p>Username</p>
+					<Form onSubmit={this.handleFormSubmit} className="">
+						<FormItem label="Username">
+							<Input value={this.state.usernameValue} placeholder="Username" />
+						</FormItem>
+					</Form>
 				</Modal>
+				<div className="header-border" />
 			</Header>
 		);
 	}
