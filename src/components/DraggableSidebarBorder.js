@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { instanceOf } from 'prop-types';
+import PropTypes from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { DragSource, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
@@ -35,9 +35,11 @@ export class DraggableSidebarBorder extends React.PureComponent {
 	}
 
 	handleDoubleClick = () => {
-		const { updateSidebarWidth, isCollapsed } = this.props;
+		const { updateSidebarWidth, isCollapsed, cookies } = this.props;
+		const newWidth = isCollapsed ? '400' : '0';
 
-		updateSidebarWidth(isCollapsed ? '400' : '0');
+		updateSidebarWidth(newWidth);
+		cookies.set('sidebarWidth', newWidth, { path: '/' });
 	};
 
 	render() {
@@ -60,7 +62,7 @@ export class DraggableSidebarBorder extends React.PureComponent {
 DraggableSidebarBorder.propTypes = {
 	isCollapsed: PropTypes.bool,
 	updateSidebarWidth: PropTypes.func,
-	cookies: instanceOf(Cookies),
+	cookies: PropTypes.instanceOf(Cookies),
 };
 
 export default withCookies(

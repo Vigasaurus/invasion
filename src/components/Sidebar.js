@@ -23,7 +23,7 @@ export class Sidebar extends React.Component {
 	renderContent() {
 		const { sidebarWidth } = this.props;
 
-		if (sidebarWidth && sidebarWidth <= 100) {
+		if (sidebarWidth && sidebarWidth <= 100 && sidebarWidth > 0) {
 			return (
 				<div className="expand-collapse-sidebar">
 					<Icon type="verticle-left" />

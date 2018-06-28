@@ -1,12 +1,28 @@
 .app-header {
 	background: #333;
 	padding: 0;
+	&.collapsed {
+		height: 10px;
+	}
+}
 
-	.header-border {
-		height: 5px;
-		background: $cobalt;
-		background: linear-gradient(to right, $cobalt 0%, #7db9e8 100%);
-		position: relative;
-		top: -5px;
+.header-border {
+	height: 5px;
+	background: $cobalt;
+	background: linear-gradient(to left, $cobalt 0%, #7db9e8 100%);
+	position: relative;
+	top: -5px;
+	cursor: pointer;
+
+	&.collapsed {
+		top: 0;
+		height: 12px;
+		display: flex;
+
+		> i {
+			color: #bbb;
+			margin: 0 auto;
+			font-size: 12px;
+		}
 	}
 }

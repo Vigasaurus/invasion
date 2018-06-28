@@ -1,9 +1,11 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox, Modal, Layout } from 'antd';
+import { withCookies, Cookies } from 'react-cookie';
 
 export class Header extends React.Component {
 	state = {
 		signupModalVisible: false,
+		isCollapsed: false,
 	};
 
 	handleSignupClick = () => {
@@ -14,14 +16,25 @@ export class Header extends React.Component {
 
 	handleFormSubmit = e => {
 		e.preventDefault();
-		console.log('submit');
+	};
+
+	handleBorderDoubleClick = () => {
+		const { isCollapsed } = this.state;
+
+		this.setState({ isCollapsed: !isCollapsed }, () => {
+			this.props.cookies.set('headerIsCollapsed', !isCollapsed);
+		});
 	};
 
 	render() {
 		const { Header } = Layout;
 		const FormItem = Form.Item;
 
-		return (
+		return this.state.isCollapsed ? (
+			<div className="header-border collapsed" onDoubleClick={this.handleBorderDoubleClick}>
+				<Icon type="down" />
+			</div>
+		) : (
 			<Header className="app-header">
 				<Button.Group>
 					<Button type="primary">Sign in</Button>
@@ -43,12 +56,14 @@ export class Header extends React.Component {
 						</FormItem>
 					</Form>
 				</Modal>
-				<div className="header-border" />
+				<div className="header-border" onDoubleClick={this.handleBorderDoubleClick} />
 			</Header>
 		);
 	}
 }
 
-Header.propTypes = {};
+Header.propTypes = {
+	cookies: PropTypes.instanceOf(Cookies),
+};
 
-export default Header;
+export default withCookies(Header);
