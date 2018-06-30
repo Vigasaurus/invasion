@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox, Modal, Layout } from 'antd';
+import PropTypes from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
 export class Header extends React.Component {
@@ -26,6 +27,28 @@ export class Header extends React.Component {
 		});
 	};
 
+	renderSignupModal() {
+		const { signupUsernameValue, signupPassword1Value, signupPassword2Value } = this.state;
+		const handleFormSubmit = () => {};
+
+		return (
+			<Modal
+				title="Sign up"
+				footer={null}
+				visible={this.state.signupModalVisible}
+				onCancel={() => {
+					this.setState({ signupModalVisible: false });
+				}}
+			>
+				<Form onSubmit={handleFormSubmit} className="">
+					<Input prefix={<Icon type="user" />} value={signupUsernameValue} placeholder="Username" />
+					<Input prefix={<Icon type="lock" />} value={signupPassword1Value} placeholder="Password" />
+					<Input prefix={<Icon type="lock" />} value={signupPassword2Value} placeholder="Repeat password" />
+				</Form>
+			</Modal>
+		);
+	}
+
 	render() {
 		const { Header } = Layout;
 		const FormItem = Form.Item;
@@ -42,20 +65,8 @@ export class Header extends React.Component {
 						Sign up
 					</Button>
 				</Button.Group>
-				<Modal
-					title="Sign up"
-					footer={null}
-					visible={this.state.signupModalVisible}
-					onCancel={() => {
-						this.setState({ signupModalVisible: false });
-					}}
-				>
-					<Form onSubmit={this.handleFormSubmit} className="">
-						<FormItem label="Username">
-							<Input value={this.state.usernameValue} placeholder="Username" />
-						</FormItem>
-					</Form>
-				</Modal>
+				{this.renderSignupModal()}
+
 				<div className="header-border" onDoubleClick={this.handleBorderDoubleClick} />
 			</Header>
 		);
