@@ -110,9 +110,6 @@ module.exports = () => {
 
 		const { passport } = socket.handshake.session;
 		const authenticated = ensureAuthenticated(socket);
-		const isAEM =
-			authenticated &&
-			(MODERATORS.includes(passport.user) || ADMINS.includes(passport.user) || EDITORS.includes(passport.user));
 
 		// Instantly sends the userlist as soon as the websocket is created.
 		// For some reason, sending the userlist before this happens actually doesn't work on the client. The event gets in, but is not used.
@@ -130,7 +127,7 @@ module.exports = () => {
 				handleUpdatedPlayerNote(socket, data);
 			})
 			.on('updateModAction', data => {
-				if (authenticated && isAEM) {
+				if (authenticated) {
 					handleModerationAction(socket, passport, data);
 				}
 			})
@@ -195,7 +192,7 @@ module.exports = () => {
 				}
 			})
 			.on('playerReportDismiss', () => {
-				if (authenticated && isAEM) {
+				if (authenticated) {
 					handlePlayerReportDismiss();
 				}
 			})
@@ -237,12 +234,12 @@ module.exports = () => {
 				}
 			})
 			.on('getModInfo', count => {
-				if (authenticated && isAEM) {
+				if (authenticated) {
 					sendModInfo(socket, count);
 				}
 			})
 			.on('getUserReports', () => {
-				if (authenticated && isAEM) {
+				if (authenticated) {
 					sendUserReports(socket);
 				}
 			})

@@ -6,6 +6,21 @@
 	}
 }
 
+.signup-modal {
+	.signup-password1 {
+		margin: 10px 0;
+	}
+
+	.signup-password2 {
+		margin-bottom: 10px;
+	}
+}
+
+.form-error-message {
+	color: red;
+	margin-left: 10px;
+}
+
 .header-border {
 	height: 5px;
 	background: $cobalt;
