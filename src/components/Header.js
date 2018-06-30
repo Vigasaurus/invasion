@@ -56,8 +56,8 @@ export class Header extends React.Component {
 			this.updateState('signinSubmitInProgress', true);
 			axios
 				.post('/account/signin', {
-					username: signupUsernameValue,
-					password: signupPassword1Value,
+					username: signinUsernameValue,
+					password: signinPasswordValue,
 				})
 				.then(res => {
 					if (window.location.pathname === '/observe/') {
@@ -68,7 +68,8 @@ export class Header extends React.Component {
 				})
 				.catch(res => {
 					this.setState({
-						signinResponseErrorMessage: res.response.data.message,
+						signinResponseErrorMessage:
+							res.response.status === 401 ? 'That is the wrong password for that account.' : 'Something went wrong.',
 						signinSubmitInProgress: false,
 					});
 				});
@@ -83,10 +84,10 @@ export class Header extends React.Component {
 				footer={null}
 				visible={this.state.signinModalVisible}
 				onCancel={() => {
-					this.setState({ signinModalVisible: false });
+					this.updateState('signinModalVisible', false);
 				}}
 			>
-				<Form onSubmit={handleFormSubmit} className="">
+				<Form onSubmit={handleFormSubmit}>
 					<Input
 						autoFocus
 						prefix={<Icon type="user" />}
@@ -164,10 +165,10 @@ export class Header extends React.Component {
 				footer={null}
 				visible={this.state.signupModalVisible}
 				onCancel={() => {
-					this.setState({ signupModalVisible: false });
+					this.updateState('signupModalVisible', false);
 				}}
 			>
-				<Form onSubmit={handleFormSubmit} className="">
+				<Form onSubmit={handleFormSubmit}>
 					<Input
 						autoFocus
 						prefix={<Icon type="user" />}
@@ -209,6 +210,7 @@ export class Header extends React.Component {
 
 	render() {
 		const { Header } = Layout;
+		console.log(JSON.parse(JSON.stringify(this.props.userInfo)));
 
 		return this.state.isCollapsed ? (
 			<div className="header-border collapsed" onDoubleClick={this.handleBorderDoubleClick}>
@@ -216,16 +218,20 @@ export class Header extends React.Component {
 			</div>
 		) : (
 			<Header className="app-header">
-				<Button.Group>
-					<Button type="primary" onClick={this.handleSigninClick}>
-						Sign in
-					</Button>
-					<Button type="primary" onClick={this.handleSignupClick}>
-						Sign up
-					</Button>
-				</Button.Group>
-				{this.renderSigninModal()}
-				{this.renderSignupModal()}
+				<div className="header-content">
+					<h1>Invasion</h1>
+
+					<Button.Group>
+						<Button type="primary" onClick={this.handleSigninClick}>
+							Sign in
+						</Button>
+						<Button type="primary" onClick={this.handleSignupClick}>
+							Sign up
+						</Button>
+					</Button.Group>
+					{this.renderSigninModal()}
+					{this.renderSignupModal()}
+				</div>
 				<div className="header-border" onDoubleClick={this.handleBorderDoubleClick} />
 			</Header>
 		);
@@ -234,6 +240,8 @@ export class Header extends React.Component {
 
 Header.propTypes = {
 	cookies: PropTypes.instanceOf(Cookies),
+	allCookies: PropTypes.object,
+	userInfo: PropTypes.object,
 };
 
 export default withCookies(Header);

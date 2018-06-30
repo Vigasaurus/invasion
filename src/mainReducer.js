@@ -1,4 +1,8 @@
 import { combineReducers } from 'redux';
-import userInfoReducer from './ducks/userInfo';
+import userInfo from './ducks/userInfo';
 
-export default combineReducers({ userInfoReducer });
+const rootReducer = combineReducers({
+	userInfo,
+});
+
+export default rootReducer;

@@ -1,10 +1,10 @@
-import babelPolyfill from 'babel-polyfill'; // eslint-disable-line
+import 'babel-polyfill';
 import React from 'react'; // eslint-disable-line no-unused-vars
 import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider as ReduxProvider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
-import AppComponent from './components/Main';
+import AppComponent from './components/Main.container';
 import polyfills from '../iso/polyfills.js';
 import reducer from './mainReducer';
 
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if (container) {
 		const store = createStore(reducer);
+		console.log(store.getState(), 'store');
 
 		render(
 			<CookiesProvider>

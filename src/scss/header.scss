@@ -1,6 +1,21 @@
 .app-header {
 	background: #333;
 	padding: 0;
+
+	.header-content {
+		display: flex;
+		justify-content: space-between;
+
+		> div {
+			margin-right: 20px;
+		}
+
+		> h1 {
+			color: #eee;
+			margin: 0 0 0 20px;
+		}
+	}
+
 	&.collapsed {
 		height: 10px;
 	}
@@ -13,6 +28,12 @@
 
 	.signup-password2 {
 		margin-bottom: 10px;
+	}
+}
+
+.signin-modal {
+	.signin-password {
+		margin: 10px 0;
 	}
 }
 
