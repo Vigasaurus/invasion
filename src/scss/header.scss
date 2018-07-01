@@ -42,6 +42,18 @@
 	margin-left: 10px;
 }
 
+.header-username {
+	color: #eee;
+
+	i {
+		font-size: 22px;
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 5px;
+		cursor: pointer;
+	}
+}
+
 .header-border {
 	height: 5px;
 	background: $cobalt;

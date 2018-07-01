@@ -20,9 +20,8 @@ export class Main extends React.Component {
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
-			console.log(username, 'u');
 
-			updateUserInfo({
+			this.props.updateUserInfo({
 				username,
 			});
 		}
@@ -37,7 +36,6 @@ export class Main extends React.Component {
 	}
 
 	render() {
-		console.log(this.props, 'main props');
 		return <MainComponent userInfo={this.props.userInfo} sidebarWidth={this.props.allCookies.sidebarWidth} />;
 	}
 }
@@ -45,10 +43,7 @@ export class Main extends React.Component {
 // const mapStateToProps = state => ({
 // 	userInfo: state.userInfo,
 // });
-const mapStateToProps = state => {
-	console.log(state, 'state');
-	return { userInfo: state.userInfo };
-};
+const mapStateToProps = state => ({ userInfo: state.userInfo });
 
 const mapDispatchToProps = dispatch => ({
 	updateUserInfo(data) {

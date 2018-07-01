@@ -48,6 +48,14 @@ export class Header extends React.Component {
 		});
 	};
 
+	handleLogoutClick = () => {
+		window.location.pathname = '/observe/';
+	};
+
+	handleSettingIconClick = () => {
+		// todo add react-router history push stuff
+	};
+
 	renderSigninModal() {
 		const { signinUsernameValue, signinPasswordValue, signinSubmitInProgress, signinResponseErrorMessage } = this.state;
 		const handleFormSubmit = e => {
@@ -209,8 +217,8 @@ export class Header extends React.Component {
 	}
 
 	render() {
+		const { userInfo } = this.props;
 		const { Header } = Layout;
-		console.log(JSON.parse(JSON.stringify(this.props.userInfo)));
 
 		return this.state.isCollapsed ? (
 			<div className="header-border collapsed" onDoubleClick={this.handleBorderDoubleClick}>
@@ -220,15 +228,24 @@ export class Header extends React.Component {
 			<Header className="app-header">
 				<div className="header-content">
 					<h1>Invasion</h1>
-
-					<Button.Group>
-						<Button type="primary" onClick={this.handleSigninClick}>
-							Sign in
-						</Button>
-						<Button type="primary" onClick={this.handleSignupClick}>
-							Sign up
-						</Button>
-					</Button.Group>
+					{userInfo.username ? (
+						<div className="header-username">
+							{userInfo.username}
+							<Icon type="setting" onClick={this.handleSettingIconClick} />
+							<Button type="primary" onClick={this.handleLogoutClick}>
+								Log out
+							</Button>
+						</div>
+					) : (
+						<Button.Group>
+							<Button type="primary" onClick={this.handleSigninClick}>
+								Sign in
+							</Button>
+							<Button type="primary" onClick={this.handleSignupClick}>
+								Sign up
+							</Button>
+						</Button.Group>
+					)}
 					{this.renderSigninModal()}
 					{this.renderSignupModal()}
 				</div>

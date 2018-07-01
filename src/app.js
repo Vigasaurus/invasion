@@ -15,14 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if (container) {
 		const store = createStore(reducer);
-		console.log(store.getState(), 'store');
 
 		render(
-			<CookiesProvider>
-				<ReduxProvider store={store}>
+			<ReduxProvider store={store}>
+				<CookiesProvider>
 					<AppComponent />
-				</ReduxProvider>
-			</CookiesProvider>,
+				</CookiesProvider>
+			</ReduxProvider>,
 			container
 		);
 	}

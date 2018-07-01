@@ -1,8 +1,4 @@
-build dnd sidebar - be able to dnd and snap to right.  custom image (none) for drag preview.  react-cookie implementation: read and set sidebar width on mount of app/dnd of sidebar
-
-build header - title, signin & signup with models, logout.  be able to log in and out.
-
-build settings icon on header that pops out sidebar account settings component with route and checks if logged in.  build a basic setting that saves to server on toggle.
+build settings icon on header that on click changes route (react-router implementation) and checks if logged in in the route itself not component.  build a basic setting (add timestamps to chat) that saves to server on toggle on hard-writes to the layout-no-menu component.
 
 build gameslist mid component - create game button (auth)
 
