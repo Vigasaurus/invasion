@@ -426,6 +426,30 @@ const handleUserLeaveGame = (socket, game, data, passport) => {
  * @param {object} socket - user socket reference.
  * @param {object} data - from socket emit.
  */
+
+/**
+ * @param {object} socket - socket reference.
+ * @param {object} passport - socket authentication.
+ * @param {object} data - from socket emit.
+ */
+module.exports.handleUpdateUserSettings = (socket, passport, data) => {
+	// Authentication Assured in routes.js
+
+	Account.findOne({ username: passport.user })
+		.then(account => {
+			account[data.type] = data.value;
+			account.save(() => {
+				socket.emit('updateUserSettings', {
+					type: data.type,
+					value: data.value,
+				});
+			});
+		})
+		.catch(err => {
+			console.log(err, 'error in saving user setting');
+		});
+};
+
 module.exports.handleUpdatedPlayerNote = (socket, data) => {
 	PlayerNote.findOne({ userName: data.userName, notedUser: data.notedUser }).then(note => {
 		if (note) {
@@ -1533,45 +1557,6 @@ module.exports.handleNewGeneralChat = (socket, passport, data) => {
 		}
 		io.sockets.emit('generalChats', generalChats);
 	}
-};
-
-/**
- * @param {object} socket - socket reference.
- * @param {object} passport - socket authentication.
- * @param {object} data - from socket emit.
- */
-module.exports.handleUpdatedGameSettings = (socket, passport, data) => {
-	// Authentication Assured in routes.js
-
-	Account.findOne({ username: passport.user })
-		.then(account => {
-			const currentPrivate = account.gameSettings.isPrivate;
-
-			for (const setting in data) {
-				account.gameSettings[setting] = data[setting];
-			}
-
-			const user = userList.find(u => u.userName === passport.user);
-			if (user) user.blacklist = account.gameSettings.blacklist;
-
-			if (
-				((data.isPrivate && !currentPrivate) || (!data.isPrivate && currentPrivate)) &&
-				(!account.gameSettings.privateToggleTime ||
-					account.gameSettings.privateToggleTime < new Date().getTime() - 64800000)
-			) {
-				account.gameSettings.privateToggleTime = new Date().getTime();
-				account.save(() => {
-					socket.emit('manualDisconnection');
-				});
-			} else {
-				account.save(() => {
-					socket.emit('gameSettings', account.gameSettings);
-				});
-			}
-		})
-		.catch(err => {
-			console.log(err);
-		});
 };
 
 /**

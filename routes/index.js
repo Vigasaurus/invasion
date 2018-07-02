@@ -73,23 +73,18 @@ module.exports = () => {
 		res.redirect('/game/');
 	});
 
-	app.get('/game/', ensureAuthenticated, (req, res) => {
+	app.get(/^\/game/, ensureAuthenticated, (req, res) => {
 		const { username } = req.user;
 
 		if (req.user.isBanned) {
 			res.redirect('/observe/');
 		} else {
 			Account.findOne({ username }, (err, account) => {
-				const { blacklist } = account.gameSettings;
-
-				account.gameSettings.blacklist = [];
-
+				console.log(account);
 				res.render('game', {
 					game: true,
-					verified: req.user.verified,
 					username,
-					gameSettings: account.gameSettings,
-					blacklist,
+					enabledTimestamp: Boolean(account.enabledTimestamp),
 				});
 			});
 		}

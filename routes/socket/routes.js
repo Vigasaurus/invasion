@@ -1,16 +1,12 @@
 const {
-	handleUpdatedTruncateGame,
-	handleUpdatedReportGame,
 	handleAddNewGame,
 	handleAddNewGameChat,
 	handleNewGeneralChat,
-	handleUpdatedGameSettings,
+	handleUpdateUserSettings,
 	handleSocketDisconnect,
 	handleUserLeaveGame,
 	checkUserStatus,
 	updateSeatedUser,
-	handleUpdateWhitelist,
-	handleAddNewClaim,
 	handleModerationAction,
 	handlePlayerReport,
 	handlePlayerReportDismiss,
@@ -71,7 +67,7 @@ const ensureAuthenticated = socket => {
 	if (socket.handshake && socket.handshake.session) {
 		const { passport } = socket.handshake.session;
 
-		return Boolean(passport && passport.user && Object.keys(passport).length);
+		return Boolean(passport && passport.user);
 	}
 };
 
@@ -131,37 +127,19 @@ module.exports = () => {
 					handleModerationAction(socket, passport, data);
 				}
 			})
-			.on('addNewClaim', data => {
-				const game = findGame(data);
-				if (authenticated && ensureInGame(passport, game)) {
-					handleAddNewClaim(passport, game, data);
-				}
-			})
-			.on('updateGameWhitelist', data => {
-				const game = findGame(data);
-				if (authenticated && ensureInGame(passport, game)) {
-					handleUpdateWhitelist(passport, game, data);
-				}
-			})
-			.on('updateTruncateGame', data => {
-				handleUpdatedTruncateGame(data);
-			})
 			.on('addNewGameChat', data => {
 				if (authenticated) {
 					handleAddNewGameChat(socket, passport, data);
 				}
-			})
-			.on('updateReportGame', data => {
-				handleUpdatedReportGame(socket, data);
 			})
 			.on('addNewGame', data => {
 				if (authenticated) {
 					handleAddNewGame(socket, passport, data);
 				}
 			})
-			.on('updateGameSettings', data => {
+			.on('updateUserSettings', data => {
 				if (authenticated) {
-					handleUpdatedGameSettings(socket, passport, data);
+					handleUpdateUserSettings(socket, passport, data);
 				}
 			})
 

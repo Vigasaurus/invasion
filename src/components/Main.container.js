@@ -7,9 +7,7 @@ import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
 import '../scss/app.scss';
 import io from 'socket.io-client';
-
 import MainComponent from './Main';
-
 import { updateUserInfo } from '../ducks/userInfo';
 
 const socket = io({ reconnect: false });
@@ -17,32 +15,44 @@ const socket = io({ reconnect: false });
 export class Main extends React.Component {
 	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
+		const { updateUserInfo } = this.props;
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
 
-			this.props.updateUserInfo({
+			updateUserInfo({
 				username,
+				...window.settings,
 			});
 		}
 
-		socket.on('manualDisconnection', () => {
-			window.location.pathname = '/observe';
+		socket.on('updateUserSettings', data => {
+			updateUserInfo({
+				[data.type]: data.value,
+			});
 		});
 
-		socket.on('manualReload', () => {
-			window.location.reload();
-		});
+		// socket.on('manualDisconnection', () => {
+		// 	window.location.pathname = '/observe';
+		// });
+
+		// socket.on('manualReload', () => {
+		// 	window.location.reload();
+		// });
 	}
 
 	render() {
-		return <MainComponent userInfo={this.props.userInfo} sidebarWidth={this.props.allCookies.sidebarWidth} />;
+		return (
+			<MainComponent
+				routeProps={this.props.routeProps}
+				socket={socket}
+				userInfo={this.props.userInfo}
+				sidebarWidth={this.props.allCookies.sidebarWidth}
+			/>
+		);
 	}
 }
 
-// const mapStateToProps = state => ({
-// 	userInfo: state.userInfo,
-// });
 const mapStateToProps = state => ({ userInfo: state.userInfo });
 
 const mapDispatchToProps = dispatch => ({
@@ -60,6 +70,7 @@ Main.propTypes = {
 	cookies: PropTypes.instanceOf(Cookies),
 	updateUserInfo: PropTypes.func,
 	userInfo: PropTypes.object,
+	routeProps: PropTypes.object,
 };
 
 export default DragDropContext(HTML5Backend)(

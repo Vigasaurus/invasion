@@ -19,16 +19,16 @@ export class Main extends React.Component {
 	render() {
 		const { Content } = Layout;
 		const { sidebarIsCollapsed, sidebarWidth } = this.state;
+		const { userInfo, routeProps, socket } = this.props;
 
 		return (
 			<Layout className="app-container">
-				<AppHeader userInfo={this.props.userInfo} />
+				<AppHeader userInfo={userInfo} routeProps={routeProps} />
 				<Content>
 					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
 					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />
-					<Mid updateSidebarWidth={this.updateSidebarWidth} />
+					<Mid socket={socket} updateSidebarWidth={this.updateSidebarWidth} userInfo={userInfo} />
 				</Content>
-				{/* <Footer style={{ textAlign: 'center' }}>footer here</Footer> */}
 			</Layout>
 		);
 	}
@@ -37,6 +37,8 @@ export class Main extends React.Component {
 Main.propTypes = {
 	userInfo: PropTypes.object,
 	sidebarWidth: PropTypes.string,
+	socket: PropTypes.object,
+	routeProps: PropTypes.object,
 };
 
 export default Main;

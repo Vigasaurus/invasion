@@ -6,7 +6,6 @@ const { ipbansNotEnforced, accountCreationDisabled } = require('./socket/models'
 // const resetPassword = require('./reset-password');
 const blacklistedWords = require('../iso/blacklistwords');
 const bannedEmails = require('../utils/disposibleEmails');
-const { expandAndSimplify } = require('./socket/ip-obf');
 /**
  * @param {object} req - express request object.
  * @param {object} res - express response object.
@@ -294,32 +293,10 @@ module.exports = () => {
 					req.headers['x-forwarded-for'] ||
 					req.connection.remoteAddress;
 
-				try {
-					ip = expandAndSimplify(ip);
-				} catch (e) {
-					console.log(e);
-				}
-
 				player.lastConnectedIP = ip;
 				player.save(() => {
 					res.send();
 				});
-
-				Profile.findOne({ _id: req.user.username })
-					.then(profile => {
-						if (profile) {
-							profile.lastConnectedIP = ip;
-							profile.save();
-						}
-					})
-					.catch(err => {
-						console.log(err, 'profile find err');
-					});
-
-				if (player.isTimeout && new Date().getTime() - new Date(player.isTimeout).getTime() < 64800000) {
-					req.logOut();
-					res.send();
-				}
 			});
 		}
 	);

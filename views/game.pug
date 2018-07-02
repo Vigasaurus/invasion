@@ -4,8 +4,8 @@ block content
 	if username
 		section#game-container(class=`username-${username}`)
 		script.
-			var gameSettings = #{gameSettings}
-			var verified = #{verified}
-			gameSettings.blacklist = !{JSON.stringify(blacklist).replace(/<\//g, '<\\/')}
+			var settings = {
+				enabledTimestamp: #{enabledTimestamp}
+			}
 	else
 		section#game-container

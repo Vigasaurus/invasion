@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Modal, Layout } from 'antd';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withCookies, Cookies } from 'react-cookie';
 import axios from 'axios';
 
@@ -18,6 +19,7 @@ export class Header extends React.Component {
 		signinPasswordValue: '',
 		signinResponseErrorMessage: '',
 		signinSubmitInProgress: false,
+		settingsIconIsHovering: false,
 	};
 
 	updateState = (stateName, value) => {
@@ -52,8 +54,8 @@ export class Header extends React.Component {
 		window.location.pathname = '/observe/';
 	};
 
-	handleSettingIconClick = () => {
-		// todo add react-router history push stuff
+	handleSettingIconHover = () => {
+		console.log('Hello, World!');
 	};
 
 	renderSigninModal() {
@@ -231,7 +233,18 @@ export class Header extends React.Component {
 					{userInfo.username ? (
 						<div className="header-username">
 							{userInfo.username}
-							<Icon type="setting" onClick={this.handleSettingIconClick} />
+							<Link to="/game/settings">
+								<Icon
+									type="setting"
+									spin={this.state.settingsIconIsHovering}
+									onMouseEnter={() => {
+										this.updateState('settingsIconIsHovering', true);
+									}}
+									onMouseLeave={() => {
+										this.updateState('settingsIconIsHovering', false);
+									}}
+								/>
+							</Link>
 							<Button type="primary" onClick={this.handleLogoutClick}>
 								Log out
 							</Button>
