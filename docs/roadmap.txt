@@ -1,5 +1,3 @@
-build settings icon on header that on click changes route (react-router implementation) and checks if logged in in the route itself not component.  build a basic setting (add timestamps to chat) that saves to server on toggle on hard-writes to the layout-no-menu component.
-
 build gameslist mid component - create game button (auth)
 
 build creategame component with route
