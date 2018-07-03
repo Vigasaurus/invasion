@@ -1,0 +1,12 @@
+.gamelist-container {
+	background: #333;
+	padding: 10px;
+	position: relative;
+	flex-grow: 1;
+
+	.creategame-button {
+		display: block;
+		margin: 10px auto;
+		width: 40%;
+	}
+}

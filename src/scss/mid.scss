@@ -2,4 +2,10 @@
 	background: #444;
 	flex-grow: 1;
 	color: white;
+	display: flex;
+	flex-direction: column;
+
+	.settings-container {
+		flex-grow: 1;
+	}
 }

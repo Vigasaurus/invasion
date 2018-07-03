@@ -80,7 +80,6 @@ module.exports = () => {
 			res.redirect('/observe/');
 		} else {
 			Account.findOne({ username }, (err, account) => {
-				console.log(account);
 				res.render('game', {
 					game: true,
 					username,

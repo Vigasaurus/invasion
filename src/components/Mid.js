@@ -4,6 +4,8 @@ import { DropTarget } from 'react-dnd';
 import { Redirect, withRouter, Switch, Route } from 'react-router-dom';
 
 import Settings from './Settings';
+import Gamelist from './Gamelist';
+import Creategame from './Creategame';
 
 const collect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget() });
 const spec = {
@@ -23,6 +25,9 @@ const Mid = ({ connectDropTarget, socket, userInfo }) =>
 						userInfo.username ? <Settings socket={socket} userInfo={userInfo} /> : <Redirect to="/observe" />
 					}
 				/>
+				<Route exact path="/game/creategame" render={() => <Creategame />} />
+				<Route path="/game" render={() => <Gamelist userInfo={userInfo} />} />
+				<Route path="/observe" render={() => <Gamelist />} />
 			</Switch>
 		</section>
 	);

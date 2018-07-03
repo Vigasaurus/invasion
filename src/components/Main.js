@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import Mid from './Mid';
 import DraggableSidebarBorder from './DraggableSidebarBorder';
 import AppHeader from './Header';
+import DevHelpers from './DevHelpers';
 
 export class Main extends React.Component {
 	state = {
@@ -24,6 +25,7 @@ export class Main extends React.Component {
 		return (
 			<Layout className="app-container">
 				<AppHeader userInfo={userInfo} routeProps={routeProps} />
+				<DevHelpers />
 				<Content>
 					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
 					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />
