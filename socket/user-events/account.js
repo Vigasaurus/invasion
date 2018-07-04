@@ -1,13 +1,13 @@
 const { games, userList, generalChats } = require('../models');
 const { sendGameList, sendGeneralChats, sendUserList } = require('../user-requests');
-const Account = require('../../../models/account');
-const Generalchats = require('../../../models/generalchats');
+const Account = require('../../models/account');
+const Generalchats = require('../../models/generalchats');
 const startGame = require('../game/start-game.js');
 const { secureGame, sendInProgressGameUpdate } = require('../util.js');
 const https = require('https');
 const _ = require('lodash');
-const animals = require('../../../utils/animals');
-const adjectives = require('../../../utils/adjectives');
+const animals = require('../../utils/animals');
+const adjectives = require('../../utils/adjectives');
 const { generateCombination } = require('gfycat-style-urls');
 
 /**

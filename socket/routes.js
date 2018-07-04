@@ -1,31 +1,5 @@
-const {
-	handleAddNewGame,
-	handleAddNewGameChat,
-	handleNewGeneralChat,
-	handleUpdateUserSettings,
-	handleSocketDisconnect,
-	handleUserLeaveGame,
-	checkUserStatus,
-	updateSeatedUser,
-	handleModerationAction,
-	handlePlayerReport,
-	handlePlayerReportDismiss,
-	handleUpdatedBio,
-	handleUpdatedRemakeGame,
-	handleUpdatedPlayerNote,
-} = require('./user-events/account');
-const {
-	sendPlayerNotes,
-	sendUserReports,
-	sendGameInfo,
-	sendUserGameSettings,
-	sendModInfo,
-	sendGameList,
-	sendGeneralChats,
-	sendUserList,
-	sendReplayGameChats,
-	updateUserStatus,
-} = require('./user-requests');
+const { handleAddNewGame, handleUpdateUserSettings, handleSocketDisconnect } = require('./user-events/account');
+const { sendGameInfo, sendUserGameSettings, sendGameList, sendGeneralChats, sendUserList } = require('./user-requests');
 const { games } = require('./models');
 
 const ensureAuthenticated = socket => socket.handshake.session.passport && socket.handshake.session.passport.user;
@@ -54,15 +28,15 @@ module.exports = () => {
 
 		socket
 			.on('disconnect', () => {
-				handleSocketDisconnect(socket);
+				// handleSocketDisconnect(socket);
 			})
 			.on('addNewGame', data => {
-				if (authenticated) {
-					handleAddNewGame(socket, passport, data);
+				if (isAuthenticated) {
+					// handleAddNewGame(socket, passport, data);
 				}
 			})
 			.on('updateUserSettings', data => {
-				if (authenticated) {
+				if (isAuthenticated) {
 					handleUpdateUserSettings(socket, passport, data);
 				}
 			})
@@ -71,7 +45,7 @@ module.exports = () => {
 				// if (io.sockets.adapter.rooms[game.general.uid] && socket) {
 				// 	socket.leave(game.general.uid);
 				// }
-				// if (authenticated && game) {
+				// if (isAuthenticated && game) {
 				// 	handleUserLeaveGame(socket, game, data, passport);
 				// }
 			})
@@ -95,7 +69,7 @@ module.exports = () => {
 
 			.on('selectedAwayTeamVote', data => {
 				// const game = findGame(data);
-				// if (authenticated && ensureInGame(passport, game)) {
+				// if (isAuthenticated && ensureInGame(passport, game)) {
 				// 	selectVoting(passport, game, data);
 				// }
 			});

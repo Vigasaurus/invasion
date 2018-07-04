@@ -1,7 +1,7 @@
 const passport = require('passport');
 const Account = require('../models/account');
 const BannedIP = require('../models/bannedIP');
-const { ipbansNotEnforced, accountCreationDisabled } = require('./socket/models');
+const { ipbansNotEnforced, accountCreationDisabled } = require('../socket/models');
 // const verifyAccount = require('./verify-account');
 // const resetPassword = require('./reset-password');
 const blacklistedWords = require('../iso/blacklistwords');
@@ -132,7 +132,8 @@ module.exports = () => {
 			res.status(401).json({
 				message: 'Sorry, usernames that end with 88 are not allowed.',
 			});
-		} else if (accountCreationDisabled.status) {
+			// } else if (accountCreationDisabled.status) {
+		} else if (false) {
 			res.status(403).json({
 				message:
 					'Sorry, creating new accounts is temporarily disabled.  If you need an account created, please contact our moderators on discord.',
