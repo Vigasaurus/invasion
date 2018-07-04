@@ -43,7 +43,15 @@ module.exports.handleUpdateUserSettings = (socket, passport, data) => {
  * @param {object} passport - socket authentication.
  * @param {object} data - from socket emit.
  */
-module.exports.handleAddNewGame = (socket, passport, data) => {};
+module.exports.handleAddNewGame = (socket, data) => {
+	games.push({
+		info: {
+			name: 'mockName',
+			uid: generateCombination(2, '', true),
+		},
+	});
+	sendGameList();
+};
 
 const crashReport = JSON.stringify({
 	content: `INVASION: ${process.env.DISCORDADMINPING} the site just crashed or reset.`,

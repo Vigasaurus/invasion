@@ -26,7 +26,7 @@ const Mid = ({ connectDropTarget, socket, userInfo }) =>
 					}
 				/>
 				<Route exact path="/game/creategame" render={() => <Creategame />} />
-				<Route path="/game" render={() => <Gamelist userInfo={userInfo} />} />
+				<Route path="/game" render={() => <Gamelist socket={socket} userInfo={userInfo} />} />
 				<Route path="/observe" render={() => <Gamelist />} />
 			</Switch>
 		</section>

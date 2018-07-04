@@ -83,7 +83,7 @@ module.exports = () => {
 				res.render('game', {
 					game: true,
 					username,
-					enabledTimestamp: Boolean(account.enabledTimestamp),
+					timestampsEnabled: Boolean(account.timestampsEnabled),
 				});
 			});
 		}

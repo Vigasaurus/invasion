@@ -11,6 +11,8 @@ const Settings = ({ userInfo, socket }) => {
 		});
 	};
 
+	console.log(userInfo, 'ui');
+
 	return (
 		<section className="settings-container">
 			<Link to="/game" className="settings-close-button">

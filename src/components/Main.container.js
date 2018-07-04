@@ -9,6 +9,7 @@ import '../scss/app.scss';
 import io from 'socket.io-client';
 import MainComponent from './Main';
 import { updateUserInfo } from '../ducks/userInfo';
+import { updateGamesList } from '../ducks/gamesList';
 
 const socket = io({ reconnect: false });
 
@@ -30,6 +31,10 @@ export class Main extends React.Component {
 			updateUserInfo({
 				[data.type]: data.value,
 			});
+		});
+
+		socket.on('gamesList', data => {
+			updateGamesList(data);
 		});
 
 		// socket.on('manualDisconnection', () => {

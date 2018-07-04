@@ -24,7 +24,7 @@ module.exports.sendUserList = socket => {
  * @param {object} socket - user socket reference.
  */
 module.exports.sendGameList = socket => {
-	const formattedGames = games.map(game => ({}));
+	const formattedGames = games.map(game => ({ name: game.info.name }));
 
 	if (socket) {
 		socket.emit('gameList', formattedGames);

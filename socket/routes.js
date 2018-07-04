@@ -50,6 +50,11 @@ module.exports = () => {
 				// }
 			})
 
+			.on('createGame', data => {
+				if (isAuthenticated) {
+					handleAddNewGame(socket, data);
+				}
+			})
 			// user-requests
 			.on('getGameList', () => {
 				sendGameList(socket);

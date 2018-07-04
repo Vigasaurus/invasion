@@ -7,7 +7,7 @@ const Account = new Schema({
 		required: true,
 		unique: true,
 	},
-	timestampEnabled: Boolean,
+	timestampsEnabled: Boolean,
 	signupIP: String,
 	lastConnectedIP: String,
 	hashUid: String,
