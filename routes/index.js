@@ -1,6 +1,6 @@
 const passport = require('passport'); // eslint-disable-line no-unused-vars
 const Account = require('../models/account'); // eslint-disable-line no-unused-vars
-const socketRoutes = require('./socket/routes');
+const socketRoutes = require('../socket/routes');
 const accounts = require('./accounts');
 const version = require('../version');
 const fs = require('fs');
