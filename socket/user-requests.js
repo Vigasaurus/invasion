@@ -24,12 +24,16 @@ module.exports.sendUserList = socket => {
  * @param {object} socket - user socket reference.
  */
 module.exports.sendGameList = socket => {
-	const formattedGames = games.map(game => ({ name: game.info.name }));
+	const formattedGames = {
+		list: games.map(game => ({ name: game.info.name, uid: game.info.uid })),
+		sticky: '',
+	};
 
 	if (socket) {
-		socket.emit('gameList', formattedGames);
+		socket.emit('gamesList', formattedGames);
 	} else {
-		io.sockets.emit('gameList', formattedGames);
+		console.log(games, 'games');
+		io.sockets.emit('gamesList', formattedGames);
 	}
 };
 

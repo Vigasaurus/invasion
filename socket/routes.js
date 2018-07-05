@@ -56,7 +56,7 @@ module.exports = () => {
 				}
 			})
 			// user-requests
-			.on('getGameList', () => {
+			.on('getGamesList', () => {
 				sendGameList(socket);
 			})
 			.on('getGameInfo', uid => {

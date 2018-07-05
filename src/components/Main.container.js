@@ -16,7 +16,7 @@ const socket = io({ reconnect: false });
 export class Main extends React.Component {
 	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
-		const { updateUserInfo } = this.props;
+		const { updateUserInfo, updateGamesList } = this.props;
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
@@ -37,6 +37,8 @@ export class Main extends React.Component {
 			updateGamesList(data);
 		});
 
+		socket.emit('getGamesList');
+
 		// socket.on('manualDisconnection', () => {
 		// 	window.location.pathname = '/observe';
 		// });
@@ -47,27 +49,34 @@ export class Main extends React.Component {
 	}
 
 	render() {
+		const { routeProps, userInfo, allCookies, gamesList } = this.props;
+
 		return (
 			<MainComponent
-				routeProps={this.props.routeProps}
+				routeProps={routeProps}
 				socket={socket}
-				userInfo={this.props.userInfo}
-				sidebarWidth={this.props.allCookies.sidebarWidth}
+				userInfo={userInfo}
+				sidebarWidth={allCookies.sidebarWidth}
+				gamesList={gamesList}
 			/>
 		);
 	}
 }
 
-const mapStateToProps = state => ({ userInfo: state.userInfo });
+const mapStateToProps = state => ({ userInfo: state.userInfo, gamesList: state.gamesList });
 
 const mapDispatchToProps = dispatch => ({
 	updateUserInfo(data) {
 		dispatch(updateUserInfo(data));
 	},
+	updateGamesList(data) {
+		dispatch(updateGamesList(data));
+	},
 });
 
 Main.defaultProps = {
 	userInfo: {},
+	gamesList: {},
 };
 
 Main.propTypes = {
@@ -75,6 +84,7 @@ Main.propTypes = {
 	cookies: PropTypes.instanceOf(Cookies),
 	updateUserInfo: PropTypes.func,
 	userInfo: PropTypes.object,
+	gamesList: PropTypes.object,
 	routeProps: PropTypes.object,
 };
 

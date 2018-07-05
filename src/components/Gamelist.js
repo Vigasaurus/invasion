@@ -18,9 +18,21 @@ export class Gamelist extends React.Component {
 	// 	);
 	// }
 
+	renderGamelist() {
+		const { gamesList } = this.props;
+
+		return gamesList.list.map(game => (
+			<div className="game-item" key={game.uid}>
+				{game.name}
+			</div>
+		));
+	}
+
 	render() {
+		const { socket, gamesList } = this.props;
+
 		const click = () => {
-			this.props.socket.emit('createGame', {});
+			socket.emit('createGame', {});
 		};
 
 		return (
@@ -28,17 +40,15 @@ export class Gamelist extends React.Component {
 				<Button type="primary" size="large" className="creategame-button" onClick={click}>
 					Create a new game
 				</Button>
+				{gamesList.list && this.renderGamelist()}
 			</section>
 		);
 	}
 }
 
-Gamelist.defaultProps = {
-	userInfo: {},
-};
-
 Gamelist.propTypes = {
 	userInfo: PropTypes.object,
+	gamesList: PropTypes.object,
 };
 
 export default Gamelist;
