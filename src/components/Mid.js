@@ -6,6 +6,7 @@ import { Redirect, withRouter, Switch, Route } from 'react-router-dom';
 import Settings from './Settings';
 import Gamelist from './Gamelist';
 import Creategame from './Creategame';
+import Game from './game/Game';
 
 const collect = (connect, monitor) => ({ connectDropTarget: connect.dropTarget() });
 const spec = {
@@ -26,8 +27,17 @@ const Mid = ({ connectDropTarget, socket, userInfo, gamesList }) =>
 					}
 				/>
 				<Route exact path="/game/creategame" render={() => <Creategame />} />
-				<Route path="/game" render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />} />
-				<Route path="/observe" render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />} />
+				<Route
+					exact
+					path="/game"
+					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
+				/>
+				<Route
+					exact
+					path="/observe"
+					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
+				/>
+				<Route path="/game/table/:id" render={() => <Game />} />
 			</Switch>
 		</section>
 	);

@@ -40,17 +40,18 @@ module.exports.handleUpdateUserSettings = (socket, passport, data) => {
 
 /**
  * @param {object} socket - user socket reference.
- * @param {object} passport - socket authentication.
  * @param {object} data - from socket emit.
  */
 module.exports.handleAddNewGame = (socket, data) => {
-	games.push({
+	const newGame = {
 		info: {
 			name: 'mockName',
 			uid: generateCombination(2, '', true),
 		},
-	});
+	};
+	games.push(newGame);
 	sendGameList();
+	socket.emit('gameUpdate', newGame, true);
 };
 
 const crashReport = JSON.stringify({

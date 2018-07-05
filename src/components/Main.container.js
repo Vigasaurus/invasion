@@ -10,13 +10,14 @@ import io from 'socket.io-client';
 import MainComponent from './Main';
 import { updateUserInfo } from '../ducks/userInfo';
 import { updateGamesList } from '../ducks/gamesList';
+import { updateGameInfo } from '../ducks/gameInfo';
 
 const socket = io({ reconnect: false });
 
 export class Main extends React.Component {
 	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
-		const { updateUserInfo, updateGamesList } = this.props;
+		const { userInfo, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
@@ -35,6 +36,16 @@ export class Main extends React.Component {
 
 		socket.on('gamesList', data => {
 			updateGamesList(data);
+		});
+
+		socket.on('gameUpdate', (data, routeToGame) => {
+			updateGameInfo(data);
+
+			if (routeToGame) {
+				routeProps.history.push(
+					this.props.userInfo.username ? `/game/table/${data.info.uid}` : `/observe/table/${data.info.uid}`
+				);
+			}
 		});
 
 		socket.emit('getGamesList');
@@ -63,7 +74,7 @@ export class Main extends React.Component {
 	}
 }
 
-const mapStateToProps = state => ({ userInfo: state.userInfo, gamesList: state.gamesList });
+const mapStateToProps = state => ({ userInfo: state.userInfo, gamesList: state.gamesList, gameInfo: state.gameInfo });
 
 const mapDispatchToProps = dispatch => ({
 	updateUserInfo(data) {
@@ -72,20 +83,27 @@ const mapDispatchToProps = dispatch => ({
 	updateGamesList(data) {
 		dispatch(updateGamesList(data));
 	},
+	updateGameInfo(data) {
+		dispatch(updateGameInfo(data));
+	},
 });
 
 Main.defaultProps = {
 	userInfo: {},
 	gamesList: {},
+	gameInfo: {},
 };
 
 Main.propTypes = {
 	allCookies: PropTypes.object,
 	cookies: PropTypes.instanceOf(Cookies),
 	updateUserInfo: PropTypes.func,
+	updateGameInfo: PropTypes.func,
+	updateGamesList: PropTypes.func,
 	userInfo: PropTypes.object,
 	gamesList: PropTypes.object,
 	routeProps: PropTypes.object,
+	gameInfo: PropTypes.object,
 };
 
 export default DragDropContext(HTML5Backend)(
