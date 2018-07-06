@@ -9,10 +9,10 @@ export default () => (
 		xmlns="http://www.w3.org/2000/svg"
 		enable_background="new 0 0 2000 1001"
 		pretty_print="False"
-		style={{ strokeLinejoin: 'round', stroke: '#000', fill: 'none' }}
 		version="1.1"
 		viewBox="0 0 2000 1001"
-		id="svg2"
+		id="svg"
+		className="map-container"
 	>
 		<metadata id="metadata8">
 			<views id="views10">
