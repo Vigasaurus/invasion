@@ -21,7 +21,7 @@ export class Main extends React.Component {
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
-
+			console.log(window.settings);
 			updateUserInfo({
 				username,
 				...window.settings,

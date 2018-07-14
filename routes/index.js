@@ -84,6 +84,7 @@ module.exports = () => {
 					game: true,
 					username,
 					timestampsEnabled: Boolean(account.timestampsEnabled),
+					helpDisabled: Boolean(account.helpDisabled),
 				});
 			});
 		}

@@ -4,14 +4,12 @@ import { Row, Col, Switch, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
 const Settings = ({ userInfo, socket }) => {
-	const handleTimestampToggle = e => {
+	const handleSettingToggle = (type, event) => {
 		socket.emit('updateUserSettings', {
-			type: 'timestampsEnabled',
-			value: e,
+			type,
+			value: event,
 		});
 	};
-
-	console.log(userInfo, 'ui');
 
 	return (
 		<section className="settings-container">
@@ -22,7 +20,21 @@ const Settings = ({ userInfo, socket }) => {
 			<Row>
 				<Col span={6} className="centered-item">
 					<p>Enable Timestamps</p>
-					<Switch checked={userInfo.timestampsEnabled} onChange={handleTimestampToggle} />
+					<Switch
+						checked={userInfo.timestampsEnabled}
+						onChange={e => {
+							handleSettingToggle('timestampsEnabled', e);
+						}}
+					/>
+				</Col>
+				<Col span={6} className="centered-item">
+					<p>Disable help popups</p>
+					<Switch
+						checked={userInfo.helpDisabled}
+						onChange={e => {
+							handleSettingToggle('helpDisabled', e);
+						}}
+					/>
 				</Col>
 			</Row>
 		</section>
