@@ -15,7 +15,7 @@ const spec = {
 	},
 };
 
-const Mid = ({ connectDropTarget, socket, userInfo, gamesList }) =>
+const Mid = ({ connectDropTarget, socket, userInfo, gamesList, gameInfo }) =>
 	connectDropTarget(
 		<section className="mid-container">
 			<Switch>
@@ -37,7 +37,7 @@ const Mid = ({ connectDropTarget, socket, userInfo, gamesList }) =>
 					path="/observe"
 					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
 				/>
-				<Route path="/game/table/:id" render={() => <Game />} />
+				<Route path="/game/table/:id" render={() => <Game gameInfo={gameInfo} userInfo={userInfo} />} />
 			</Switch>
 		</section>
 	);
@@ -47,6 +47,7 @@ Mid.propTypes = {
 	socket: PropTypes.object,
 	userInfo: PropTypes.object,
 	gamesList: PropTypes.object,
+	gameInfo: PropTypes.object,
 };
 
 export default withRouter(DropTarget('sidebar', spec, collect)(Mid));

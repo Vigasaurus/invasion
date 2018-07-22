@@ -20,7 +20,7 @@ export class Main extends React.Component {
 	render() {
 		const { Content } = Layout;
 		const { sidebarIsCollapsed, sidebarWidth } = this.state;
-		const { userInfo, routeProps, socket, gamesList } = this.props;
+		const { gameInfo, userInfo, routeProps, socket, gamesList } = this.props;
 
 		return (
 			<Layout className="app-container">
@@ -28,8 +28,18 @@ export class Main extends React.Component {
 				<DevHelpers />
 				<Content>
 					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
-					<DraggableSidebarBorder isCollapsed={sidebarIsCollapsed} updateSidebarWidth={this.updateSidebarWidth} />
-					<Mid gamesList={gamesList} socket={socket} updateSidebarWidth={this.updateSidebarWidth} userInfo={userInfo} />
+					<DraggableSidebarBorder
+						isHelpDisabled={userInfo.helpDisabled}
+						isCollapsed={sidebarIsCollapsed}
+						updateSidebarWidth={this.updateSidebarWidth}
+					/>
+					<Mid
+						gamesList={gamesList}
+						socket={socket}
+						updateSidebarWidth={this.updateSidebarWidth}
+						userInfo={userInfo}
+						gameInfo={gameInfo}
+					/>
 				</Content>
 			</Layout>
 		);
@@ -42,6 +52,7 @@ Main.propTypes = {
 	sidebarWidth: PropTypes.string,
 	socket: PropTypes.object,
 	routeProps: PropTypes.object,
+	gameInfo: PropTypes.object,
 };
 
 export default Main;

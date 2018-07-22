@@ -17,11 +17,11 @@ const socket = io({ reconnect: false });
 export class Main extends React.Component {
 	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
-		const { userInfo, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
+		const { updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
-			console.log(window.settings);
+
 			updateUserInfo({
 				username,
 				...window.settings,
@@ -60,7 +60,7 @@ export class Main extends React.Component {
 	}
 
 	render() {
-		const { routeProps, userInfo, allCookies, gamesList } = this.props;
+		const { gameInfo, routeProps, userInfo, allCookies, gamesList } = this.props;
 
 		return (
 			<MainComponent
@@ -69,6 +69,7 @@ export class Main extends React.Component {
 				userInfo={userInfo}
 				sidebarWidth={allCookies.sidebarWidth}
 				gamesList={gamesList}
+				gameInfo={gameInfo}
 			/>
 		);
 	}
