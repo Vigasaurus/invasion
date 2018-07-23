@@ -37,7 +37,12 @@ const Mid = ({ connectDropTarget, socket, userInfo, gamesList, gameInfo }) =>
 					path="/observe"
 					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
 				/>
-				<Route path="/game/table/:id" render={() => <Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} />} />
+				<Route
+					path="/game/table/:id"
+					render={routeProps => (
+						<Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} uid={routeProps.match.params.id} />
+					)}
+				/>
 			</Switch>
 		</section>
 	);

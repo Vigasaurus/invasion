@@ -41,6 +41,10 @@ export class Main extends React.Component {
 		socket.on('gameUpdate', (data, routeToGame) => {
 			updateGameInfo(data);
 
+			if (!Object.keys(data).length) {
+				routeProps.history.replace(this.props.userInfo.username ? '/game' : '/observe');
+			}
+
 			if (routeToGame) {
 				routeProps.history.push(
 					this.props.userInfo.username ? `/game/table/${data.info.uid}` : `/observe/table/${data.info.uid}`

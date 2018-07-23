@@ -9,6 +9,8 @@ const secureGame = game => {
 	return _game;
 };
 
+module.exports.secureGame = secureGame;
+
 /**
  * @param {object} game - game to act on.
  */

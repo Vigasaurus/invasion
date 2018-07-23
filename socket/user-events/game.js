@@ -29,6 +29,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 	};
 	games.push(newGame);
 	sendGameList();
+	socket.join(newGame.info.uid);
 	socket.emit('gameUpdate', newGame, true);
 };
 
@@ -44,8 +45,7 @@ module.exports.handleAddNewGamechat = data => {
 	};
 
 	game.playerChats.push(chat);
-	console.log(io.sockets.adapter.rooms);
-	io.sockets.adapter.rooms[game.info.uid].sockets.emit('addNewChat', chat);
+	io.to(game.info.uid).emit('addNewChat', chat);
 };
 
 const crashReport = JSON.stringify({

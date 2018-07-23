@@ -4,7 +4,7 @@
 // const Game = require('../../models/game');
 
 const { games, userList, generalChats } = require('./models');
-const { sendInProgressGameUpdate } = require('./util');
+const { secureGame, sendInProgressGameUpdate } = require('./util');
 
 /**
  * @param {object} socket - user socket reference.
@@ -17,6 +17,28 @@ module.exports.sendUserList = socket => {
 		});
 	} else {
 		// send to all people subbed to userlist & all not logged in
+	}
+};
+
+module.exports.sendGameInfo = (socket, uid) => {
+	const game = games.find(game => game.info.uid === uid);
+	const { passport } = socket.handshake.session;
+
+	if (game.info.isInProgress) {
+		if (
+			passport &&
+			Object.keys(passport).length &&
+			game.publicPlayersState.find(player => player.username === passport.user)
+		) {
+			player.leftGame = false;
+			player.connected = true;
+			sendInProgressGameUpdate(game);
+		} else {
+			_game = secureGame(game);
+			socket.emit('gameUpdate', secureGame(game));
+		}
+	} else {
+		socket.emit('gameUpdate', {});
 	}
 };
 
