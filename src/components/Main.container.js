@@ -48,6 +48,10 @@ export class Main extends React.Component {
 			}
 		});
 
+		socket.on('addNewChat', data => {
+			console.log(data, 'data');
+		});
+
 		socket.emit('getGamesList');
 
 		// socket.on('manualDisconnection', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Form, Input, Button } from 'antd';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export class Gamechat extends React.Component {
 	state = {
@@ -20,9 +20,15 @@ export class Gamechat extends React.Component {
 	};
 
 	handleChatFormSubmit = e => {
+		const { userInfo, gameInfo, socket } = this.props;
 		e.preventDefault();
+		console.log(gameInfo);
 
-		console.log('Hello, World!');
+		socket.emit('newGamechat', {
+			username: userInfo.username,
+			uid: gameInfo.info.uid,
+			chat: this.state.chatInputValue,
+		});
 	};
 
 	renderHeader() {
@@ -81,6 +87,10 @@ export class Gamechat extends React.Component {
 	}
 }
 
-Gamechat.propTypes = {};
+Gamechat.propTypes = {
+	userInfo: PropTypes.object,
+	gameInfo: PropTypes.object,
+	socket: PropTypes.object,
+};
 
 export default Gamechat;

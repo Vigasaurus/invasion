@@ -29,10 +29,12 @@ export class Gamelist extends React.Component {
 	}
 
 	render() {
-		const { socket, gamesList } = this.props;
+		const { socket, gamesList, userInfo } = this.props;
 
 		const click = () => {
-			socket.emit('createGame', {});
+			socket.emit('createGame', {
+				gameCreator: userInfo.username,
+			});
 		};
 
 		return (

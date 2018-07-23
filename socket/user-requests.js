@@ -32,7 +32,6 @@ module.exports.sendGameList = socket => {
 	if (socket) {
 		socket.emit('gamesList', formattedGames);
 	} else {
-		console.log(games, 'games');
 		io.sockets.emit('gamesList', formattedGames);
 	}
 };

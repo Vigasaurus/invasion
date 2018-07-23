@@ -1,7 +1,6 @@
 const { games, userList, generalChats } = require('../models');
 const { sendGameList, sendGeneralChats, sendUserList } = require('../user-requests');
 const Account = require('../../models/account');
-const Generalchats = require('../../models/generalchats');
 const startGame = require('../game/start-game.js');
 const { secureGame, sendInProgressGameUpdate } = require('../util.js');
 const https = require('https');
@@ -12,30 +11,41 @@ const { generateCombination } = require('gfycat-style-urls');
 
 /**
  * @param {object} socket - user socket reference.
- */
-const handleSocketDisconnect = socket => {};
-
-/**
- * @param {object} socket - socket reference.
- * @param {object} passport - socket authentication.
  * @param {object} data - from socket emit.
  */
-module.exports.handleUpdateUserSettings = (socket, passport, data) => {
-	// Authentication Assured in routes.js
+module.exports.handleAddNewGame = (socket, data) => {
+	const newGame = {
+		info: {
+			name: 'mockName',
+			uid: generateCombination(2, '', true),
+			gameCreator: data.gameCreator,
+		},
+		playerChats: [],
+		publicPlayersState: [
+			{
+				username: data.gameCreator,
+			},
+		],
+	};
+	games.push(newGame);
+	sendGameList();
+	socket.emit('gameUpdate', newGame, true);
+};
 
-	Account.findOne({ username: passport.user })
-		.then(account => {
-			account[data.type] = data.value;
-			account.save(() => {
-				socket.emit('updateUserSettings', {
-					type: data.type,
-					value: data.value,
-				});
-			});
-		})
-		.catch(err => {
-			console.log(err, 'error in saving user setting');
-		});
+/**
+ * @param {object} data - from socket emit.
+ */
+module.exports.handleAddNewGamechat = data => {
+	const game = games.find(game => game.info.uid === data.uid);
+	const chat = {
+		timestamp: new Date(),
+		username: data.username,
+		chat: data.chat,
+	};
+
+	game.playerChats.push(chat);
+	console.log(io.sockets.adapter.rooms);
+	io.sockets.adapter.rooms[game.info.uid].sockets.emit('addNewChat', chat);
 };
 
 const crashReport = JSON.stringify({
