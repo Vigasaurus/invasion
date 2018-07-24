@@ -1,8 +1,15 @@
 gameInfo
 	info
-		name String
-		gameCreator String
-		uid String
+		name string
+		gameCreator string
+		uid string
+		isStarted bool
 	playerChats array
 		obj
+	combinedChats array
 	publicPlayersState array
+	internals
+		unseatedGameChats array
+			obj
+				username string
+				gameChats array

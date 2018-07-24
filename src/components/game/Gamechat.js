@@ -22,7 +22,6 @@ export class Gamechat extends React.Component {
 	handleChatFormSubmit = e => {
 		const { userInfo, gameInfo, socket } = this.props;
 		e.preventDefault();
-		console.log(gameInfo);
 
 		socket.emit('newGamechat', {
 			username: userInfo.username,
@@ -77,10 +76,24 @@ export class Gamechat extends React.Component {
 		);
 	}
 
+	renderGamechats() {
+		const { gameInfo } = this.props;
+
+		// {gameInfo.combinedChats
+		return (
+			<ul>
+				{gameInfo.playerChats
+					.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+					.map((chat, index) => <li key={`${chat.username}${index}`}>{chat.chat}</li>)}
+			</ul>
+		);
+	}
+
 	render() {
 		return (
 			<section className="gamechat-container">
 				{this.renderHeader()}
+				<div className="chats-container">{this.renderGamechats()}</div>
 				{this.renderInputForm()}
 			</section>
 		);

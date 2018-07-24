@@ -21,11 +21,21 @@ module.exports.handleAddNewGame = (socket, data) => {
 			gameCreator: data.gameCreator,
 		},
 		playerChats: [],
+		combinedChats: [],
 		publicPlayersState: [
 			{
 				username: data.gameCreator,
 			},
 		],
+		internals: {
+			playersState: [
+				{
+					username: data.gameCreator,
+					gameChats: [],
+				},
+			],
+			unseatedGameChats: [],
+		},
 	};
 	games.push(newGame);
 	sendGameList();
@@ -45,6 +55,7 @@ module.exports.handleAddNewGamechat = data => {
 	};
 
 	game.playerChats.push(chat);
+
 	io.to(game.info.uid).emit('addNewChat', chat);
 };
 

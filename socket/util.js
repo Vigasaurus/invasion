@@ -20,17 +20,16 @@ module.exports.sendInProgressGameUpdate = game => {
 
 	/**
 	 * @param {object} game - game to act on.
-	 * @param {string} userName - name of user to act on.
+	 * @param {string} username - name of user to act on.
 	 * @return {array} list of chats.
 	 */
-	const combineInProgressChats = (game, userName) => {
-		let player;
+	const combineInProgressChats = (game, username) => {
+		const player =
+			username && game.info.isStarted
+				? game.internals.seatedPlayers.find(player => player.username === username)
+				: undefined;
 
-		if (userName && game.gameState.isTracksFlipped) {
-			player = game.private.seatedPlayers.find(player => player.userName === userName);
-		}
-
-		return player ? player.gameChats.concat(game.chats) : game.private.unSeatedGameChats.concat(game.chats);
+		return player ? player.gameChats.concat(game.playerChats) : game.internals.unSeatedGameChats.concat(game.chats);
 	};
 
 	let roomSockets;
