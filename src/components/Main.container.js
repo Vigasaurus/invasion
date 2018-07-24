@@ -10,14 +10,14 @@ import io from 'socket.io-client';
 import MainComponent from './Main';
 import { updateUserInfo } from '../ducks/userInfo';
 import { updateGamesList } from '../ducks/gamesList';
-import { updateGameInfo } from '../ducks/gameInfo';
+import { updateGameInfo, appendNewGamechat } from '../ducks/gameInfo';
 
 const socket = io({ reconnect: false });
 
 export class Main extends React.Component {
 	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
-		const { updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
+		const { appendNewGamechat, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
@@ -53,7 +53,7 @@ export class Main extends React.Component {
 		});
 
 		socket.on('addNewChat', data => {
-			console.log(data, 'data');
+			appendNewGamechat(data);
 		});
 
 		socket.emit('getGamesList');
@@ -94,6 +94,9 @@ const mapDispatchToProps = dispatch => ({
 	},
 	updateGameInfo(data) {
 		dispatch(updateGameInfo(data));
+	},
+	appendNewGamechat(data) {
+		dispatch(appendNewGamechat(data));
 	},
 });
 

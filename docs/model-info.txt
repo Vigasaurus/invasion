@@ -1,1 +1,8 @@
-	
+gameInfo
+	info
+		name String
+		gameCreator String
+		uid String
+	playerChats array
+		obj
+	publicPlayersState array
