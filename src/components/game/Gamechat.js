@@ -28,6 +28,10 @@ export class Gamechat extends React.Component {
 			uid: gameInfo.info.uid,
 			chat: this.state.chatInputValue,
 		});
+
+		this.setState({
+			chatInputValue: '',
+		});
 	};
 
 	renderHeader() {
@@ -63,6 +67,7 @@ export class Gamechat extends React.Component {
 		return (
 			<Form onSubmit={this.handleChatFormSubmit}>
 				<Input
+					autoFocus
 					placeholder="Chat"
 					onChange={e => {
 						this.updateState('chatInputValue', e.target.value);
@@ -82,9 +87,11 @@ export class Gamechat extends React.Component {
 		// {gameInfo.combinedChats
 		return (
 			<ul>
-				{gameInfo.playerChats
-					.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
-					.map((chat, index) => <li key={`${chat.username}${index}`}>{chat.chat}</li>)}
+				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)).map((chat, index) => (
+					<li key={`${chat.username}${index}`}>
+						{chat.username}: {chat.chat}
+					</li>
+				))}
 			</ul>
 		);
 	}
