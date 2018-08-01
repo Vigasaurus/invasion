@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Map from './Map';
 import Gamechat from './Gamechat';
+import Meters from './Meters';
 
 class Game extends React.Component {
 	componentDidMount() {
@@ -18,7 +19,8 @@ class Game extends React.Component {
 		return (
 			<section className="game-container">
 				<section className="game-left-column-container">
-					<Map />
+					<Map gameInfo={gameInfo} />
+					<Meters />
 				</section>
 				<Gamechat gameInfo={gameInfo} socket={socket} userInfo={userInfo} />
 			</section>
