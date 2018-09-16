@@ -37,7 +37,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 			unseatedGameChats: [],
 		},
 	};
-	games.push(newGame);
+	games[newGame.info.uid] = newGame;
 	sendGameList();
 	socket.join(newGame.info.uid);
 	socket.emit('gameUpdate', newGame, true);
@@ -47,7 +47,11 @@ module.exports.handleAddNewGame = (socket, data) => {
  * @param {object} data - from socket emit.
  */
 module.exports.handleAddNewGamechat = data => {
-	const game = games.find(game => game.info.uid === data.uid);
+	const game = games[data.uid];
+
+	if (!game) {
+		return;
+	}
 	const chat = {
 		timestamp: new Date(),
 		username: data.username,
@@ -57,6 +61,30 @@ module.exports.handleAddNewGamechat = data => {
 	game.playerChats.push(chat);
 
 	io.to(game.info.uid).emit('addNewChat', chat);
+};
+
+/**
+ * @param {string} uid uid of game
+ * @param {object} socket socket object
+ */
+module.exports.handlePlayerJoiningGame = (uid, socket) => {
+	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
+	const game = games[uid];
+	console.log('Hello, World!');
+
+	if (!game || !username) {
+		return;
+	}
+
+	game.publicPlayersState.push({
+		username,
+	});
+	game.internals.playersState.push({
+		username,
+		gameChats: [],
+	});
+	console.log(game, 'g');
+	socket.emit('gameUpdate', game);
 };
 
 const crashReport = JSON.stringify({

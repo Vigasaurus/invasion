@@ -22,9 +22,9 @@ export class Gamelist extends React.Component {
 		const { gamesList } = this.props;
 
 		return gamesList.list.map(game => (
-			<div className="game-item" key={game.uid}>
-				{game.name}
-			</div>
+			<Link to={`/game/table/${game.uid}`} key={game.uid}>
+				<div className="game-item">{game.name}</div>
+			</Link>
 		));
 	}
 

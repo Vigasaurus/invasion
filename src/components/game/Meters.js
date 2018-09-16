@@ -8,8 +8,8 @@ class Meters extends React.Component {
 
 		return (
 			<section className="meters-container">
-				<Progress percent={50} status="active" />
-				<Progress percent={50} status="active" successPercent={50} />
+				<Progress percent={0} status="active" />
+				<Progress percent={0} status="active" />
 			</section>
 		);
 	}

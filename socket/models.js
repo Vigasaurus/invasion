@@ -1,5 +1,5 @@
-module.exports.games = [];
-module.exports.userList = [];
+module.exports.games = {};
+module.exports.userList = {};
 module.exports.generalChats = {
 	sticky: '',
 	list: [],

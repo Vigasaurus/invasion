@@ -3,7 +3,37 @@
 	display: flex;
 
 	.game-left-column-container {
+		position: relative;
 		width: 700px;
+
+		.players-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			transition: all 1s;
+
+			.join-game {
+				position: absolute;
+				top: 250px;
+				left: 300px;
+			}
+
+			.player-container {
+				position: absolute;
+
+				&.unstarted-player-0 {
+					top: 80px;
+					left: 190px;
+				}
+			}
+
+			.user-icon {
+				width: 50px;
+				height: 50px;
+				background: black;
+				border-radius: 50%;
+			}
+		}
 	}
 
 	// svg {

@@ -1,11 +1,9 @@
 const { handleUpdateUserSettings, handleSocketDisconnect } = require('./user-events/account');
-const { handleAddNewGamechat, handleAddNewGame } = require('./user-events/game');
+const { handlePlayerJoiningGame, handleAddNewGamechat, handleAddNewGame } = require('./user-events/game');
 const { sendGameInfo, sendUserGameSettings, sendGameList, sendGeneralChats, sendUserList } = require('./user-requests');
 const { games } = require('./models');
 
 const ensureAuthenticated = socket => socket.handshake.session.passport && socket.handshake.session.passport.user;
-
-const findGame = uid => games.find(el => el.info.uid === uid);
 
 const ensureInGame = (passport, game) =>
 	Boolean(game.publicPlayersState.find(player => player.username === passport.user));
@@ -50,6 +48,11 @@ module.exports = () => {
 					handleAddNewGame(socket, data);
 				}
 			})
+			.on('joinGame', uid => {
+				if (isAuthenticated && !ensureInGame) {
+					handlePlayerJoiningGame(socket, uid);
+				}
+			})
 			// user-requests
 			.on('getGamesList', () => {
 				sendGameList(socket);
@@ -69,7 +72,7 @@ module.exports = () => {
 
 			// user-events game
 			.on('newGamechat', data => {
-				const game = findGame(data.uid);
+				const game = games[data.uid];
 
 				if (isAuthenticated && game && ensureInGame(passport, game)) {
 					handleAddNewGamechat(data);
@@ -77,7 +80,6 @@ module.exports = () => {
 			})
 
 			.on('selectedAwayTeamVote', data => {
-				// const game = findGame(data);
 				// if (isAuthenticated && ensureInGame(passport, game)) {
 				// 	selectVoting(passport, game, data);
 				// }

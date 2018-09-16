@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Map from './Map';
 import Gamechat from './Gamechat';
 import Meters from './Meters';
+import Players from './Players';
 
 class Game extends React.Component {
 	componentDidMount() {
@@ -15,16 +16,18 @@ class Game extends React.Component {
 
 	render() {
 		const { gameInfo, userInfo, socket } = this.props;
-
-		return (
+		console.log(gameInfo, 'gi');
+		console.log(JSON.parse(JSON.stringify(Object.keys(gameInfo).length)));
+		return Object.keys(gameInfo).length ? (
 			<section className="game-container">
 				<section className="game-left-column-container">
 					<Map gameInfo={gameInfo} />
 					<Meters />
+					<Players gameInfo={gameInfo} userInfo={userInfo} socket={socket} />
 				</section>
 				<Gamechat gameInfo={gameInfo} socket={socket} userInfo={userInfo} />
 			</section>
-		);
+		) : null;
 	}
 }
 

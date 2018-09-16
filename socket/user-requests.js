@@ -21,7 +21,12 @@ module.exports.sendUserList = socket => {
 };
 
 module.exports.sendGameInfo = (socket, uid) => {
-	const game = games.find(game => game.info.uid === uid);
+	const game = games[uid];
+
+	if (!game) {
+		return;
+	}
+
 	const { passport } = socket.handshake.session;
 
 	if (game.info.isInProgress) {
@@ -38,7 +43,7 @@ module.exports.sendGameInfo = (socket, uid) => {
 			socket.emit('gameUpdate', secureGame(game));
 		}
 	} else {
-		socket.emit('gameUpdate', {});
+		socket.emit('gameUpdate', game);
 	}
 };
 
@@ -47,7 +52,10 @@ module.exports.sendGameInfo = (socket, uid) => {
  */
 module.exports.sendGameList = socket => {
 	const formattedGames = {
-		list: games.map(game => ({ name: game.info.name, uid: game.info.uid })),
+		list: Object.keys(games).map(gameName => ({
+			name: games[gameName].info.name,
+			uid: games[gameName].info.uid,
+		})),
 		sticky: '',
 	};
 
