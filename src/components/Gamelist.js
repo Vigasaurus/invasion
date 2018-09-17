@@ -19,10 +19,10 @@ export class Gamelist extends React.Component {
 	// }
 
 	renderGamelist() {
-		const { gamesList } = this.props;
+		const { gamesList, userInfo } = this.props;
 
 		return gamesList.list.map(game => (
-			<Link to={`/game/table/${game.uid}`} key={game.uid}>
+			<Link to={userInfo.username ? `/game/table/${game.uid}` : `/observe/table/${game.uid}`} key={game.uid}>
 				<div className="game-item">{game.name}</div>
 			</Link>
 		));
@@ -51,6 +51,7 @@ export class Gamelist extends React.Component {
 Gamelist.propTypes = {
 	userInfo: PropTypes.object,
 	gamesList: PropTypes.object,
+	socket: PropTypes.object,
 };
 
 export default Gamelist;

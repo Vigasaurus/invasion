@@ -19,6 +19,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 			name: 'mockName',
 			uid: generateCombination(2, '', true),
 			gameCreator: data.gameCreator,
+			status: 'Waiting for more players..',
 		},
 		playerChats: [],
 		combinedChats: [],
@@ -70,7 +71,6 @@ module.exports.handleAddNewGamechat = data => {
 module.exports.handlePlayerJoiningGame = (uid, socket) => {
 	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
 	const game = games[uid];
-	console.log('Hello, World!');
 
 	if (!game || !username) {
 		return;
@@ -83,7 +83,7 @@ module.exports.handlePlayerJoiningGame = (uid, socket) => {
 		username,
 		gameChats: [],
 	});
-	console.log(game, 'g');
+
 	socket.emit('gameUpdate', game);
 };
 

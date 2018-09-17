@@ -99,7 +99,7 @@ export class Gamechat extends React.Component {
 	render() {
 		return (
 			<section className="gamechat-container">
-				{this.renderHeader()}
+				{/* {this.renderHeader()} */}
 				<div className="chats-container">{this.renderGamechats()}</div>
 				{this.renderInputForm()}
 			</section>

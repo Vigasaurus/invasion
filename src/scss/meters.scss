@@ -1,3 +1,11 @@
 .meters-container {
 	background: #444;
+
+	.ant-progress-text {
+		color: #eee;
+	}
+
+	.ant-progress-bg {
+		height: 18px !important;
+	}
 }

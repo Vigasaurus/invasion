@@ -16,11 +16,11 @@ class Game extends React.Component {
 
 	render() {
 		const { gameInfo, userInfo, socket } = this.props;
-		console.log(gameInfo, 'gi');
-		console.log(JSON.parse(JSON.stringify(Object.keys(gameInfo).length)));
+
 		return Object.keys(gameInfo).length ? (
 			<section className="game-container">
 				<section className="game-left-column-container">
+					<div className="status">{gameInfo.info.status}</div>
 					<Map gameInfo={gameInfo} />
 					<Meters />
 					<Players gameInfo={gameInfo} userInfo={userInfo} socket={socket} />
