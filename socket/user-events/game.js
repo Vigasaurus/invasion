@@ -38,7 +38,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 			unseatedGameChats: [],
 		},
 	};
-	games[newGame.info.uid] = newGame;
+	games.gameList[newGame.info.uid] = newGame;
 	sendGameList();
 	socket.join(newGame.info.uid);
 	socket.emit('gameUpdate', newGame, true);
@@ -48,7 +48,7 @@ module.exports.handleAddNewGame = (socket, data) => {
  * @param {object} data - from socket emit.
  */
 module.exports.handleAddNewGamechat = data => {
-	const game = games[data.uid];
+	const game = games.gameList[data.uid];
 
 	if (!game) {
 		return;
@@ -68,9 +68,9 @@ module.exports.handleAddNewGamechat = data => {
  * @param {string} uid uid of game
  * @param {object} socket socket object
  */
-module.exports.handlePlayerJoiningGame = (uid, socket) => {
+module.exports.handlePlayerJoinGame = (uid, socket) => {
 	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
-	const game = games[uid];
+	const game = games.gameList[uid];
 
 	if (!game || !username) {
 		return;
@@ -85,6 +85,43 @@ module.exports.handlePlayerJoiningGame = (uid, socket) => {
 	});
 
 	socket.emit('gameUpdate', game);
+};
+
+module.exports.handlePlayerLeaveGame = (game, username, isDisconnected) => {
+	const internalPlayersState = game.internals.playersState;
+	const { publicPlayersState } = game;
+	const index = internalPlayersState.findIndex(player => player.username === username);
+	const { isStarted } = game.info;
+
+	if (internalPlayersState.length && internalPlayersState.length < 2) {
+		delete games.gameList[game.info.uid];
+	}
+
+	if (isStarted) {
+		if (isDisconnected) {
+			publicPlayersState[index].isDisconnected = true;
+		} else {
+			publicPlayersState[index].hasLeftGame = true;
+		}
+	} else {
+		publicPlayersState.splice(index, 1);
+		internalPlayersState.splice(index, 1);
+	}
+
+	io.in(game.info.uid).emit('gameUpdate', isStarted || publicPlayersState.length > 1 ? secureGame(game) : {});
+	sendGameList();
+};
+
+module.exports.handleSocketDisconnect = username => {
+	const gameUid = Object.keys(games.gameList).find(gameUid =>
+		games.gameList[gameUid].publicPlayersState.find(player => player.username === username)
+	);
+
+	if (gameUid) {
+		module.exports.handlePlayerLeaveGame(games.gameList[gameUid], username, true);
+	} else {
+		// delete from userlist here
+	}
 };
 
 const crashReport = JSON.stringify({

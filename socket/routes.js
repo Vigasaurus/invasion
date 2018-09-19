@@ -1,5 +1,12 @@
-const { handleUpdateUserSettings, handleSocketDisconnect } = require('./user-events/account');
-const { handlePlayerJoiningGame, handleAddNewGamechat, handleAddNewGame } = require('./user-events/game');
+const { handleUpdateUserSettings } = require('./user-events/account');
+``;
+const {
+	handlePlayerLeaveGame,
+	handlePlayerJoinGame,
+	handleAddNewGamechat,
+	handleAddNewGame,
+	handleSocketDisconnect,
+} = require('./user-events/game');
 const { sendGameInfo, sendUserGameSettings, sendGameList, sendGeneralChats, sendUserList } = require('./user-requests');
 const { games } = require('./models');
 
@@ -22,7 +29,16 @@ module.exports = () => {
 
 		socket
 			.on('disconnect', () => {
-				// handleSocketDisconnect(socket);
+				if (ensureAuthenticated(socket)) {
+					handleSocketDisconnect(passport.user);
+				}
+			})
+			.on('leaveGame', uid => {
+				const game = games.gameList[uid];
+
+				if (isAuthenticated && game && ensureInGame(passport, game)) {
+					handlePlayerLeaveGame(game, passport.user);
+				}
 			})
 			.on('addNewGame', data => {
 				if (isAuthenticated) {
@@ -34,23 +50,16 @@ module.exports = () => {
 					handleUpdateUserSettings(socket, passport, data);
 				}
 			})
-			.on('leaveGame', data => {
-				// const game = findGame(data);
-				// if (io.sockets.adapter.rooms[game.general.uid] && socket) {
-				// 	socket.leave(game.general.uid);
-				// }
-				// if (isAuthenticated && game) {
-				// 	handleUserLeaveGame(socket, game, data, passport);
-				// }
-			})
 			.on('createGame', data => {
 				if (isAuthenticated) {
 					handleAddNewGame(socket, data);
 				}
 			})
 			.on('joinGame', uid => {
-				if (isAuthenticated && !ensureInGame) {
-					handlePlayerJoiningGame(socket, uid);
+				const game = games.gameList[uid];
+
+				if (isAuthenticated && game && !ensureInGame(passport, game)) {
+					handlePlayerJoinGame(socket, uid);
 				}
 			})
 			// user-requests
@@ -72,7 +81,7 @@ module.exports = () => {
 
 			// user-events game
 			.on('newGamechat', data => {
-				const game = games[data.uid];
+				const game = games.gameList[data.uid];
 
 				if (isAuthenticated && game && ensureInGame(passport, game)) {
 					handleAddNewGamechat(data);

@@ -11,11 +11,6 @@ const adjectives = require('../../utils/adjectives');
 const { generateCombination } = require('gfycat-style-urls');
 
 /**
- * @param {object} socket - user socket reference.
- */
-const handleSocketDisconnect = socket => {};
-
-/**
  * @param {object} socket - socket reference.
  * @param {object} passport - socket authentication.
  * @param {object} data - from socket emit.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Form, Input, Button } from 'antd';
+import { Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 
 export class Gamechat extends React.Component {
@@ -34,6 +34,12 @@ export class Gamechat extends React.Component {
 		});
 	};
 
+	handleCloseButtonClick = () => {
+		const { socket, gameInfo } = this.props;
+
+		socket.emit('leaveGame', gameInfo.info.uid);
+	};
+
 	renderHeader() {
 		const { chatFilter, gameChatFilter } = this.state;
 
@@ -58,6 +64,14 @@ export class Gamechat extends React.Component {
 					/>
 				</span>
 			</div>
+		);
+	}
+
+	renderCloseButton() {
+		return (
+			<Tooltip placement="left" title="Leave this game">
+				<Icon type="close-circle" className="leave-game" onClick={this.handleCloseButtonClick} />
+			</Tooltip>
 		);
 	}
 
@@ -100,6 +114,7 @@ export class Gamechat extends React.Component {
 		return (
 			<section className="gamechat-container">
 				{/* {this.renderHeader()} */}
+				{this.renderCloseButton()}
 				<div className="chats-container">{this.renderGamechats()}</div>
 				{this.renderInputForm()}
 			</section>

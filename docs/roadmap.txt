@@ -1,3 +1,2 @@
-build gameslist mid component - create game button (auth)
-
-build creategame component with route
+players can join and leave games outside of game creator
+players routing to non existant games should be redirected to /observe or /game respectively

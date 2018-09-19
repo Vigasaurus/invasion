@@ -1,7 +1,23 @@
 .gamechat-container {
-	flex-grow: 1;
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
+	position: relative;
+
+	// .leave-game-tooltip {
+	// 	background: $cobalt;
+	// }
+	.leave-game {
+		position: absolute;
+		font-size: 22px;
+		right: 5px;
+		top: 5px;
+		cursor: pointer;
+
+		&:hover {
+			color: orange;
+		}
+	}
 
 	.chats-container {
 		flex-grow: 1;

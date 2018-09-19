@@ -5,6 +5,7 @@
 
 const { games, userList, generalChats } = require('./models');
 const { secureGame, sendInProgressGameUpdate } = require('./util');
+const { GAMELIST_DEBOUNCE } = require('../iso/constants');
 
 /**
  * @param {object} socket - user socket reference.
@@ -21,7 +22,7 @@ module.exports.sendUserList = socket => {
 };
 
 module.exports.sendGameInfo = (socket, uid) => {
-	const game = games[uid];
+	const game = games.gameList[uid];
 
 	if (!game) {
 		return;
@@ -51,10 +52,16 @@ module.exports.sendGameInfo = (socket, uid) => {
  * @param {object} socket - user socket reference.
  */
 module.exports.sendGameList = socket => {
+	// const time = new Date().getTime();
+
+	// if (time < games.emitDebounceTime + GAMELIST_DEBOUNCE) {
+	// 	return;
+	// }
+
 	const formattedGames = {
-		list: Object.keys(games).map(gameName => ({
-			name: games[gameName].info.name,
-			uid: games[gameName].info.uid,
+		list: Object.keys(games.gameList).map(gameName => ({
+			name: games.gameList[gameName].info.name,
+			uid: games.gameList[gameName].info.uid,
 		})),
 		sticky: '',
 	};
@@ -64,6 +71,8 @@ module.exports.sendGameList = socket => {
 	} else {
 		io.sockets.emit('gamesList', formattedGames);
 	}
+
+	// games.emitDebounceTime = time;
 };
 
 module.exports.sendGeneralChats = socket => {

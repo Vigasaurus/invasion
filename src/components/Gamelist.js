@@ -17,6 +17,13 @@ export class Gamelist extends React.Component {
 	// 		</section>
 	// 	);
 	// }
+	handleCreateGameClick = () => {
+		const { socket, userInfo } = this.props;
+
+		socket.emit('createGame', {
+			gameCreator: userInfo.username,
+		});
+	};
 
 	renderGamelist() {
 		const { gamesList, userInfo } = this.props;
@@ -29,17 +36,11 @@ export class Gamelist extends React.Component {
 	}
 
 	render() {
-		const { socket, gamesList, userInfo } = this.props;
-
-		const click = () => {
-			socket.emit('createGame', {
-				gameCreator: userInfo.username,
-			});
-		};
+		const { gamesList } = this.props;
 
 		return (
 			<section className="gamelist-container">
-				<Button type="primary" size="large" className="creategame-button" onClick={click}>
+				<Button type="primary" size="large" className="creategame-button" onClick={this.handleCreateGameClick}>
 					Create a new game
 				</Button>
 				{gamesList.list && this.renderGamelist()}
