@@ -9,13 +9,15 @@
 	// }
 	.leave-game {
 		position: absolute;
-		font-size: 22px;
+		font-size: 12px;
 		right: 5px;
 		top: 5px;
 		cursor: pointer;
+		height: auto;
+		padding: 2px;
 
 		&:hover {
-			color: orange;
+			background: orange;
 		}
 	}
 

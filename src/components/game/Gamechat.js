@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Form, Input, Button } from 'antd';
+import { Switch, Form, Input, Button, Tooltip } from 'antd';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export class Gamechat extends React.Component {
@@ -27,10 +28,9 @@ export class Gamechat extends React.Component {
 			return;
 		}
 
-		const { userInfo, gameInfo, socket } = this.props;
+		const { gameInfo, socket } = this.props;
 
 		socket.emit('newGamechat', {
-			username: userInfo.username,
 			uid: gameInfo.info.uid,
 			chat: chatInputValue,
 		});
@@ -76,10 +76,14 @@ export class Gamechat extends React.Component {
 	}
 
 	renderCloseButton() {
+		const { userInfo } = this.props;
+
 		return (
-			<Button onClick={this.handleCloseButtonClick} className="leave-game">
-				Leave Game
-			</Button>
+			<Link to={userInfo.username ? '/game/' : '/observe'}>
+				<Button onClick={this.handleCloseButtonClick} className="leave-game">
+					Leave Game
+				</Button>
+			</Link>
 		);
 	}
 
@@ -106,12 +110,16 @@ export class Gamechat extends React.Component {
 	renderGamechats() {
 		const { gameInfo } = this.props;
 
-		// {gameInfo.combinedChats
 		return (
 			<ul>
 				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1)).map((chat, index) => (
 					<li key={`${chat.username}${index}`}>
-						{chat.username}: {chat.chat}
+						{chat.username}
+						{chat.isObserver && (
+							<Tooltip title="This player is/was an observer">
+								<span className="observer-chat"> (Obs.)</span>
+							</Tooltip>
+						)}: {chat.chat}
 					</li>
 				))}
 			</ul>

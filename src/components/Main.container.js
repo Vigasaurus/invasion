@@ -39,16 +39,16 @@ export class Main extends React.Component {
 		});
 
 		socket.on('gameUpdate', (data, routeToGame) => {
+			const { userInfo } = this.props;
+
 			updateGameInfo(data);
 
 			if (!Object.keys(data).length) {
-				routeProps.history.replace(this.props.userInfo.username ? '/game' : '/observe');
+				routeProps.history.replace(userInfo.username ? '/game' : '/observe');
 			}
 
 			if (routeToGame) {
-				routeProps.history.push(
-					this.props.userInfo.username ? `/game/table/${data.info.uid}` : `/observe/table/${data.info.uid}`
-				);
+				routeProps.history.push(userInfo.username ? `/game/table/${data.info.uid}` : `/observe/table/${data.info.uid}`);
 			}
 		});
 
@@ -116,6 +116,7 @@ Main.propTypes = {
 	gamesList: PropTypes.object,
 	routeProps: PropTypes.object,
 	gameInfo: PropTypes.object,
+	appendNewGamechat: PropTypes.func,
 };
 
 export default DragDropContext(HTML5Backend)(

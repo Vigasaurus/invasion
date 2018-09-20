@@ -47,16 +47,19 @@ module.exports.handleAddNewGame = (socket, data) => {
 /**
  * @param {object} data - from socket emit.
  */
-module.exports.handleAddNewGamechat = data => {
+module.exports.handleAddNewGamechat = (socket, data) => {
 	const game = games.gameList[data.uid];
+	const { passport } = socket.handshake.session;
 
-	if (!game) {
+	if (!game || !passport || !passport.user) {
 		return;
 	}
+
 	const chat = {
 		timestamp: new Date(),
-		username: data.username,
+		username: passport.user,
 		chat: data.chat,
+		isObserver: Boolean(!game.publicPlayersState.find(player => player.username === passport.user)),
 	};
 
 	game.playerChats.push(chat);
@@ -87,11 +90,13 @@ module.exports.handlePlayerJoinGame = (uid, socket) => {
 	socket.emit('gameUpdate', game);
 };
 
-module.exports.handlePlayerLeaveGame = (game, username, isDisconnected) => {
+module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) => {
 	const internalPlayersState = game.internals.playersState;
 	const { publicPlayersState } = game;
 	const index = internalPlayersState.findIndex(player => player.username === username);
 	const { isStarted } = game.info;
+
+	socket.leave(game.info.uid);
 
 	if (internalPlayersState.length && internalPlayersState.length < 2) {
 		delete games.gameList[game.info.uid];
@@ -112,13 +117,13 @@ module.exports.handlePlayerLeaveGame = (game, username, isDisconnected) => {
 	sendGameList();
 };
 
-module.exports.handleSocketDisconnect = username => {
+module.exports.handleSocketDisconnect = (socket, username) => {
 	const gameUid = Object.keys(games.gameList).find(gameUid =>
 		games.gameList[gameUid].publicPlayersState.find(player => player.username === username)
 	);
 
 	if (gameUid) {
-		module.exports.handlePlayerLeaveGame(games.gameList[gameUid], username, true);
+		module.exports.handlePlayerLeaveGame(socket, games.gameList[gameUid], username, true);
 	} else {
 		// delete from userlist here
 	}

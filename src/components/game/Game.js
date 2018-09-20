@@ -10,7 +10,7 @@ class Game extends React.Component {
 		const { gameInfo, socket, uid } = this.props;
 
 		if (!Object.keys(gameInfo).length) {
-			socket.emit('getGameInfo', uid);
+			socket.emit('getGameInfo', uid, true);
 		}
 	}
 

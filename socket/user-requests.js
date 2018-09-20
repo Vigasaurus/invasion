@@ -21,7 +21,7 @@ module.exports.sendUserList = socket => {
 	}
 };
 
-module.exports.sendGameInfo = (socket, uid) => {
+module.exports.sendGameInfo = (socket, uid, shouldJoinRoom) => {
 	const game = games.gameList[uid];
 
 	if (!game) {
@@ -29,6 +29,10 @@ module.exports.sendGameInfo = (socket, uid) => {
 	}
 
 	const { passport } = socket.handshake.session;
+
+	if (shouldJoinRoom) {
+		socket.join(uid);
+	}
 
 	if (game.info.isInProgress) {
 		if (

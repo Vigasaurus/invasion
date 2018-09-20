@@ -30,15 +30,17 @@ module.exports = () => {
 		socket
 			.on('disconnect', () => {
 				if (ensureAuthenticated(socket)) {
-					handleSocketDisconnect(passport.user);
+					handleSocketDisconnect(socket, passport.user);
 				}
 			})
 			.on('leaveGame', uid => {
+				if (!uid) {
+					return;
+				}
+
 				const game = games.gameList[uid];
 
-				if (isAuthenticated && game && ensureInGame(passport, game)) {
-					handlePlayerLeaveGame(game, passport.user);
-				}
+				handlePlayerLeaveGame(socket, game, passport.user);
 			})
 			.on('addNewGame', data => {
 				if (isAuthenticated) {
@@ -46,16 +48,20 @@ module.exports = () => {
 				}
 			})
 			.on('updateUserSettings', data => {
-				if (isAuthenticated) {
+				if (isAuthenticated && data) {
 					handleUpdateUserSettings(socket, passport, data);
 				}
 			})
 			.on('createGame', data => {
-				if (isAuthenticated) {
+				if (isAuthenticated && data) {
 					handleAddNewGame(socket, data);
 				}
 			})
 			.on('joinGame', uid => {
+				if (!uid) {
+					return;
+				}
+
 				const game = games.gameList[uid];
 
 				if (isAuthenticated && game && !ensureInGame(passport, game)) {
@@ -66,8 +72,8 @@ module.exports = () => {
 			.on('getGamesList', () => {
 				sendGameList(socket);
 			})
-			.on('getGameInfo', uid => {
-				sendGameInfo(socket, uid);
+			.on('getGameInfo', (uid, shouldJoinRoom) => {
+				sendGameInfo(socket, uid, shouldJoinRoom);
 			})
 			.on('getUserList', () => {
 				sendUserList(socket);
@@ -81,10 +87,13 @@ module.exports = () => {
 
 			// user-events game
 			.on('newGamechat', data => {
+				if (!data || !data.uid) {
+					return;
+				}
 				const game = games.gameList[data.uid];
 
-				if (isAuthenticated && game && ensureInGame(passport, game)) {
-					handleAddNewGamechat(data);
+				if (isAuthenticated && game) {
+					handleAddNewGamechat(socket, data);
 				}
 			})
 
