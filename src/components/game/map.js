@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => (
+export default ({ gameInfo }) => (
 	<svg
 		xmlnsdc="http://purl.org/dc/elements/1.1/"
 		xmlnscc="http://creativecommons.org/ns#"
@@ -12,7 +12,7 @@ export default () => (
 		version="1.1"
 		viewBox="0 0 2000 1001"
 		id="svg"
-		className="map-container"
+		className={gameInfo.mapState.isBlurred ? 'map-container blurred' : 'map-container'}
 	>
 		<metadata id="metadata8">
 			<views id="views10">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Form, Input, Button, Tooltip } from 'antd';
+import { Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -8,6 +8,7 @@ export class Gamechat extends React.Component {
 		chatFilter: true,
 		gameChatFilter: true,
 		chatInputValue: '',
+		isLocked: false,
 	};
 
 	updateState = (stateName, value) => {
@@ -46,6 +47,11 @@ export class Gamechat extends React.Component {
 		const { socket, gameInfo } = this.props;
 
 		socket.emit('leaveGame', gameInfo.info.uid);
+	};
+
+	handleChatScroll = e => {
+		console.log(e.detail, 'd');
+		console.log(e.view, 'v');
 	};
 
 	renderHeader() {
@@ -87,6 +93,12 @@ export class Gamechat extends React.Component {
 		);
 	}
 
+	renderLockButton() {
+		const { isLocked } = this.state;
+
+		return <Icon className="chat-lock" type={isLocked ? 'lock' : 'unlock'} />;
+	}
+
 	renderInputForm() {
 		const { chatInputValue } = this.state;
 
@@ -111,7 +123,7 @@ export class Gamechat extends React.Component {
 		const { gameInfo } = this.props;
 
 		return (
-			<ul>
+			<ul onScroll={this.handleChatScroll}>
 				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1)).map((chat, index) => (
 					<li key={`${chat.username}${index}`}>
 						{chat.username}
@@ -131,6 +143,7 @@ export class Gamechat extends React.Component {
 			<section className="gamechat-container">
 				{/* {this.renderHeader()} */}
 				{this.renderCloseButton()}
+				{this.renderLockButton()}
 				<div className="chats-container">{this.renderGamechats()}</div>
 				{this.renderInputForm()}
 			</section>

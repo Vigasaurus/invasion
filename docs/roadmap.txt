@@ -1,3 +1,1 @@
-players should be able to join and leave games outside of game creator
-
-after like 2 minutes of idle time websockets close automatically (should be never) with this message: websocket.js:192 WebSocket is already in CLOSING or CLOSED state.
+no chat scroll lock functionality in gamechat

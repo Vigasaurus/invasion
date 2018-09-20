@@ -1,4 +1,8 @@
 .map-container {
 	background: #555;
 	stroke: #1e1e91;
+
+	&.blurred {
+		filter: blur(5px) opacity(0.1);
+	}
 }

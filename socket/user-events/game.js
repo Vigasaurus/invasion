@@ -28,6 +28,9 @@ module.exports.handleAddNewGame = (socket, data) => {
 				username: data.gameCreator,
 			},
 		],
+		mapState: {
+			isBlurred: true,
+		},
 		internals: {
 			playersState: [
 				{
@@ -38,6 +41,16 @@ module.exports.handleAddNewGame = (socket, data) => {
 			unseatedGameChats: [],
 		},
 	};
+
+	for (let index = 0; index < 40; index++) {
+		newGame.playerChats.push({
+			timestamp: new Date(),
+			username: data.gameCreator,
+			chat: 'a',
+			isObserver: false,
+		});
+	}
+
 	games.gameList[newGame.info.uid] = newGame;
 	sendGameList();
 	socket.join(newGame.info.uid);
@@ -71,7 +84,7 @@ module.exports.handleAddNewGamechat = (socket, data) => {
  * @param {string} uid uid of game
  * @param {object} socket socket object
  */
-module.exports.handlePlayerJoinGame = (uid, socket) => {
+module.exports.handlePlayerJoinGame = (socket, uid) => {
 	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
 	const game = games.gameList[uid];
 
@@ -87,7 +100,7 @@ module.exports.handlePlayerJoinGame = (uid, socket) => {
 		gameChats: [],
 	});
 
-	socket.emit('gameUpdate', game);
+	io.in(game.info.uid).emit('gameUpdate', game);
 };
 
 module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) => {
