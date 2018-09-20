@@ -22,12 +22,13 @@
 	.chats-container {
 		flex-grow: 1;
 		background: #000;
+		display: flex;
 
 		ul {
 			list-style-type: none;
 			padding: 5px;
 			display: flex;
-			flex-direction: column;
+			flex-direction: column-reverse;
 			overflow-y: scroll;
 			margin: 0;
 		}

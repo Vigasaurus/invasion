@@ -36,13 +36,15 @@ export class Gamelist extends React.Component {
 	}
 
 	render() {
-		const { gamesList } = this.props;
+		const { gamesList, userInfo } = this.props;
 
 		return (
 			<section className="gamelist-container">
-				<Button type="primary" size="large" className="creategame-button" onClick={this.handleCreateGameClick}>
-					Create a new game
-				</Button>
+				{userInfo.username && (
+					<Button type="primary" size="large" className="creategame-button" onClick={this.handleCreateGameClick}>
+						Create a new game
+					</Button>
+				)}
 				{gamesList.list && this.renderGamelist()}
 			</section>
 		);

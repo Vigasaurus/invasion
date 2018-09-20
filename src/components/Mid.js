@@ -15,6 +15,19 @@ const spec = {
 	},
 };
 
+const renderGameList = (gamesList, socket, userInfo) => (
+	<Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />
+);
+
+const renderGame = (socket, gameInfo, userInfo, uid, gamesList) =>
+	Boolean(gamesList.list && gamesList.list.find(game => game.uid === uid)) ? (
+		<Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} uid={uid} />
+	) : userInfo.username ? (
+		<Redirect to="/game" />
+	) : (
+		<Redirect to="/observe" />
+	);
+
 const Mid = ({ connectDropTarget, socket, userInfo, gamesList, gameInfo }) =>
 	connectDropTarget(
 		<section className="mid-container">
@@ -27,29 +40,17 @@ const Mid = ({ connectDropTarget, socket, userInfo, gamesList, gameInfo }) =>
 					}
 				/>
 				<Route exact path="/game/creategame" render={() => <Creategame />} />
-				<Route
-					exact
-					path="/game"
-					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
-				/>
-				<Route
-					exact
-					path="/observe"
-					render={() => <Gamelist gamesList={gamesList} socket={socket} userInfo={userInfo} />}
-				/>
+				<Route exact path="/game" render={() => renderGameList(gamesList, socket, userInfo)} />
+				<Route exact path="/observe" render={() => renderGameList(gamesList, socket, userInfo)} />
 				<Route
 					exact
 					path="/observe/table/:id"
-					render={routeProps => (
-						<Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} uid={routeProps.match.params.id} />
-					)}
+					render={routeProps => renderGame(socket, gameInfo, userInfo, routeProps.match.params.id, gamesList)}
 				/>
 				<Route
 					exact
 					path="/game/table/:id"
-					render={routeProps => (
-						<Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} uid={routeProps.match.params.id} />
-					)}
+					render={routeProps => renderGame(socket, gameInfo, userInfo, routeProps.match.params.id, gamesList)}
 				/>
 			</Switch>
 		</section>

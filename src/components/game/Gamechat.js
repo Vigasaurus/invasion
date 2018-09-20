@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
+import { Switch, Form, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 
 export class Gamechat extends React.Component {
@@ -20,13 +20,19 @@ export class Gamechat extends React.Component {
 	};
 
 	handleChatFormSubmit = e => {
-		const { userInfo, gameInfo, socket } = this.props;
 		e.preventDefault();
+		const { chatInputValue } = this.state;
+
+		if (!chatInputValue) {
+			return;
+		}
+
+		const { userInfo, gameInfo, socket } = this.props;
 
 		socket.emit('newGamechat', {
 			username: userInfo.username,
 			uid: gameInfo.info.uid,
-			chat: this.state.chatInputValue,
+			chat: chatInputValue,
 		});
 
 		this.setState({
@@ -34,7 +40,9 @@ export class Gamechat extends React.Component {
 		});
 	};
 
-	handleCloseButtonClick = () => {
+	handleCloseButtonClick = e => {
+		e.preventDefault();
+
 		const { socket, gameInfo } = this.props;
 
 		socket.emit('leaveGame', gameInfo.info.uid);
@@ -69,9 +77,9 @@ export class Gamechat extends React.Component {
 
 	renderCloseButton() {
 		return (
-			<Tooltip placement="left" title="Leave this game">
-				<Icon type="close-circle" className="leave-game" onClick={this.handleCloseButtonClick} />
-			</Tooltip>
+			<Button onClick={this.handleCloseButtonClick} className="leave-game">
+				Leave Game
+			</Button>
 		);
 	}
 
@@ -101,7 +109,7 @@ export class Gamechat extends React.Component {
 		// {gameInfo.combinedChats
 		return (
 			<ul>
-				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)).map((chat, index) => (
+				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1)).map((chat, index) => (
 					<li key={`${chat.username}${index}`}>
 						{chat.username}: {chat.chat}
 					</li>

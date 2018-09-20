@@ -1,2 +1,5 @@
-players can join and leave games outside of game creator
-players routing to non existant games should be redirected to /observe or /game respectively
+players should be able to join and leave games outside of game creator
+
+going directly to a table redirects to 404 page (needs minor express fix)
+
+observer chat not working
