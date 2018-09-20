@@ -1,5 +1,3 @@
 players should be able to join and leave games outside of game creator
 
-going directly to a table redirects to /game or /observe because it doesn't have the gamelist at that time, need to refactor that idea.
-
 after like 2 minutes of idle time websockets close automatically (should be never) with this message: websocket.js:192 WebSocket is already in CLOSING or CLOSED state.

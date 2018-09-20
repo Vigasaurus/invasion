@@ -94,9 +94,10 @@ module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) 
 	const internalPlayersState = game.internals.playersState;
 	const { publicPlayersState } = game;
 	const index = internalPlayersState.findIndex(player => player.username === username);
+	if (index < 0) {
+		return;
+	}
 	const { isStarted } = game.info;
-
-	socket.leave(game.info.uid);
 
 	if (internalPlayersState.length && internalPlayersState.length < 2) {
 		delete games.gameList[game.info.uid];

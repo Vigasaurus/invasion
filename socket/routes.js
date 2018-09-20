@@ -40,7 +40,13 @@ module.exports = () => {
 
 				const game = games.gameList[uid];
 
-				handlePlayerLeaveGame(socket, game, passport.user);
+				if (game) {
+					socket.leave(game.info.uid);
+					socket.emit('gameUpdate', {});
+					if (passport) {
+						handlePlayerLeaveGame(socket, game, passport.user);
+					}
+				}
 			})
 			.on('addNewGame', data => {
 				if (isAuthenticated) {

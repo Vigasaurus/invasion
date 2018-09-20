@@ -2,8 +2,9 @@ const passport = require('passport'); // eslint-disable-line no-unused-vars
 const Account = require('../models/account'); // eslint-disable-line no-unused-vars
 const socketRoutes = require('../socket/routes');
 const accounts = require('./accounts');
-const version = require('../version');
-const fs = require('fs');
+const { games } = require('../socket/models');
+// const version = require('../version');
+// const fs = require('fs');
 
 /**
  * @param {object} req - express request object.
@@ -85,6 +86,12 @@ module.exports = () => {
 					username,
 					timestampsEnabled: Boolean(account.timestampsEnabled),
 					helpDisabled: Boolean(account.helpDisabled),
+					gameList: Object.keys(games.gameList).length
+						? Object.keys(games.gameList).map(gameName => ({
+								name: games.gameList[gameName].info.name,
+								uid: games.gameList[gameName].info.uid,
+						  }))
+						: false,
 				});
 			});
 		}
@@ -99,7 +106,15 @@ module.exports = () => {
 			req.session.destroy();
 			req.logout();
 		}
-		res.render('game', { game: true });
+		res.render('game', {
+			game: true,
+			gameList: Object.keys(games.gameList).length
+				? Object.keys(games.gameList).map(gameName => ({
+						name: games.gameList[gameName].info.name,
+						uid: games.gameList[gameName].info.uid,
+				  }))
+				: false,
+		});
 	});
 
 	// app.get('/online-playercount', (req, res) => {

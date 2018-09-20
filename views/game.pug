@@ -7,6 +7,9 @@ block content
 			var settings = {
 				timestampsEnabled: #{timestampsEnabled},
 				helpDisabled: #{helpDisabled}
-			}
+			};
 	else
 		section#game-container
+	script.
+		var gameList = {}
+		gameList.list = !{JSON.stringify(gameList).replace(/<\//g, '<\\/')}

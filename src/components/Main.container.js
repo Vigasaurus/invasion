@@ -19,6 +19,10 @@ export class Main extends React.Component {
 		const { classList } = document.getElementById('game-container');
 		const { appendNewGamechat, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
+		updateGamesList({
+			list: window.gameList.list ? window.gameList.list : [],
+		});
+
 		if (classList.length) {
 			const username = classList[0].split('username-')[1];
 
@@ -56,7 +60,7 @@ export class Main extends React.Component {
 			appendNewGamechat(data);
 		});
 
-		socket.emit('getGamesList');
+		// socket.emit('getGamesList');
 
 		// socket.on('manualDisconnection', () => {
 		// 	window.location.pathname = '/observe';
