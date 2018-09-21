@@ -1,8 +1,9 @@
 .map-container {
 	background: #555;
 	stroke: #1e1e91;
+	transition: filter 0.5s;
 
 	&.blurred {
-		filter: blur(5px) opacity(0.1);
+		filter: blur(5px) opacity(0.3);
 	}
 }

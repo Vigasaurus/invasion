@@ -46,7 +46,11 @@ module.exports.handleAddNewGame = (socket, data) => {
 		newGame.playerChats.push({
 			timestamp: new Date(),
 			username: data.gameCreator,
-			chat: 'a',
+			chat: `${Math.random()
+				.toString(36)
+				.substring(2)}${Math.random()
+				.toString(36)
+				.substring(2)}`,
 			isObserver: false,
 		});
 	}

@@ -1,14 +1,24 @@
 import React from 'react';
-import { Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
+import { Tabs, Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
+const TabPane = Tabs.TabPane;
 
 export class Gamechat extends React.Component {
 	state = {
 		chatFilter: true,
 		gameChatFilter: true,
 		chatInputValue: '',
-		isLocked: false,
+		isChatLocked: false,
+	};
+
+	componentDidUpdate() {
+		this.scrollToBottom();
+	}
+
+	scrollToBottom = () => {
+		// this.scrollList.scrollTop = 999999;
 	};
 
 	updateState = (stateName, value) => {
@@ -50,34 +60,56 @@ export class Gamechat extends React.Component {
 	};
 
 	handleChatScroll = e => {
-		console.log(e.detail, 'd');
-		console.log(e.view, 'v');
+		// console.log(this.scrollList.getBoundingClientRect());
 	};
 
 	renderHeader() {
-		const { chatFilter, gameChatFilter } = this.state;
+		// const { chatFilter, gameChatFilter } = this.state;
+
+		// return (
+		// 	<div className="gamechat-header">
+		// 		<span>
+		// 			Chat<Switch
+		// 				onChange={() => {
+		// 					this.handleFilterChange('chatFilter');
+		// 				}}
+		// 				checked={chatFilter}
+		// 				size="small"
+		// 			/>
+		// 		</span>
+		// 		<span>
+		// 			Game<Switch
+		// 				onChange={() => {
+		// 					this.handleFilterChange('gameChatFilter');
+		// 				}}
+		// 				checked={gameChatFilter}
+		// 				size="small"
+		// 			/>
+		// 		</span>
+		// 	</div>
+		// );
+		const { userInfo } = this.props;
+
+		const closeButton = (
+			<Link to={userInfo.username ? '/game/' : '/observe'}>
+				<Button onClick={this.handleCloseButtonClick} className="leave-game">
+					Leave Game
+				</Button>
+			</Link>
+		);
 
 		return (
-			<div className="gamechat-header">
-				<span>
-					Chat<Switch
-						onChange={() => {
-							this.handleFilterChange('chatFilter');
-						}}
-						checked={chatFilter}
-						size="small"
-					/>
-				</span>
-				<span>
-					Game<Switch
-						onChange={() => {
-							this.handleFilterChange('gameChatFilter');
-						}}
-						checked={gameChatFilter}
-						size="small"
-					/>
-				</span>
-			</div>
+			<Tabs tabBarExtraContent={closeButton}>
+				<TabPane tab={<Icon type="message" />} key="1">
+					<div className="chats-container">
+						{this.renderGamechats()}
+						{this.renderInputForm()}
+					</div>
+				</TabPane>
+				<TabPane tab={<Icon type="gift" />} key="2">
+					<div className="inventory-container">inventory here</div>
+				</TabPane>
+			</Tabs>
 		);
 	}
 
@@ -85,7 +117,7 @@ export class Gamechat extends React.Component {
 		const { userInfo } = this.props;
 
 		return (
-			<Link to={userInfo.username ? '/game/' : '/observe'}>
+			<Link to={userInfo.username ? '/game' : '/observe'}>
 				<Button onClick={this.handleCloseButtonClick} className="leave-game">
 					Leave Game
 				</Button>
@@ -94,9 +126,10 @@ export class Gamechat extends React.Component {
 	}
 
 	renderLockButton() {
-		const { isLocked } = this.state;
+		const { isChatLocked } = this.state;
 
-		return <Icon className="chat-lock" type={isLocked ? 'lock' : 'unlock'} />;
+		// return <Icon className="chat-lock" type={isChatLocked ? 'lock' : 'unlock'} />;
+		return <span className="chat-lock">{isChatLocked ? 'L' : 'U'}</span>;
 	}
 
 	renderInputForm() {
@@ -123,13 +156,18 @@ export class Gamechat extends React.Component {
 		const { gameInfo } = this.props;
 
 		return (
-			<ul onScroll={this.handleChatScroll}>
+			<ul
+				onScroll={this.handleChatScroll}
+				ref={el => {
+					this.scrollList = el;
+				}}
+			>
 				{gameInfo.playerChats.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1)).map((chat, index) => (
 					<li key={`${chat.username}${index}`}>
 						{chat.username}
 						{chat.isObserver && (
 							<Tooltip title="This player is/was an observer">
-								<span className="observer-chat"> (Obs.)</span>
+								<span className="observer-chat"> (Obs)</span>
 							</Tooltip>
 						)}: {chat.chat}
 					</li>
@@ -141,11 +179,11 @@ export class Gamechat extends React.Component {
 	render() {
 		return (
 			<section className="gamechat-container">
-				{/* {this.renderHeader()} */}
-				{this.renderCloseButton()}
+				{this.renderHeader()}
+				{/* {this.renderCloseButton()} */}
 				{this.renderLockButton()}
-				<div className="chats-container">{this.renderGamechats()}</div>
-				{this.renderInputForm()}
+				{/* <div className="chats-container">{this.renderGamechats()}</div> */}
+				{/* {this.renderInputForm()} */}
 			</section>
 		);
 	}
