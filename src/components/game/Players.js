@@ -66,6 +66,15 @@ class Players extends React.Component {
 	}
 }
 
+Players.defaultProps = {
+	gameInfo: {
+		gameState: {},
+		info: {},
+		publicPlayersState: [],
+	},
+	userInfo: {},
+};
+
 Players.propTypes = {
 	socket: PropTypes.object,
 	gameInfo: PropTypes.object,

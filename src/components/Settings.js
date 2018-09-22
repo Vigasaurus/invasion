@@ -41,6 +41,10 @@ const Settings = ({ userInfo, socket }) => {
 	);
 };
 
+Settings.defaultProps = {
+	userInfo: {},
+};
+
 Settings.propTypes = {
 	userInfo: PropTypes.object,
 	socket: PropTypes.object,

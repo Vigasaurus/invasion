@@ -31,6 +31,13 @@ class Game extends React.Component {
 	}
 }
 
+Game.defaultProps = {
+	gameInfo: {},
+	socket: {
+		emit: () => {},
+	},
+};
+
 Game.propTypes = {
 	gameInfo: PropTypes.object,
 	userInfo: PropTypes.object,

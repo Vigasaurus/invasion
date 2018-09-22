@@ -46,6 +46,10 @@ export class Main extends React.Component {
 	}
 }
 
+Main.defaultProps = {
+	userInfo: {},
+};
+
 Main.propTypes = {
 	gamesList: PropTypes.object,
 	userInfo: PropTypes.object,

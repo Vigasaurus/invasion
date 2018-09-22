@@ -115,9 +115,9 @@
 		"lint": "esw src/ scripts/ routes/ webpack/ models/ iso/"
 	},
 	"jest": {
-		"setupTestFrameworkScriptFile": "<rootDir>/__test__/test-setup.js",
+		"setupTestFrameworkScriptFile": "<rootDir>/utils/test-setup.js",
 		"moduleNameMapper": {
-			"\\.(css|scss)$": "<rootDir>/__test__/mocks/styleMock.js"
+			"\\.(css|scss)$": "<rootDir>/utils/styleMock.js"
 		}
 	}
 }

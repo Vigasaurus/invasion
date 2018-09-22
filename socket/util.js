@@ -25,6 +25,8 @@ const combineInProgressChats = (game, username) => {
 	return player ? player.gameChats.concat(game.playerChats) : game.playerChats;
 };
 
+module.exports.combineInProgressChats = combineInProgressChats;
+
 /**
  * @param {object} game - game to act on.
  */

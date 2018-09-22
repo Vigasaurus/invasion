@@ -1,5 +1,5 @@
 module.exports.games = {
-	emitDebounceTime: new Date().getTime(),
+	emitDebounceTime: new Date(),
 	gameList: {},
 };
 module.exports.userList = {};

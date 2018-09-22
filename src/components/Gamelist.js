@@ -51,6 +51,11 @@ export class Gamelist extends React.Component {
 	}
 }
 
+Gamelist.defaultProps = {
+	userInfo: {},
+	gamesList: {},
+};
+
 Gamelist.propTypes = {
 	userInfo: PropTypes.object,
 	gamesList: PropTypes.object,

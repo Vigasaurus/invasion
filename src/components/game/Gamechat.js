@@ -214,6 +214,14 @@ export class Gamechat extends React.Component {
 	}
 }
 
+Gamechat.defaultProps = {
+	userInfo: {},
+	gameInfo: {
+		playerChats: [],
+		gameState: {},
+	},
+};
+
 Gamechat.propTypes = {
 	userInfo: PropTypes.object,
 	gameInfo: PropTypes.object,
