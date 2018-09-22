@@ -14,11 +14,13 @@ export class Gamechat extends React.Component {
 	};
 
 	componentDidUpdate() {
-		this.scrollToBottom();
+		if (!this.state.isChatLocked) {
+			this.scrollToBottom();
+		}
 	}
 
 	scrollToBottom = () => {
-		// this.scrollList.scrollTop = 999999;
+		this.scrollList.scrollTop = 999999;
 	};
 
 	updateState = (stateName, value) => {
@@ -59,8 +61,17 @@ export class Gamechat extends React.Component {
 		socket.emit('leaveGame', gameInfo.info.uid);
 	};
 
-	handleChatScroll = e => {
-		// console.log(this.scrollList.getBoundingClientRect());
+	handleChatScroll = () => {
+		const { isChatLocked } = this.state;
+		const bottomChat = this.scrollList.firstChild;
+		const bottomChatPxFromBottom =
+			bottomChat.getBoundingClientRect().bottom - this.scrollList.getBoundingClientRect().bottom;
+
+		if (isChatLocked && bottomChatPxFromBottom < 30) {
+			this.setState({ isChatLocked: false });
+		} else if (!isChatLocked && bottomChatPxFromBottom > 29) {
+			this.setState({ isChatLocked: true });
+		}
 	};
 
 	renderHeader() {
@@ -128,8 +139,7 @@ export class Gamechat extends React.Component {
 	renderLockButton() {
 		const { isChatLocked } = this.state;
 
-		// return <Icon className="chat-lock" type={isChatLocked ? 'lock' : 'unlock'} />;
-		return <span className="chat-lock">{isChatLocked ? 'L' : 'U'}</span>;
+		return <Icon className="chat-lock" type={isChatLocked ? 'lock' : 'unlock'} />;
 	}
 
 	renderInputForm() {
@@ -169,7 +179,7 @@ export class Gamechat extends React.Component {
 							<Tooltip title="This player is/was an observer">
 								<span className="observer-chat"> (Obs)</span>
 							</Tooltip>
-						)}: {chat.chat}
+						)}: {<span className="player-chat">{chat.chat}</span>}
 					</li>
 				))}
 			</ul>
