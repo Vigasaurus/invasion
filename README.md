@@ -2,9 +2,6 @@
 
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Considering contributing to this project? Please read our brief guidelines found at
-[CONTRIBUTING](https://github.com/cozuya/secret-hitler/blob/master/CONTRIBUTING.md). Contributors get a cool teal playername color!
-
 Front end: React, Redux, Sass, Ant Design, SocketIO.
 
 Back end: Node v8, Express, Pug, Passport, Mongodb with Mongoose, SocketIO.
@@ -42,11 +39,3 @@ You'll most likely need a browser extension such as Chrome's [openMultiLogin](ht
 ```bash
 yarn create-accounts
 ```
-
-## Important note for Windows users
-
-After much struggling, I have determined there is something wrong in NodeJS LTS itself. You MUST USE NODE JS v6.13.1, not "Node JS" i.e. the LTS version. For more info: https://stackoverflow.com/questions/49091270/why-is-socket-io-is-very-slow-on-windows/49212490#49212490
-
-## Running in production mode
-
-I'll leave you to figure that out.

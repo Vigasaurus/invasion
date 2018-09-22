@@ -62,6 +62,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 };
 
 /**
+ * @param {object} socket - user socket reference.
  * @param {object} data - from socket emit.
  */
 module.exports.handleAddNewGamechat = (socket, data) => {
@@ -85,8 +86,8 @@ module.exports.handleAddNewGamechat = (socket, data) => {
 };
 
 /**
- * @param {string} uid uid of game
  * @param {object} socket socket object
+ * @param {string} uid uid of game
  */
 module.exports.handlePlayerJoinGame = (socket, uid) => {
 	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
