@@ -175,53 +175,54 @@ module.exports = () => {
 					if (account && account.username === username.toLowerCase()) {
 						res.status(401).json({ message: 'Sorry, that account already exists.' });
 					} else {
-						BannedIP.find({ ip: signupIP }, (err, ips) => {
-							let date;
-							let unbannedTime;
-							const ip = ips[ips.length - 1];
+						// BannedIP.find({ ip: signupIP }, (err, ips) => {
+						let date;
+						let unbannedTime;
+						let ip;
+						// const ip = ips[ips.length - 1];
 
-							if (err) {
-								return next(err);
-							}
+						if (err) {
+							return next(err);
+						}
 
-							if (ip) {
-								date = new Date().getTime();
-								unbannedTime =
-									ip.type === 'small' || ip.type === 'new'
-										? ip.bannedDate.getTime() + 64800000
-										: ip.bannedDate.getTime() + 604800000;
-							}
+						if (ip) {
+							date = new Date().getTime();
+							unbannedTime =
+								ip.type === 'small' || ip.type === 'new'
+									? ip.bannedDate.getTime() + 64800000
+									: ip.bannedDate.getTime() + 604800000;
+						}
 
-							if (ip && unbannedTime > date && !ipbansNotEnforced.status && process.env.NODE_ENV === 'production') {
-								res.status(403).json({
-									message:
-										ip.type === 'small'
-											? 'You can no longer access this service.  If you believe this is in error, contact the moderators.'
-											: 'You can only make accounts once per day.  If you need an exception to this rule, contact the moderators.',
+						if (ip && unbannedTime > date && !ipbansNotEnforced.status && process.env.NODE_ENV === 'production') {
+							res.status(403).json({
+								message:
+									ip.type === 'small'
+										? 'You can no longer access this service.  If you believe this is in error, contact the moderators.'
+										: 'You can only make accounts once per day.  If you need an exception to this rule, contact the moderators.',
+							});
+						} else {
+							Account.register(new Account(save), password, err => {
+								if (err) {
+									return next(err);
+								}
+								if (email) {
+									verifyAccount.sendToken(username, email);
+								}
+
+								passport.authenticate('local')(req, res, () => {
+									// const newPlayerBan = new BannedIP({
+									// 	bannedDate: new Date(),
+									// 	type: 'new',
+									// 	ip: signupIP,
+									// });
+
+									// newPlayerBan.save(() => {
+									res.send();
+									// });
 								});
-							} else {
-								Account.register(new Account(save), password, err => {
-									if (err) {
-										return next(err);
-									}
-									if (email) {
-										verifyAccount.sendToken(username, email);
-									}
-
-									passport.authenticate('local')(req, res, () => {
-										const newPlayerBan = new BannedIP({
-											bannedDate: new Date(),
-											type: 'new',
-											ip: signupIP,
-										});
-
-										newPlayerBan.save(() => {
-											res.send();
-										});
-									});
-								});
-							}
-						});
+							});
+						}
+						// });
 					}
 				});
 			}

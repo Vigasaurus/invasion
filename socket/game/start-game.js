@@ -5,4 +5,7 @@ const Account = require('../../models/account.js');
 /**
  * @param {object} game - game to act on.
  */
-const beginGame = game => {};
+module.exports.handlePlayerStartGame = game => {
+	game.info.status = 'Dealing roles..';
+	sendInProgressGameUpdate(game);
+};

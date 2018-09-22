@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import cn from 'classnames';
 
 class Players extends React.Component {
@@ -23,14 +23,32 @@ class Players extends React.Component {
 		});
 	}
 
+	handleCreatorStartGameClick = () => {
+		this.props.socket.emit('startGame', this.props.gameInfo.info.uid);
+	};
+
+	renderCreatorStartGame() {
+		return (
+			<Icon type="caret-right" onClick={this.handleCreatorStartGameClick} className="creator-start-game-icon">
+				Start game
+			</Icon>
+		);
+	}
+
 	render() {
 		const { gameInfo, userInfo } = this.props;
-		const { isStarted } = gameInfo.info;
+		const { gameState } = gameInfo;
+		const { isStarted, gameCreator } = gameInfo.info;
 		const playerIsInGame = Boolean(gameInfo.publicPlayersState.find(player => player.username === userInfo.username));
 
 		return (
 			<section className="players-container">
 				{!isStarted && this.renderUnstartedPlayers()}
+				{!isStarted &&
+					gameState.isWaitingToForCreatorToStart &&
+					userInfo.username &&
+					userInfo.username === gameCreator &&
+					this.renderCreatorStartGame()}
 				{!isStarted &&
 					!playerIsInGame && (
 						<Button

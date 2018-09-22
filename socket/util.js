@@ -29,15 +29,15 @@ module.exports.sendInProgressGameUpdate = game => {
 				? game.internals.seatedPlayers.find(player => player.username === username)
 				: undefined;
 
-		return player ? player.gameChats.concat(game.playerChats) : game.internals.unSeatedGameChats.concat(game.chats);
+		return player ? player.gameChats.concat(game.playerChats) : game.playerChats;
 	};
 
 	let roomSockets;
 	let playerSockets;
 	let observerSockets;
 
-	if (io.sockets.adapter.rooms[game.general.uid]) {
-		roomSockets = Object.keys(io.sockets.adapter.rooms[game.general.uid].sockets).map(
+	if (io.sockets.adapter.rooms[game.info.uid]) {
+		roomSockets = Object.keys(io.sockets.adapter.rooms[game.info.uid].sockets).map(
 			sockedId => io.sockets.connected[sockedId]
 		);
 
@@ -61,8 +61,8 @@ module.exports.sendInProgressGameUpdate = game => {
 			const _game = Object.assign({}, game);
 			const { user } = sock.handshake.session.passport;
 
-			if (!game.gameState.isCompleted && game.gameState.isTracksFlipped) {
-				const privatePlayer = _game.private.seatedPlayers.find(player => user === player.userName);
+			if (!game.gameState.isCompleted) {
+				const privatePlayer = _game.internals.seatedPlayers.find(player => user === player.userName);
 
 				if (!_game || !privatePlayer) {
 					return;

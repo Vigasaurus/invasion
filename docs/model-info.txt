@@ -4,8 +4,11 @@ gameInfo
 		gameCreator string
 		uid string
 		isStarted bool
+		status string top left status bar thing
 	playerChats array
 		obj
+	gameState object general info about the state of the game that doesn't belong in 'info'
+		isWaitingToForCreatorToStart bool creator needs to click start to start game
 	combinedChats array
 	publicPlayersState array
 	internals

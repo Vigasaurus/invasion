@@ -10,6 +10,11 @@ const adjectives = require('../../utils/adjectives');
 const { generateCombination } = require('gfycat-style-urls');
 
 /**
+ * @param {string} game game reference
+ */
+module.exports.handlePlayerStartGame = game => {};
+
+/**
  * @param {object} socket - user socket reference.
  * @param {object} data - from socket emit.
  */
@@ -23,6 +28,7 @@ module.exports.handleAddNewGame = (socket, data) => {
 		},
 		playerChats: [],
 		combinedChats: [],
+		gameState: {},
 		publicPlayersState: [
 			{
 				username: data.gameCreator,
@@ -42,18 +48,18 @@ module.exports.handleAddNewGame = (socket, data) => {
 		},
 	};
 
-	for (let index = 0; index < 40; index++) {
-		newGame.playerChats.push({
-			timestamp: new Date(),
-			username: data.gameCreator,
-			chat: `${Math.random()
-				.toString(36)
-				.substring(2)}${Math.random()
-				.toString(36)
-				.substring(2)}`,
-			isObserver: false,
-		});
-	}
+	// for (let index = 0; index < 40; index++) {
+	// 	newGame.playerChats.push({
+	// 		timestamp: new Date(),
+	// 		username: data.gameCreator,
+	// 		chat: `${Math.random()
+	// 			.toString(36)
+	// 			.substring(2)}${Math.random()
+	// 			.toString(36)
+	// 			.substring(2)}`,
+	// 		isObserver: false,
+	// 	});
+	// }
 
 	games.gameList[newGame.info.uid] = newGame;
 	sendGameList();
@@ -93,7 +99,7 @@ module.exports.handlePlayerJoinGame = (socket, uid) => {
 	const username = socket.handshake.session.passport ? socket.handshake.session.passport.user : null;
 	const game = games.gameList[uid];
 
-	if (!game || !username) {
+	if (!game || !username || game.publicPlayersState.length === 10) {
 		return;
 	}
 
@@ -105,9 +111,20 @@ module.exports.handlePlayerJoinGame = (socket, uid) => {
 		gameChats: [],
 	});
 
+	if (game.publicPlayersState.length > 4) {
+		game.info.status = 'Waiting for creator to start game..';
+		game.gameState.isWaitingToForCreatorToStart = true;
+	}
+
 	io.in(game.info.uid).emit('gameUpdate', game);
 };
 
+/**
+ * @param {object} socket player socket reference
+ * @param {object} game game object
+ * @param {string} username player name
+ * @param {boolean} isDisconnected if the player leaving is disconned
+ */
 module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) => {
 	const internalPlayersState = game.internals.playersState;
 	const { publicPlayersState } = game;
@@ -136,6 +153,10 @@ module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) 
 	sendGameList();
 };
 
+/**
+ * @param {object} socket player socket reference
+ * @param {string} username player name
+ */
 module.exports.handleSocketDisconnect = (socket, username) => {
 	const gameUid = Object.keys(games.gameList).find(gameUid =>
 		games.gameList[gameUid].publicPlayersState.find(player => player.username === username)

@@ -7,6 +7,7 @@ const {
 	handleAddNewGame,
 	handleSocketDisconnect,
 } = require('./user-events/game');
+const { handlePlayerStartGame } = require('./game/start-game');
 const { sendGameInfo, sendUserGameSettings, sendGameList, sendGeneralChats, sendUserList } = require('./user-requests');
 const { games } = require('./models');
 
@@ -64,14 +65,17 @@ module.exports = () => {
 				}
 			})
 			.on('joinGame', uid => {
-				if (!uid) {
-					return;
-				}
-
 				const game = games.gameList[uid];
 
-				if (isAuthenticated && game && !ensureInGame(passport, game)) {
+				if (uid && isAuthenticated && game && !ensureInGame(passport, game)) {
 					handlePlayerJoinGame(socket, uid);
+				}
+			})
+			.on('startGame', uid => {
+				const game = games.gameList[uid];
+
+				if (uid && ensureAuthenticated && ensureInGame(passport, game) && game && !game.info.isStarted) {
+					handlePlayerStartGame(game);
 				}
 			})
 			// user-requests
