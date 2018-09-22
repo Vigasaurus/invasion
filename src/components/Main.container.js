@@ -30,6 +30,20 @@ export class Main extends React.Component {
 				username,
 				...window.settings,
 			});
+
+			// begin devhelpers
+			if (['Reinhardt', 'Mei', 'Ana', 'Orisa'].includes(username)) {
+				socket.emit('joinGame', 'devgame');
+				socket.emit('getGameInfo', 'devgame', true);
+			}
+
+			if (username === 'Sombra') {
+				socket.emit('createGame', {
+					gameCreator: 'Sombra',
+				});
+			}
+
+			// end devhelpers
 		}
 
 		socket.on('updateUserSettings', data => {

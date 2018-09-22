@@ -22,7 +22,8 @@ module.exports.handleAddNewGame = (socket, data) => {
 	const newGame = {
 		info: {
 			name: 'mockName',
-			uid: generateCombination(2, '', true),
+			// uid: generateCombination(2, '', true),
+			uid: 'devgame',
 			gameCreator: data.gameCreator,
 			status: 'Waiting for more players..',
 		},

@@ -1,8 +1,15 @@
 extends layout
 block content
 	if username
-		a(href="/game/") Game Lobby
+		a(href="/game/", style="font-size: 38px; color: red") Game Lobby
 	else
-		a(href="/observe/") Game Lobby
+		a(href="/observe/", style="font-size: 38px; color: red") Game Lobby
+	section(style="font-family: sans-serif; background: silver; color: #333;")
 			
-	h1 todo
+		h1 Welcome to the pre-alpha of Invasion, the newest game by the developer behind #[a(href="https://secrethitler.io") secret hitler IO].
+
+		h4 As this is a work in progress, many "quality of life" standards that you might expect from SH.IO are not yet implemented, even obvious ones like a player list or general chat.  Please do not give feedback on stuff like this.
+
+		h3 What I am really going for in this pre-alpha is simply #[b(style="text-decoration: underline") does the game work, and is the game fun] and if not, what could be done.  I will be going for a data driven analysis of game balance and will be watching everything closely.
+
+		h1 Click here for #[a(href="/rules") rules for this game].  Click the above "game lobby" link to hop in and help me test and balance this game!

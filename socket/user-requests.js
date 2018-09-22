@@ -45,10 +45,10 @@ module.exports.sendGameInfo = (socket, uid, shouldJoinRoom) => {
 			sendInProgressGameUpdate(game);
 		} else {
 			_game = secureGame(game);
-			socket.emit('gameUpdate', secureGame(game));
+			socket.emit('gameUpdate', secureGame(game), shouldJoinRoom);
 		}
 	} else {
-		socket.emit('gameUpdate', game);
+		socket.emit('gameUpdate', game, shouldJoinRoom);
 	}
 };
 

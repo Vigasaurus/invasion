@@ -46,9 +46,9 @@ module.exports = () => {
 		renderPage(req, res, 'page-home', 'home');
 	});
 
-	// app.get('/rules', (req, res) => {
-	// 	renderPage(req, res, 'page-rules', 'rules');
-	// });
+	app.get('/rules', (req, res) => {
+		renderPage(req, res, 'page-rules', 'rules');
+	});
 
 	// app.get('/how-to-play', (req, res) => {
 	// 	renderPage(req, res, 'page-howtoplay', 'howtoplay');
