@@ -12,7 +12,6 @@ gameInfo
 	combinedChats array
 	publicPlayersState array
 	internals
-		unseatedGameChats array
-			obj
-				username string
-				gameChats array
+		seatedPlayers array
+		gameLog array
+	unseatedGameChats array

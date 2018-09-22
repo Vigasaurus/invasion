@@ -10,7 +10,11 @@ class Players extends React.Component {
 		socket.emit('joinGame', gameInfo.info.uid);
 	};
 
-	renderUnstartedPlayers() {
+	handleCreatorStartGameClick = () => {
+		this.props.socket.emit('startGame', this.props.gameInfo.info.uid);
+	};
+
+	renderPlayers() {
 		return this.props.gameInfo.publicPlayersState.map((player, index) => {
 			const classes = cn('player-container', `unstarted-player-${index}`);
 
@@ -23,10 +27,6 @@ class Players extends React.Component {
 		});
 	}
 
-	handleCreatorStartGameClick = () => {
-		this.props.socket.emit('startGame', this.props.gameInfo.info.uid);
-	};
-
 	renderCreatorStartGame() {
 		return (
 			<Icon type="caret-right" onClick={this.handleCreatorStartGameClick} className="creator-start-game-icon">
@@ -38,12 +38,13 @@ class Players extends React.Component {
 	render() {
 		const { gameInfo, userInfo } = this.props;
 		const { gameState } = gameInfo;
-		const { isStarted, gameCreator } = gameInfo.info;
+		const { gameCreator } = gameInfo.info;
+		const { isStarted } = gameInfo.gameState;
 		const playerIsInGame = Boolean(gameInfo.publicPlayersState.find(player => player.username === userInfo.username));
 
 		return (
 			<section className="players-container">
-				{!isStarted && this.renderUnstartedPlayers()}
+				{this.renderPlayers()}
 				{!isStarted &&
 					gameState.isWaitingToForCreatorToStart &&
 					userInfo.username &&

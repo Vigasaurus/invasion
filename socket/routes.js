@@ -74,7 +74,7 @@ module.exports = () => {
 			.on('startGame', uid => {
 				const game = games.gameList[uid];
 
-				if (uid && ensureAuthenticated && ensureInGame(passport, game) && game && !game.info.isStarted) {
+				if (uid && ensureAuthenticated && ensureInGame(passport, game) && game && !game.gameState.isStarted) {
 					handlePlayerStartGame(game);
 				}
 			})

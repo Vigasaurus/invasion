@@ -1,0 +1,13 @@
+need to look into unSeatedGameChats before moving too far forward
+
+need to break up chats/combine them in the ui so that things are colored/bold etc.
+
+need to math out the starting positions for CSS transitions/locations.  css calc?  if not that, sass loops/math.  bump players to 70x70?
+
+need to have "glow" notification for players.  
+
+need to verify start game works as expected and is also is secure / does not leak internals at any point.
+
+need to get in chat filters (either player setting or set cookie, not sure what best practices are here).  UI idea isn't the best really but it will do for now.
+
+next thing after that is figure out the items - start with "greetings" icon, make it work on double click and drag and drop onto map canvas, deleted when used, etc.  after that need a "populate cities" function and then the meat of "player x is captain and needs to click stuff" etc.

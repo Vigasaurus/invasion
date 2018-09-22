@@ -7,8 +7,7 @@ const TabPane = Tabs.TabPane;
 
 export class Gamechat extends React.Component {
 	state = {
-		chatFilter: true,
-		gameChatFilter: true,
+		chatFilterVisible: false,
 		chatInputValue: '',
 		isChatLocked: false,
 	};
@@ -20,7 +19,9 @@ export class Gamechat extends React.Component {
 	}
 
 	scrollToBottom = () => {
-		this.scrollList.scrollTop = 999999;
+		if (this.scrollList) {
+			this.scrollList.scrollTop = 999999;
+		}
 	};
 
 	updateState = (stateName, value) => {
@@ -99,27 +100,41 @@ export class Gamechat extends React.Component {
 		// 		</span>
 		// 	</div>
 		// );
-		const { userInfo } = this.props;
+		const { userInfo, gameInfo } = this.props;
+		const { chatFilterVisible } = this.state;
 
 		const closeButton = (
-			<Link to={userInfo.username ? '/game/' : '/observe'}>
-				<Button onClick={this.handleCloseButtonClick} className="leave-game">
-					Leave Game
-				</Button>
-			</Link>
+			<React.Fragment>
+				<Icon
+					type="filter"
+					className="chat-filter-icon"
+					onClick={() => {
+						this.updateState('chatFilterVisible', true);
+					}}
+				/>
+				<Link to={userInfo.username ? '/game/' : '/observe'}>
+					<Button onClick={this.handleCloseButtonClick} className="leave-game">
+						Leave Game
+					</Button>
+				</Link>
+			</React.Fragment>
 		);
 
-		return (
-			<Tabs tabBarExtraContent={closeButton}>
+		return chatFilterVisible ? (
+			<span>filter</span>
+		) : (
+			<Tabs tabBarExtraContent={chatFilterVisible ? null : closeButton}>
 				<TabPane tab={<Icon type="message" />} key="1">
 					<div className="chats-container">
 						{this.renderGamechats()}
 						{this.renderInputForm()}
 					</div>
 				</TabPane>
-				<TabPane tab={<Icon type="gift" />} key="2">
-					<div className="inventory-container">inventory here</div>
-				</TabPane>
+				{gameInfo.gameState.isStarted && (
+					<TabPane tab={<Icon type="gift" />} key="2">
+						<div className="inventory-container">inventory here</div>
+					</TabPane>
+				)}
 			</Tabs>
 		);
 	}

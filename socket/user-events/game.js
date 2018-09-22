@@ -10,11 +10,6 @@ const adjectives = require('../../utils/adjectives');
 const { generateCombination } = require('gfycat-style-urls');
 
 /**
- * @param {string} game game reference
- */
-module.exports.handlePlayerStartGame = game => {};
-
-/**
  * @param {object} socket - user socket reference.
  * @param {object} data - from socket emit.
  */
@@ -39,13 +34,19 @@ module.exports.handleAddNewGame = (socket, data) => {
 			isBlurred: true,
 		},
 		internals: {
-			playersState: [
+			seatedPlayers: [
 				{
 					username: data.gameCreator,
-					gameChats: [],
+					playersState: {
+						gameChats: [],
+						inventory: [
+							{
+								type: 'greeting',
+							},
+						],
+					},
 				},
 			],
-			unseatedGameChats: [],
 		},
 	};
 
@@ -107,9 +108,16 @@ module.exports.handlePlayerJoinGame = (socket, uid) => {
 	game.publicPlayersState.push({
 		username,
 	});
-	game.internals.playersState.push({
+	game.internals.seatedPlayers.push({
 		username,
-		gameChats: [],
+		playersState: {
+			gameChats: [],
+			inventory: [
+				{
+					type: 'greeting',
+				},
+			],
+		},
 	});
 
 	if (game.publicPlayersState.length > 4) {
@@ -127,15 +135,15 @@ module.exports.handlePlayerJoinGame = (socket, uid) => {
  * @param {boolean} isDisconnected if the player leaving is disconned
  */
 module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) => {
-	const internalPlayersState = game.internals.playersState;
+	const internalSeatedPlayers = game.internals.seatedPlayers;
 	const { publicPlayersState } = game;
-	const index = internalPlayersState.findIndex(player => player.username === username);
+	const index = internalSeatedPlayers.findIndex(player => player.username === username);
 	if (index < 0) {
 		return;
 	}
-	const { isStarted } = game.info;
+	const { isStarted } = game.gameState;
 
-	if (internalPlayersState.length && internalPlayersState.length < 2) {
+	if (internalSeatedPlayers.length && internalSeatedPlayers.length < 2) {
 		delete games.gameList[game.info.uid];
 	}
 
@@ -147,7 +155,7 @@ module.exports.handlePlayerLeaveGame = (socket, game, username, isDisconnected) 
 		}
 	} else {
 		publicPlayersState.splice(index, 1);
-		internalPlayersState.splice(index, 1);
+		internalSeatedPlayers.splice(index, 1);
 	}
 
 	io.in(game.info.uid).emit('gameUpdate', isStarted || publicPlayersState.length > 1 ? secureGame(game) : {});

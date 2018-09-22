@@ -1,0 +1,85 @@
+.players-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: all 1s;
+
+	.creator-start-game-icon {
+		position: absolute;
+		top: 320px;
+		left: 300px;
+		width: 80px;
+	}
+
+	.join-game {
+		position: absolute;
+		top: 250px;
+		left: 300px;
+	}
+
+	.player-container {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		transition: left 0.5s, top 0.5s;
+
+		&.unstarted-player-0 {
+			top: 80px;
+			left: 80px;
+		}
+
+		&.unstarted-player-1 {
+			top: 80px;
+			left: 180px;
+		}
+
+		&.unstarted-player-2 {
+			top: 80px;
+			left: 280px;
+		}
+
+		&.unstarted-player-3 {
+			top: 80px;
+			left: 380px;
+		}
+
+		&.unstarted-player-4 {
+			top: 80px;
+			left: 480px;
+		}
+
+		&.unstarted-player-5 {
+			top: 160px;
+			left: 80px;
+		}
+
+		&.unstarted-player-6 {
+			top: 160px;
+			left: 180px;
+		}
+
+		&.unstarted-player-7 {
+			top: 160px;
+			left: 280px;
+		}
+
+		&.unstarted-player-8 {
+			top: 160px;
+			left: 380px;
+		}
+
+		&.unstarted-player-9 {
+			top: 160px;
+			left: 480px;
+		}
+	}
+
+	.user-icon {
+		width: 65px;
+		height: 65px;
+		background: black;
+		border-radius: 50%;
+		border: 2px solid $cobalt;
+	}
+}
