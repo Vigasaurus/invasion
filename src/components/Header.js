@@ -229,9 +229,9 @@ export class Header extends React.Component {
 		) : (
 			<Header className="app-header">
 				<div className="header-content">
-					{/* <a href="/" target="_blank"> */}
-					<h1>Invasion</h1>
-					{/* </a> */}
+					<a href="/" target="_blank">
+						<h1>Invasion</h1>
+					</a>
 					{userInfo.username ? (
 						<div className="header-username">
 							{userInfo.username}

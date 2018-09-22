@@ -1,6 +1,6 @@
 const passport = require('passport');
 const Account = require('../models/account');
-const BannedIP = require('../models/bannedIP');
+// const BannedIP = require('../models/bannedIP');
 const { ipbansNotEnforced, accountCreationDisabled } = require('../socket/models');
 // const verifyAccount = require('./verify-account');
 // const resetPassword = require('./reset-password');
@@ -231,48 +231,45 @@ module.exports = () => {
 	app.post(
 		'/account/signin',
 		(req, res, next) => {
-			BannedIP.find(
-				{
-					ip:
-						req.headers['x-real-ip'] ||
-						req.headers['X-Real-IP'] ||
-						req.headers['X-Forwarded-For'] ||
-						req.headers['x-forwarded-for'] ||
-						req.connection.remoteAddress,
-					type: 'small' || 'big',
-				},
-				(err, ips) => {
-					let date;
-					let unbannedTime;
-					const ip = ips[ips.length - 1];
-
-					// const ip2 =
-					// 	req.headers['x-real-ip'] ||
-					// 	req.headers['X-Real-IP'] ||
-					// 	req.headers['X-Forwarded-For'] ||
-					// 	req.headers['x-forwarded-for'] ||
-					// 	req.connection.remoteAddress;
-
-					if (err) {
-						return next(err);
-					}
-
-					if (ip) {
-						date = new Date().getTime();
-						unbannedTime =
-							ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
-					}
-
-					if (ip && unbannedTime > date) {
-						res.status(403).json({
-							message: 'You can not access this service.  If you believe this is in error, contact the moderators.',
-							// TODO: include the reason moderators provided for the IP ban, if it exists
-						});
-					} else {
-						return next();
-					}
-				}
-			);
+			// BannedIP.find(
+			// 	{
+			// 		ip:
+			// 			req.headers['x-real-ip'] ||
+			// 			req.headers['X-Real-IP'] ||
+			// 			req.headers['X-Forwarded-For'] ||
+			// 			req.headers['x-forwarded-for'] ||
+			// 			req.connection.remoteAddress,
+			// 		type: 'small' || 'big',
+			// 	},
+			// 	(err, ips) => {
+			// 		let date;
+			// 		let unbannedTime;
+			// 		const ip = ips[ips.length - 1];
+			// 		// const ip2 =
+			// 		// 	req.headers['x-real-ip'] ||
+			// 		// 	req.headers['X-Real-IP'] ||
+			// 		// 	req.headers['X-Forwarded-For'] ||
+			// 		// 	req.headers['x-forwarded-for'] ||
+			// 		// 	req.connection.remoteAddress;
+			// 		if (err) {
+			// 			return next(err);
+			// 		}
+			// 		if (ip) {
+			// 			date = new Date().getTime();
+			// 			unbannedTime =
+			// 				ip.type === 'small' ? ip.bannedDate.getTime() + 64800000 : ip.bannedDate.getTime() + 604800000;
+			// 		}
+			// 		if (ip && unbannedTime > date) {
+			// 			res.status(403).json({
+			// 				message: 'You can not access this service.  If you believe this is in error, contact the moderators.',
+			// 				// TODO: include the reason moderators provided for the IP ban, if it exists
+			// 			});
+			// 		} else {
+			// 			return next();
+			// 		}
+			// 	}
+			// );
+			return next();
 		},
 		passport.authenticate('local'),
 		(req, res) => {
