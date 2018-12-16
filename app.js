@@ -6,14 +6,29 @@ const socketSession = require('express-socket.io-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const compression = require('compression');
-const Strategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 const Account = require('./models/account');
 const routesIndex = require('./routes/index');
-const session = require('express-session')({
-	secret: process.env.SECRETSESSIONKEY,
-	resave: false,
-	saveUninitialized: false,
-});
+const session = require('express-session');
+
+let store;
+
+if (process.env.NODE_ENV !== 'production') {
+	const MongoDBStore = require('connect-mongodb-session')(session);
+	store = new MongoDBStore({
+		uri: 'mongodb://localhost/secret-hitler-app',
+		collection: 'sessions',
+	});
+} else {
+	const redis = require('redis').createClient();
+	const RedisStore = require('connect-redis')(session);
+	store = new RedisStore({
+		host: '127.0.0.1',
+		port: 6379,
+		client: redis,
+		ttl: 260,
+	});
+}
 
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'pug');
@@ -24,20 +39,37 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(favicon(`${__dirname}/public/favicon.ico`));
 app.use(cookieParser());
 app.use(express.static(`${__dirname}/public`, { maxAge: 86400000 * 28 }));
-app.use(session);
+
+const sessionSettings = {
+	secret: process.env.SECRETSESSIONKEY,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 * 28, // 4 weeks
+	},
+	store,
+	resave: true,
+	saveUninitialized: true,
+};
 
 io.use(
-	socketSession(session, {
+	socketSession(session(sessionSettings), {
 		autoSave: true,
 	})
 );
 
+app.use(session(sessionSettings));
+
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new Strategy(Account.authenticate()));
+
+passport.use(new LocalStrategy(Account.authenticate()));
+
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
-mongoose.connect(`mongodb://localhost:${process.env.MONGOPORT}/invasion-app`);
+mongoose.connect(
+	`mongodb://localhost/secret-hitler-app`,
+	{ useNewUrlParser: true }
+);
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 routesIndex();

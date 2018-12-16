@@ -16,7 +16,7 @@ const loginQuick = username => {
 			}
 		})
 		.catch(res => {
-			window.alert('something went wrong');
+			console.log('something went wrong');
 		});
 };
 

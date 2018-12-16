@@ -19,8 +19,6 @@ export default () => {
 					return value;
 				}
 			}
-
-			return undefined;
 		};
 	}
 };

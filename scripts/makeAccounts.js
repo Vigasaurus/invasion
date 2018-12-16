@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const http = require('http');
 
 const options = {
@@ -13,7 +11,7 @@ const options = {
 };
 
 const createUser = username => {
-	const req = http.request(options, function(res) {
+	const req = http.request(options, res => {
 		const chunks = [];
 
 		res.on('data', function(chunk) {
@@ -34,16 +32,9 @@ const createUser = username => {
 	req.end();
 };
 
-// todo needs fixing
-const filePath = path.join(__dirname, '..', 'src', 'frontend-scripts', 'components', 'section-main', 'Defaultmid.jsx');
-const fileString = fs.readFileSync(filePath, 'utf8');
-
-const nameRegex = /data-name="([A-z]+)" className="loginquick">/g;
-
 console.log('Creating accounts in MongoDB.  May give errors for repeated runs.');
+const names = ['Sombra', 'Reinhardt', 'Mei', 'Ana', 'Orisa', 'DVA', 'Junkrat', 'Winston', 'Doomfist', 'Zenyatta'];
 
-let m;
-
-while ((m = nameRegex.exec(fileString))) {
-	createUser(m[1]);
-}
+names.forEach(name => {
+	createUser(name);
+});
