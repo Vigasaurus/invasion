@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default ({ gameInfo }) => (
+const Map = ({ gameInfo }) => (
 	<svg
 		xmlnsdc="http://purl.org/dc/elements/1.1/"
 		xmlnscc="http://creativecommons.org/ns#"
@@ -1285,3 +1286,9 @@ export default ({ gameInfo }) => (
 		/>
 	</svg>
 );
+
+Map.propTypes = {
+	gameInfo: PropTypes.object,
+};
+
+export default Map;

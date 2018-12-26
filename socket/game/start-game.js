@@ -36,21 +36,17 @@ module.exports.handlePlayerStartGame = game => {
 			).slice(0, alienCount)
 		);
 
-	game.publicPlayersState.forEach(player => {
-		player.cardStatus.cardDisplayed = true;
-	});
+	game.internals.seatedPlayers = _.shuffle(game.internals.seatedPlayers);
 
-	game.private.seatedPlayers.forEach((player, i) => {
+	game.internals.seatedPlayers.forEach((player, i) => {
 		const index = Math.floor(Math.random() * roles.length);
 
 		player.role = roles[index];
 		roles.splice(index, 1);
 		player.playersState = _.range(0, game.publicPlayersState.length).map(play => ({}));
 
-		// can probably combine this into :49 but lazy
 		player.playersState.forEach((play, index) => {
 			play.notificationStatus = play.nameStatus = '';
-
 			play.cardStatus = i === index ? { cardBack: player.role } : {};
 		});
 
@@ -78,6 +74,13 @@ module.exports.handlePlayerStartGame = game => {
 		});
 	});
 
+	game.publicPlayersState.forEach(player => {
+		const playerIndex = game.internals.seatedPlayers.findIndex(play => play.username === player.username);
+
+		player.seatNumber = playerIndex;
+		player.cardStatus.displayed = true;
+	});
+
 	game.internals.unSeatedGameChats = [
 		{
 			gameChat: true,
@@ -90,9 +93,9 @@ module.exports.handlePlayerStartGame = game => {
 		},
 	];
 
-	const overlordPlayer = game.private.seatedPlayers.find(player => player.role.cardName === 'overlord');
-	const playerCount = game.private.seatedPlayers.length;
-	const otherAliens = game.private.seatedPlayers.filter(player => player.role.cardName === 'alien');
+	const overlordPlayer = game.internals.seatedPlayers.find(player => player.role.cardName === 'overlord');
+	const playerCount = game.internals.seatedPlayers.length;
+	const otherAliens = game.internals.seatedPlayers.filter(player => player.role.cardName === 'alien');
 	const overlordChat = {
 		timestamp: new Date(),
 		gameChat: true,
@@ -112,13 +115,13 @@ module.exports.handlePlayerStartGame = game => {
 
 	if (playerCount < 7) {
 		overlordChat.chat.push({
-			text: `{${game.private.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
+			text: `{${game.internals.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
 			type: 'alien',
 		});
 	} else if (playerCount < 9) {
 		overlordChat.chat.push(
 			{
-				text: `{${game.private.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
+				text: `{${game.internals.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
 				type: 'alien',
 			},
 			{
@@ -126,14 +129,14 @@ module.exports.handlePlayerStartGame = game => {
 				type: 'text',
 			},
 			{
-				text: `{${game.private.seatedPlayers.indexOf(otherAliens[1]) + 1}} ${otherAliens[1].username}`,
+				text: `{${game.internals.seatedPlayers.indexOf(otherAliens[1]) + 1}} ${otherAliens[1].username}`,
 				type: 'alien',
 			}
 		);
 	} else {
 		overlordChat.chat.push(
 			{
-				text: `{${game.private.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
+				text: `{${game.internals.seatedPlayers.indexOf(otherAliens[0]) + 1}} ${otherAliens[0].username}`,
 				type: 'alien',
 			},
 			{
@@ -141,7 +144,7 @@ module.exports.handlePlayerStartGame = game => {
 				type: 'text',
 			},
 			{
-				text: `{${game.private.seatedPlayers.indexOf(otherAliens[1]) + 1}} ${otherAliens[1].username}`,
+				text: `{${game.internals.seatedPlayers.indexOf(otherAliens[1]) + 1}} ${otherAliens[1].username}`,
 				type: 'alien',
 			},
 			{
@@ -149,12 +152,14 @@ module.exports.handlePlayerStartGame = game => {
 				type: 'text',
 			},
 			{
-				text: `{${game.private.seatedPlayers.indexOf(otherAliens[2]) + 1}} ${otherAliens[2].username}`,
+				text: `{${game.internals.seatedPlayers.indexOf(otherAliens[2]) + 1}} ${otherAliens[2].username}`,
 				type: 'alien',
 			}
 		);
 	}
 
 	overlordPlayer.gameChats.push(overlordChat);
+	console.log(game);
+	game.gameState.isStarted = true;
 	sendInProgressGameUpdate(game);
 };

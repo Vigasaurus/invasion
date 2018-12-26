@@ -101,8 +101,8 @@ $(document).ready(function() {
 			}),
 			statusCode: {
 				200: function() {
-					if (window.location.pathname === '/observe/') {
-						window.location.pathname = '/game/';
+					if (window.location.pathname === '/observe') {
+						window.location.pathname = '/game';
 					} else {
 						window.location.reload();
 					}
@@ -180,8 +180,8 @@ $(document).ready(function() {
 			data: JSON.stringify({ username: username, password: password }),
 			statusCode: {
 				200: function() {
-					if (window.location.pathname === '/observe/') {
-						window.location.pathname = '/game/';
+					if (window.location.pathname === '/observe') {
+						window.location.pathname = '/game';
 					} else {
 						window.location.reload();
 					}

@@ -112,7 +112,7 @@ export class Gamechat extends React.Component {
 						this.updateState('chatFilterVisible', true);
 					}}
 				/>
-				<Link to={userInfo.username ? '/game/' : '/observe'}>
+				<Link to={userInfo.username ? '/game' : '/observe'}>
 					<Button onClick={this.handleCloseButtonClick} className="leave-game">
 						Leave Game
 					</Button>

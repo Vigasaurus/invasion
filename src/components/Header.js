@@ -51,7 +51,7 @@ export class Header extends React.Component {
 	};
 
 	handleLogoutClick = () => {
-		window.location.pathname = '/observe/';
+		window.location.pathname = '/observe';
 	};
 
 	handleSettingIconHover = () => {
@@ -70,8 +70,8 @@ export class Header extends React.Component {
 					password: signinPasswordValue,
 				})
 				.then(res => {
-					if (window.location.pathname === '/observe/') {
-						window.location.pathname = '/game/';
+					if (window.location.pathname === '/observe') {
+						window.location.pathname = '/game';
 					} else {
 						window.location.reload();
 					}
@@ -146,8 +146,8 @@ export class Header extends React.Component {
 					password2: signupPassword2Value,
 				})
 				.then(res => {
-					if (window.location.pathname === '/observe/') {
-						window.location.pathname = '/game/';
+					if (window.location.pathname === '/observe') {
+						window.location.pathname = '/game';
 					} else {
 						window.location.reload();
 					}

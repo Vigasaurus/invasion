@@ -15,8 +15,15 @@ class Players extends React.Component {
 	};
 
 	renderPlayers() {
-		return this.props.gameInfo.publicPlayersState.map((player, index) => {
-			const classes = cn('player-container', `unstarted-player-${index}`);
+		const { gameInfo } = this.props;
+		const { gameState, publicPlayersState } = gameInfo;
+		const { isStarted } = gameState;
+
+		return publicPlayersState.map((player, index) => {
+			const classes = cn(
+				'player-container',
+				isStarted ? `started-player-${player.seatNumber}-${publicPlayersState.length}` : `unstarted-player-${index}`
+			);
 
 			return (
 				<div className={classes} key={player.username}>

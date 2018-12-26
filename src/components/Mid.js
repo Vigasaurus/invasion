@@ -20,8 +20,6 @@ const renderGameList = (gamesList, socket, userInfo) => (
 );
 
 const renderGame = (socket, gameInfo, userInfo, uid, gamesList) => {
-	// console.log(gamesList, 'gl');
-
 	return Boolean(gamesList.list && gamesList.list.find(game => game.uid === uid)) ? (
 		<Game socket={socket} gameInfo={gameInfo} userInfo={userInfo} uid={uid} />
 	) : userInfo.username ? (

@@ -28,6 +28,9 @@ module.exports.handleAddNewGame = (socket, data) => {
 		publicPlayersState: [
 			{
 				username: data.gameCreator,
+				cardStatus: {
+					displayed: false,
+				},
 			},
 		],
 		mapState: {
@@ -37,8 +40,8 @@ module.exports.handleAddNewGame = (socket, data) => {
 			seatedPlayers: [
 				{
 					username: data.gameCreator,
+					gameChats: [],
 					playersState: {
-						gameChats: [],
 						inventory: [
 							{
 								type: 'greeting',
@@ -49,19 +52,6 @@ module.exports.handleAddNewGame = (socket, data) => {
 			],
 		},
 	};
-
-	// for (let index = 0; index < 40; index++) {
-	// 	newGame.playerChats.push({
-	// 		timestamp: new Date(),
-	// 		username: data.gameCreator,
-	// 		chat: `${Math.random()
-	// 			.toString(36)
-	// 			.substring(2)}${Math.random()
-	// 			.toString(36)
-	// 			.substring(2)}`,
-	// 		isObserver: false,
-	// 	});
-	// }
 
 	games.gameList[newGame.info.uid] = newGame;
 	sendGameList();
@@ -107,11 +97,14 @@ module.exports.handlePlayerJoinGame = (socket, uid) => {
 
 	game.publicPlayersState.push({
 		username,
+		cardStatus: {
+			displayed: false,
+		},
 	});
 	game.internals.seatedPlayers.push({
 		username,
+		gameChats: [],
 		playersState: {
-			gameChats: [],
 			inventory: [
 				{
 					type: 'greeting',

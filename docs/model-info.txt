@@ -3,15 +3,22 @@ gameInfo
 		name string
 		gameCreator string
 		uid string
-		isStarted bool
-		status string top left status bar thing
+		status string - top left status bar thing
+		alienCount - number
+		overlordCount - number
+		humanCount - number
+		minPlayerCount number
+		maxPlayerCount number
 	playerChats array
-		obj
-	gameState object general info about the state of the game that doesn't belong in 'info'
-		isWaitingToForCreatorToStart bool creator needs to click start to start game
+	gameState object - general info about the state of the game that doesn't belong in info
+		isStarted bool
+		isWaitingToForCreatorToStart bool - creator needs to click start to start game
 	combinedChats array
 	publicPlayersState array
+		cardStatus
+			displayed bool - whether or not card is flipped
 	internals
 		seatedPlayers array
+			seatNumber number
 		gameLog array
 	unseatedGameChats array
