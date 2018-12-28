@@ -1,4 +1,4 @@
-const { sendInProgressGameUpdate } = require('../util.js');
+const { sendInProgressGameUpdate } = require('./util.js');
 const _ = require('lodash');
 
 /**

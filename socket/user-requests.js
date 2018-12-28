@@ -4,7 +4,7 @@
 // const Game = require('../../models/game');
 
 const { games, userList, generalChats } = require('./models');
-const { secureGame, sendInProgressGameUpdate } = require('./util');
+const { secureGame, sendInProgressGameUpdate } = require('./game/util');
 const { GAMELIST_DEBOUNCE } = require('../iso/constants');
 
 /**

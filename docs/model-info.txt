@@ -14,6 +14,7 @@ gameInfo
 		isStarted bool
 		isWaitingToForCreatorToStart bool - creator needs to click start to start game
 	combinedChats array
+	welcomeItempowerState array - describes the status of players using the "welcome" inventory item
 	publicPlayersState array
 		cardStatus
 			displayed bool - whether or not card is flipped

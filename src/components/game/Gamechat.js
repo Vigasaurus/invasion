@@ -3,6 +3,8 @@ import { Tabs, Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import Inventory from './Inventory';
+
 const TabPane = Tabs.TabPane;
 
 export class Gamechat extends React.Component {
@@ -130,11 +132,9 @@ export class Gamechat extends React.Component {
 						{this.renderInputForm()}
 					</div>
 				</TabPane>
-				{gameInfo.gameState.isStarted && (
-					<TabPane tab={<Icon type="gift" />} key="2">
-						<div className="inventory-container">inventory here</div>
-					</TabPane>
-				)}
+				<TabPane tab={<Icon type="gift" />} key="2">
+					{gameInfo.gameState.isStarted && <Inventory userInfo={userInfo} gameInfo={gameInfo} />}
+				</TabPane>
 			</Tabs>
 		);
 	}

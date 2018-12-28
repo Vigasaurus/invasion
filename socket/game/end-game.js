@@ -1,4 +1,4 @@
-const { sendInProgressGameUpdate, rateEloGame } = require('../util.js');
+const { sendInProgressGameUpdate, rateEloGame } = require('./util.js');
 const { userList, games } = require('../models.js');
 const { sendUserList, sendGameList } = require('../user-requests.js');
 const Account = require('../../models/account.js');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withCookies, Cookies } from 'react-cookie';
 import { DragDropContext } from 'react-dnd';
@@ -14,10 +14,26 @@ import { updateGameInfo, appendNewGamechat } from '../ducks/gameInfo';
 
 const socket = io({ reconnect: false });
 
-export class Main extends React.Component {
-	componentDidMount() {
+const Main = ({
+	gameInfo,
+	routeProps,
+	userInfo,
+	allCookies,
+	gamesList,
+	appendNewGamechat,
+	updateUserInfo,
+	updateGamesList,
+	updateGameInfo,
+}) => {
+	const [hasMounted, updateHasMounted] = useState(false);
+
+	useEffect(() => {
+		if (hasMounted) {
+			return;
+		}
+		updateHasMounted(true);
+
 		const { classList } = document.getElementById('game-container');
-		const { appendNewGamechat, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
 		updateGamesList({
 			list: window.gameList.list ? window.gameList.list : [],
@@ -57,8 +73,6 @@ export class Main extends React.Component {
 		});
 
 		socket.on('gameUpdate', (data, routeToGame) => {
-			const { userInfo } = this.props;
-
 			updateGameInfo(data);
 
 			if (!Object.keys(data).length) {
@@ -83,23 +97,19 @@ export class Main extends React.Component {
 		// socket.on('manualReload', () => {
 		// 	window.location.reload();
 		// });
-	}
+	});
 
-	render() {
-		const { gameInfo, routeProps, userInfo, allCookies, gamesList } = this.props;
-
-		return (
-			<MainComponent
-				routeProps={routeProps}
-				socket={socket}
-				userInfo={userInfo}
-				sidebarWidth={allCookies.sidebarWidth}
-				gamesList={gamesList}
-				gameInfo={gameInfo}
-			/>
-		);
-	}
-}
+	return (
+		<MainComponent
+			routeProps={routeProps}
+			socket={socket}
+			userInfo={userInfo}
+			sidebarWidth={allCookies.sidebarWidth}
+			gamesList={gamesList}
+			gameInfo={gameInfo}
+		/>
+	);
+};
 
 const mapStateToProps = state => ({ userInfo: state.userInfo, gamesList: state.gamesList, gameInfo: state.gameInfo });
 
