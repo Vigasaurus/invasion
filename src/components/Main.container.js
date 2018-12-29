@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withCookies, Cookies } from 'react-cookie';
 import { DragDropContext } from 'react-dnd';
@@ -7,33 +7,17 @@ import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
 import '../scss/app.scss';
 import io from 'socket.io-client';
-import MainComponent from './Main';
+import Main from './Main';
 import { updateUserInfo } from '../ducks/userInfo';
 import { updateGamesList } from '../ducks/gamesList';
 import { updateGameInfo, appendNewGamechat } from '../ducks/gameInfo';
 
 const socket = io({ reconnect: false });
 
-const Main = ({
-	gameInfo,
-	routeProps,
-	userInfo,
-	allCookies,
-	gamesList,
-	appendNewGamechat,
-	updateUserInfo,
-	updateGamesList,
-	updateGameInfo,
-}) => {
-	const [hasMounted, updateHasMounted] = useState(false);
-
-	useEffect(() => {
-		if (hasMounted) {
-			return;
-		}
-		updateHasMounted(true);
-
+export class MainContainer extends React.Component {
+	componentDidMount() {
 		const { classList } = document.getElementById('game-container');
+		const { appendNewGamechat, updateUserInfo, updateGamesList, updateGameInfo, routeProps } = this.props;
 
 		updateGamesList({
 			list: window.gameList.list ? window.gameList.list : [],
@@ -73,6 +57,8 @@ const Main = ({
 		});
 
 		socket.on('gameUpdate', (data, routeToGame) => {
+			const { userInfo } = this.props;
+
 			updateGameInfo(data);
 
 			if (!Object.keys(data).length) {
@@ -97,19 +83,23 @@ const Main = ({
 		// socket.on('manualReload', () => {
 		// 	window.location.reload();
 		// });
-	});
+	}
 
-	return (
-		<MainComponent
-			routeProps={routeProps}
-			socket={socket}
-			userInfo={userInfo}
-			sidebarWidth={allCookies.sidebarWidth}
-			gamesList={gamesList}
-			gameInfo={gameInfo}
-		/>
-	);
-};
+	render() {
+		const { gameInfo, routeProps, userInfo, allCookies, gamesList } = this.props;
+
+		return (
+			<Main
+				routeProps={routeProps}
+				socket={socket}
+				userInfo={userInfo}
+				sidebarWidth={allCookies.sidebarWidth}
+				gamesList={gamesList}
+				gameInfo={gameInfo}
+			/>
+		);
+	}
+}
 
 const mapStateToProps = state => ({ userInfo: state.userInfo, gamesList: state.gamesList, gameInfo: state.gameInfo });
 
@@ -128,13 +118,13 @@ const mapDispatchToProps = dispatch => ({
 	},
 });
 
-Main.defaultProps = {
+MainContainer.defaultProps = {
 	userInfo: {},
 	gamesList: {},
 	gameInfo: {},
 };
 
-Main.propTypes = {
+MainContainer.propTypes = {
 	allCookies: PropTypes.object,
 	cookies: PropTypes.instanceOf(Cookies),
 	updateUserInfo: PropTypes.func,
@@ -152,6 +142,6 @@ export default DragDropContext(HTML5Backend)(
 		connect(
 			mapStateToProps,
 			mapDispatchToProps
-		)(Main)
+		)(MainContainer)
 	)
 );

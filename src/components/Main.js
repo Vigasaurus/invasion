@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import Sidebar from './Sidebar';
@@ -7,44 +7,39 @@ import DraggableSidebarBorder from './DraggableSidebarBorder';
 import AppHeader from './Header';
 import DevHelpers from './DevHelpers';
 
-export class Main extends React.Component {
-	state = {
-		sidebarWidth: this.props.sidebarWidth || '400',
-		sidebarIsCollapsed: this.props.sidebarWidth === '0',
+const Main = props => {
+	const [sidebarWidth, updateSidebarWidth] = useState(props.sidebarWidth || '400');
+	const [sidebarIsCollapsed, updateSidebarIsCollapsed] = useState(props.sidebarIsCollapsed === '0');
+
+	const handleUpdateSidebarWidth = sidebarWidth => {
+		updateSidebarIsCollapsed(sidebarWidth === '0');
 	};
 
-	updateSidebarWidth = sidebarWidth => {
-		this.setState({ sidebarWidth, sidebarIsCollapsed: sidebarWidth === '0' });
-	};
+	const { Content } = Layout;
+	const { gameInfo, userInfo, routeProps, socket, gamesList } = props;
 
-	render() {
-		const { Content } = Layout;
-		const { sidebarIsCollapsed, sidebarWidth } = this.state;
-		const { gameInfo, userInfo, routeProps, socket, gamesList } = this.props;
-
-		return (
-			<Layout className="app-container">
-				<AppHeader userInfo={userInfo} routeProps={routeProps} />
-				<DevHelpers />
-				<Content>
-					<Sidebar updateSidebarWidth={this.updateSidebarWidth} sidebarWidth={sidebarWidth} />
-					<DraggableSidebarBorder
-						isHelpDisabled={userInfo.helpDisabled}
-						isCollapsed={sidebarIsCollapsed}
-						updateSidebarWidth={this.updateSidebarWidth}
-					/>
-					<Mid
-						gamesList={gamesList}
-						socket={socket}
-						updateSidebarWidth={this.updateSidebarWidth}
-						userInfo={userInfo}
-						gameInfo={gameInfo}
-					/>
-				</Content>
-			</Layout>
-		);
-	}
-}
+	return (
+		<Layout className="app-container">
+			<AppHeader userInfo={userInfo} routeProps={routeProps} />
+			<DevHelpers />
+			<Content>
+				<Sidebar updateSidebarWidth={handleUpdateSidebarWidth} sidebarWidth={sidebarWidth} />
+				<DraggableSidebarBorder
+					isHelpDisabled={userInfo.helpDisabled}
+					isCollapsed={sidebarIsCollapsed}
+					updateSidebarWidth={handleUpdateSidebarWidth}
+				/>
+				<Mid
+					gamesList={gamesList}
+					socket={socket}
+					updateSidebarWidth={handleUpdateSidebarWidth}
+					userInfo={userInfo}
+					gameInfo={gameInfo}
+				/>
+			</Content>
+		</Layout>
+	);
+};
 
 Main.defaultProps = {
 	userInfo: {},
@@ -57,6 +52,7 @@ Main.propTypes = {
 	socket: PropTypes.object,
 	routeProps: PropTypes.object,
 	gameInfo: PropTypes.object,
+	sidebarIsCollapsed: PropTypes.string,
 };
 
 export default Main;

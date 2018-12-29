@@ -82,6 +82,7 @@ module.exports = () => {
 			req.session.destroy();
 			req.logout();
 		}
+
 		res.render('game', {
 			game: true,
 			gameList: Object.keys(games.gameList).length

@@ -9,11 +9,7 @@ const loginQuick = username => {
 			password: 'snipsnap',
 		})
 		.then(res => {
-			if (window.location.pathname === '/observe') {
-				window.location.pathname = '/game';
-			} else {
-				window.location.reload();
-			}
+			window.location.pathname = '/game';
 		})
 		.catch(res => {
 			console.log('something went wrong');
