@@ -30,13 +30,12 @@ module.exports.combineInProgressChats = combineInProgressChats;
 /**
  * @param {object} game - game to act on.
  */
-// todo-release make this accept a socket argument and emit only to it if it exists
 module.exports.sendInProgressGameUpdate = game => {
 	const seatedPlayerNames = game.publicPlayersState.map(player => player.username);
 
-	let roomSockets;
-	let playerSockets;
-	let observerSockets;
+	let roomSockets = [];
+	let playerSockets = [];
+	let observerSockets = [];
 
 	if (io.sockets.adapter.rooms[game.info.uid]) {
 		roomSockets = Object.keys(io.sockets.adapter.rooms[game.info.uid].sockets).map(
@@ -58,34 +57,30 @@ module.exports.sendInProgressGameUpdate = game => {
 		);
 	}
 
-	if (playerSockets) {
-		playerSockets.forEach(sock => {
-			const _game = Object.assign({}, game);
-			const { user } = sock.handshake.session.passport;
+	playerSockets.forEach(sock => {
+		const _game = Object.assign({}, game);
+		const { user } = sock.handshake.session.passport;
 
-			if (!game.gameState.isCompleted) {
-				const privatePlayer = _game.internals.seatedPlayers.find(player => user === player.username);
+		if (!game.gameState.isCompleted) {
+			const privatePlayer = _game.internals.seatedPlayers.find(player => user === player.username);
 
-				if (!_game || !privatePlayer) {
-					return;
-				}
-				_game.playersState = privatePlayer.playersState;
-				_game.inventory = privatePlayer.inventory;
+			if (!_game || !privatePlayer) {
+				return;
 			}
+			_game.playersState = privatePlayer.playersState;
+			_game.inventory = privatePlayer.inventory;
+		}
 
-			_game.chats = combineInProgressChats(_game, user);
-			sock.emit('gameUpdate', secureGame(_game));
-		});
-	}
+		_game.chats = combineInProgressChats(_game, user);
+		sock.emit('gameUpdate', secureGame(_game));
+	});
 
-	if (observerSockets) {
-		observerSockets.forEach(sock => {
-			const _game = Object.assign({}, game);
+	observerSockets.forEach(sock => {
+		const _game = Object.assign({}, game);
 
-			_game.chats = combineInProgressChats(_game);
-			sock.emit('gameUpdate', secureGame(_game));
-		});
-	}
+		_game.chats = combineInProgressChats(_game);
+		sock.emit('gameUpdate', secureGame(_game));
+	});
 };
 
 module.exports.secureGame = secureGame;

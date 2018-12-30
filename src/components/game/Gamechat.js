@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Icon, Switch, Form, Input, Button, Tooltip } from 'antd';
+import { Tabs, Icon, Form, Input, Button, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 

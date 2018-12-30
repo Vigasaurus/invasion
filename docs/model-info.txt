@@ -10,11 +10,14 @@ gameInfo
 		minPlayerCount number
 		maxPlayerCount number
 	playerChats array
-	gameState object - general info about the state of the game that doesn't belong in info
+	gameState object - general info about the state of the game that doesn't belong
+		isCompleted bool
+	info
 		isStarted bool
 		isWaitingToForCreatorToStart bool - creator needs to click start to start game
 	combinedChats array
-	welcomeItempowerState array - describes the status of players using the "welcome" inventory item
+	welcomeItempowerState array - describes the status of players using the "welcome" inventory array
+		type string
 	publicPlayersState array
 		cardStatus
 			displayed bool - whether or not card is flipped

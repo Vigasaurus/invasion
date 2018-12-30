@@ -8,7 +8,7 @@ import AppHeader from './Header';
 import DevHelpers from './DevHelpers';
 
 const Main = props => {
-	const [sidebarWidth, updateSidebarWidth] = useState(props.sidebarWidth || '400');
+	const [sidebarWidth] = useState(props.sidebarWidth || '400');
 	const [sidebarIsCollapsed, updateSidebarIsCollapsed] = useState(props.sidebarIsCollapsed === '0');
 
 	const handleUpdateSidebarWidth = sidebarWidth => {

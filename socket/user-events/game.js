@@ -41,13 +41,12 @@ module.exports.handleAddNewGame = (socket, data) => {
 				{
 					username: data.gameCreator,
 					gameChats: [],
-					playersState: {
-						inventory: [
-							{
-								type: 'greeting',
-							},
-						],
-					},
+					playersState: [],
+					inventory: [
+						{
+							type: 'greeting',
+						},
+					],
 				},
 			],
 		},

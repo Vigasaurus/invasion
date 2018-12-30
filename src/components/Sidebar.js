@@ -19,10 +19,8 @@ const spec = {
 	},
 };
 
-export class Sidebar extends React.Component {
-	renderContent() {
-		const { sidebarWidth } = this.props;
-
+const Sidebar = ({ sidebarWidth, connectDropTarget }) => {
+	const renderContent = () => {
 		if (sidebarWidth && sidebarWidth <= 100 && sidebarWidth > 0) {
 			return (
 				<div className="expand-collapse-sidebar">
@@ -30,23 +28,20 @@ export class Sidebar extends React.Component {
 				</div>
 			);
 		}
-	}
+	};
 
-	render() {
-		const { connectDropTarget, sidebarWidth } = this.props;
-
-		return connectDropTarget(
-			<section className="sidebar-container" style={{ width: `${sidebarWidth}px` }}>
-				{this.renderContent()}
-			</section>
-		);
-	}
-}
+	return connectDropTarget(
+		<section className="sidebar-container" style={{ width: `${sidebarWidth}px` }}>
+			{renderContent()}
+		</section>
+	);
+};
 
 Sidebar.propTypes = {
 	sidebarWidth: PropTypes.string,
 	updateSidebarWidth: PropTypes.func,
 	cookies: PropTypes.object,
+	connectDropTarget: PropTypes.func,
 };
 
 export default withCookies(DropTarget('sidebar', spec, collect)(Sidebar));
