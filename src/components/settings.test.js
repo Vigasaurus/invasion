@@ -1,9 +1,6 @@
 import React from 'react'; // eslint-disable-line
 import Settings from './Settings';
-import Enzyme, { shallow } from 'enzyme';
-// import Adapter from 'enzyme-adapter-react-16';
-
-// Enzyme.configure({ adapter: new Adapter() });
+import { shallow } from 'enzyme';
 
 describe('Settings component', () => {
 	it('should initialize correctly', () => {

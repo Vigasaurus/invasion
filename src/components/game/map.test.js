@@ -1,9 +1,6 @@
 import React from 'react'; // eslint-disable-line
 import Map from './map';
-import Enzyme, { shallow } from 'enzyme';
-// import Adapter from 'enzyme-adapter-react-16';
-
-// Enzyme.configure({ adapter: new Adapter() });
+import { shallow } from 'enzyme';
 
 describe('Map component', () => {
 	it('should initialize correctly', () => {

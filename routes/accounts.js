@@ -1,7 +1,8 @@
 const passport = require('passport');
 const Account = require('../models/account');
 // const BannedIP = require('../models/bannedIP');
-const { ipbansNotEnforced, accountCreationDisabled } = require('../socket/models');
+// const { ipbansNotEnforced, accountCreationDisabled } = require('../socket/models');
+const { ipbansNotEnforced } = require('../socket/models');
 // const verifyAccount = require('./verify-account');
 // const resetPassword = require('./reset-password');
 const blacklistedWords = require('../iso/blacklistwords');

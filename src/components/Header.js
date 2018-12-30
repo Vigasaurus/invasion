@@ -1,87 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Icon, Input, Button, Modal, Layout } from 'antd';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withCookies, Cookies } from 'react-cookie';
 import axios from 'axios';
 
-export class Header extends React.Component {
-	state = {
-		signupModalVisible: false,
-		signinModalVisible: false,
-		isCollapsed: false,
-		signupUsernameValue: '',
-		signupPassword1Value: '',
-		signupPassword2Value: '',
-		signupSubmitInProgress: false,
-		signupResponseErrorMessage: '',
-		signinUsernameValue: '',
-		signinPasswordValue: '',
-		signinResponseErrorMessage: '',
-		signinSubmitInProgress: false,
-		settingsIconIsHovering: false,
+const Header = ({ userInfo, cookies }) => {
+	const [signupModalVisible, updateSignupModalVisible] = useState(false);
+	const [signinModalVisible, updateSigninModalVisible] = useState(false);
+	const [isCollapsed, updateIsCollapsed] = useState(false);
+	const [signupUsernameValue, updateSignupUsernameValue] = useState('');
+	const [signupPassword1Value, updateSignupPassword1Value] = useState('');
+	const [signupPassword2Value, updateSignupPassword2Value] = useState('');
+	const [signupSubmitInProgress, updateSignupSubmitInProgress] = useState(false);
+	const [signupResponseErrorMessage, updateSignupResponseErrorMessage] = useState('');
+	const [signinUsernameValue, updateSigninUsernameValue] = useState('');
+	const [signinPasswordValue, updateSigninPasswordValue] = useState('');
+	const [signinResponseErrorMessage, updateSigninResponseErrorMessage] = useState('');
+	const [signinSubmitInProgress, updateSigninSubmitInProgress] = useState(false);
+	const [settingsIconIsHovering, updateSettingsIconIsHovering] = useState(false);
+
+	const handleBorderDoubleClick = () => {
+		updateIsCollapsed(!isCollapsed);
+		cookies.set('headerIsCollapsed', !isCollapsed);
 	};
 
-	updateState = (stateName, value) => {
-		this.setState({ [stateName]: value });
-	};
-
-	handleSignupClick = () => {
-		this.setState({
-			signupModalVisible: true,
-		});
-	};
-
-	handleSigninClick = () => {
-		this.setState({
-			signinModalVisible: true,
-		});
-	};
-
-	handleFormSubmit = e => {
-		e.preventDefault();
-	};
-
-	handleBorderDoubleClick = () => {
-		const { isCollapsed } = this.state;
-
-		this.setState({ isCollapsed: !isCollapsed }, () => {
-			this.props.cookies.set('headerIsCollapsed', !isCollapsed);
-		});
-	};
-
-	handleLogoutClick = () => {
-		window.location.pathname = '/observe';
-	};
-
-	handleSettingIconHover = () => {
-		console.log('Hello, World!');
-	};
-
-	renderSigninModal() {
-		const { signinUsernameValue, signinPasswordValue, signinSubmitInProgress, signinResponseErrorMessage } = this.state;
+	const renderSigninModal = () => {
 		const handleFormSubmit = e => {
 			e.preventDefault();
 
-			this.updateState('signinSubmitInProgress', true);
+			updateSigninSubmitInProgress(true);
+
 			axios
 				.post('/account/signin', {
 					username: signinUsernameValue,
 					password: signinPasswordValue,
 				})
 				.then(res => {
-					if (window.location.pathname === '/observe') {
-						window.location.pathname = '/game';
-					} else {
-						window.location.reload();
-					}
+					window.location.pathname = '/game';
 				})
 				.catch(res => {
-					this.setState({
-						signinResponseErrorMessage:
-							res.response.status === 401 ? 'That is the wrong password for that account.' : 'Something went wrong.',
-						signinSubmitInProgress: false,
-					});
+					updateSigninResponseErrorMessage(
+						res.response.status === 401 ? 'That is the wrong password for that account.' : 'Something went wrong.'
+					);
+					updateSigninSubmitInProgress(false);
 				});
 		};
 		const validateSubmit = () =>
@@ -92,9 +54,9 @@ export class Header extends React.Component {
 				className="signin-modal"
 				title="Sign in"
 				footer={null}
-				visible={this.state.signinModalVisible}
+				visible={signinModalVisible}
 				onCancel={() => {
-					this.updateState('signinModalVisible', false);
+					updateSigninModalVisible(false);
 				}}
 			>
 				<Form onSubmit={handleFormSubmit}>
@@ -104,7 +66,7 @@ export class Header extends React.Component {
 						value={signinUsernameValue}
 						placeholder="Username"
 						onChange={e => {
-							this.updateState('signinUsernameValue', e.target.value);
+							updateSigninUsernameValue(e.target.value);
 						}}
 						className="signin-username"
 					/>
@@ -114,7 +76,7 @@ export class Header extends React.Component {
 						value={signinPasswordValue}
 						placeholder="Password"
 						onChange={e => {
-							this.updateState('signinPasswordValue', e.target.value);
+							updateSigninPasswordValue(e.target.value);
 						}}
 						className="signin-password"
 					/>
@@ -125,20 +87,14 @@ export class Header extends React.Component {
 				</Form>
 			</Modal>
 		);
-	}
+	};
 
-	renderSignupModal() {
-		const {
-			signupUsernameValue,
-			signupPassword1Value,
-			signupPassword2Value,
-			signupSubmitInProgress,
-			signupResponseErrorMessage,
-		} = this.state;
+	const renderSignupModal = () => {
 		const handleFormSubmit = e => {
 			e.preventDefault();
 
-			this.updateState('signupSubmitInProgress', true);
+			updateSignupSubmitInProgress(true);
+
 			axios
 				.post('/account/signup', {
 					username: signupUsernameValue,
@@ -146,19 +102,14 @@ export class Header extends React.Component {
 					password2: signupPassword2Value,
 				})
 				.then(res => {
-					if (window.location.pathname === '/observe') {
-						window.location.pathname = '/game';
-					} else {
-						window.location.reload();
-					}
+					window.location.pathname = '/game';
 				})
 				.catch(res => {
-					this.setState({
-						signupResponseErrorMessage: res.response.data.message,
-						signupSubmitInProgress: false,
-					});
+					updateSignupResponseErrorMessage(res.response.data.message);
+					updateSignupSubmitInProgress(false);
 				});
 		};
+
 		const validateSubmit = () =>
 			!(
 				signupUsernameValue.length > 2 &&
@@ -173,9 +124,9 @@ export class Header extends React.Component {
 				className="signup-modal"
 				title="Sign up"
 				footer={null}
-				visible={this.state.signupModalVisible}
+				visible={signupModalVisible}
 				onCancel={() => {
-					this.updateState('signupModalVisible', false);
+					updateSignupModalVisible(false);
 				}}
 			>
 				<Form onSubmit={handleFormSubmit}>
@@ -185,7 +136,7 @@ export class Header extends React.Component {
 						value={signupUsernameValue}
 						placeholder="Username - 3-12 alphanumeric characters"
 						onChange={e => {
-							this.updateState('signupUsernameValue', e.target.value);
+							updateSignupUsernameValue(e.target.value);
 						}}
 						className="signup-username"
 					/>
@@ -195,7 +146,7 @@ export class Header extends React.Component {
 						value={signupPassword1Value}
 						placeholder="Password - 6+ characters"
 						onChange={e => {
-							this.updateState('signupPassword1Value', e.target.value);
+							updateSignupPassword1Value(e.target.value);
 						}}
 						className="signup-password1"
 					/>
@@ -205,7 +156,7 @@ export class Header extends React.Component {
 						value={signupPassword2Value}
 						placeholder="Repeat password"
 						onChange={e => {
-							this.updateState('signupPassword2Value', e.target.value);
+							updateSignupPassword2Value(e.target.value);
 						}}
 						className="signup-password2"
 					/>
@@ -216,59 +167,69 @@ export class Header extends React.Component {
 				</Form>
 			</Modal>
 		);
-	}
+	};
 
-	render() {
-		const { userInfo } = this.props;
-		const { Header } = Layout;
-
-		return this.state.isCollapsed ? (
-			<div className="header-border collapsed" onDoubleClick={this.handleBorderDoubleClick}>
-				<Icon type="down" />
+	return isCollapsed ? (
+		<div className="header-border collapsed" onDoubleClick={handleBorderDoubleClick}>
+			<Icon type="down" />
+		</div>
+	) : (
+		<Layout.Header className="app-header">
+			<div className="header-content">
+				<a href="/" target="_blank">
+					<h1>Invasion</h1>
+				</a>
+				{userInfo.username ? (
+					<div className="header-username">
+						{userInfo.username}
+						<Link to="/game/settings">
+							<Icon
+								type="setting"
+								spin={settingsIconIsHovering}
+								onMouseEnter={() => {
+									updateSettingsIconIsHovering(true);
+								}}
+								onMouseLeave={() => {
+									updateSettingsIconIsHovering(false);
+								}}
+							/>
+						</Link>
+						<Button
+							type="primary"
+							onClick={() => {
+								window.location.pathname = '/observe';
+							}}
+						>
+							Log out
+						</Button>
+					</div>
+				) : (
+					<Button.Group>
+						<Button
+							type="primary"
+							onClick={() => {
+								updateSigninModalVisible(true);
+							}}
+						>
+							Sign in
+						</Button>
+						<Button
+							type="primary"
+							onClick={() => {
+								updateSignupModalVisible(true);
+							}}
+						>
+							Sign up
+						</Button>
+					</Button.Group>
+				)}
+				{renderSigninModal()}
+				{renderSignupModal()}
 			</div>
-		) : (
-			<Header className="app-header">
-				<div className="header-content">
-					<a href="/" target="_blank">
-						<h1>Invasion</h1>
-					</a>
-					{userInfo.username ? (
-						<div className="header-username">
-							{userInfo.username}
-							<Link to="/game/settings">
-								<Icon
-									type="setting"
-									spin={this.state.settingsIconIsHovering}
-									onMouseEnter={() => {
-										this.updateState('settingsIconIsHovering', true);
-									}}
-									onMouseLeave={() => {
-										this.updateState('settingsIconIsHovering', false);
-									}}
-								/>
-							</Link>
-							<Button type="primary" onClick={this.handleLogoutClick}>
-								Log out
-							</Button>
-						</div>
-					) : (
-						<Button.Group>
-							<Button type="primary" onClick={this.handleSigninClick}>
-								Sign in
-							</Button>
-							<Button type="primary" onClick={this.handleSignupClick}>
-								Sign up
-							</Button>
-						</Button.Group>
-					)}
-					{this.renderSigninModal()}
-					{this.renderSignupModal()}
-				</div>
-				<div className="header-border" onDoubleClick={this.handleBorderDoubleClick} />
-			</Header>
-		);
-	}
-}
+			<div className="header-border" onDoubleClick={handleBorderDoubleClick} />
+		</Layout.Header>
+	);
+};
 
 Header.propTypes = {
 	cookies: PropTypes.instanceOf(Cookies),

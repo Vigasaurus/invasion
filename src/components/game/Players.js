@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Icon } from 'antd';
 import cn from 'classnames';
 
-const Players = ({ socket, gameInfo }) => {
+const Players = ({ socket, gameInfo, userInfo }) => {
 	const handleJoinGameSubmit = () => {
 		socket.emit('joinGame', gameInfo.info.uid);
 	};

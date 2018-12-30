@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// import { DragSource } from 'react-dnd';
 
 const processInventoryItem = item => {
 	switch (item.type) {
@@ -7,6 +8,17 @@ const processInventoryItem = item => {
 			return <div className="inventory-item-greeting">G</div>;
 	}
 };
+
+// const borderSource = {
+// 	beginDrag: () => ({}),
+// 	isDragging: (props, monitor) => monitor.getItem().id === props.id,
+// };
+
+// const dragCollect = (connect, monitor) => ({
+// 	connectDragSource: connect.dragSource(),
+// 	isDragging: monitor.isDragging(),
+// 	connectDragPreview: connect.dragPreview(),
+// });
 
 const Inventory = ({ gameInfo }) => (
 	<div className="inventory-container">

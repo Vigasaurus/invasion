@@ -63,6 +63,10 @@ DraggableSidebarBorder.propTypes = {
 	isCollapsed: PropTypes.bool,
 	updateSidebarWidth: PropTypes.func,
 	cookies: PropTypes.instanceOf(Cookies),
+	connectDragPreview: PropTypes.func,
+	connectDragSource: PropTypes.func,
+	connectDropTarget: PropTypes.func,
+	isDragging: PropTypes.bool,
 };
 
 export default withCookies(
